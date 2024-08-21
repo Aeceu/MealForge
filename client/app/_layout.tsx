@@ -1,31 +1,20 @@
+import { store } from "@/redux/store";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import {
-	DarkTheme,
-	DefaultTheme,
-	ThemeProvider,
-} from "@react-navigation/native";
+
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
-
-export {
-	// Catch any errors thrown by the Layout component.
-	ErrorBoundary,
-} from "expo-router";
-
-export const unstable_settings = {
-	// Ensure that reloading on `/modal` keeps a back button present.
-	initialRouteName: "(tabs)",
-};
+import { Provider } from "react-redux";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
 	const [loaded, error] = useFonts({
-		SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+		Poppins: require("../assets/fonts/Poppins-Regular.ttf"),
+		Makeba: require("../assets/fonts/Makeba.ttf"),
 		...FontAwesome.font,
 	});
 
@@ -48,11 +37,11 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-	const colorScheme = useColorScheme();
-
 	return (
-		<Stack options={{ headerShown: false }}>
-			<Stack.Screen name="index" options={{ headerShown: false }} />
-		</Stack>
+		<Provider store={store}>
+			<Stack screenOptions={{ headerShown: false }}>
+				<Stack.Screen name="index" options={{ headerShown: false }} />
+			</Stack>
+		</Provider>
 	);
 }
