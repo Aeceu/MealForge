@@ -1,18 +1,18 @@
 import { TouchableOpacity, type TouchableOpacityProps } from "react-native";
 
 type Props = TouchableOpacityProps & {
-	type?: "default" | "link" | "sm" | "lg" | "xl";
+	size?: "default" | "link" | "sm" | "lg" | "xl";
 };
 
-const StyledPressable = ({ type = "default", ...rest }: Props) => {
+const StyledPressable = ({ size = "default", ...rest }: Props) => {
 	return (
 		<TouchableOpacity
 			className={`
-        ${type === "sm" && "w-1/4 py-2"}
-        ${type === "default" && "w-1/2 py-3"}
-        ${type === "lg" && "w-3/4 py-4"}
-        ${type === "xl" && "w-full py-4"}
-        bg-orange-500 rounded-md items-center justify-center `}
+        ${size === "sm" && "w-1/4 py-2"}
+        ${size === "default" && "w-1/2 py-3"}
+        ${size === "lg" && "w-3/4 py-4"}
+        ${size === "xl" && "w-full py-4"}
+         rounded-md items-center justify-center `}
 			{...rest}
 		/>
 	);
