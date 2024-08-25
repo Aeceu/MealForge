@@ -9,51 +9,47 @@ import StyledPressable from "@/components/StyledPressable";
 const index = () => {
 	const { colorScheme } = useColorScheme();
 
+	const gradientColor =
+		colorScheme === "light" ? ["#BBA78D", "#ead9bf"] : ["#171310", "#201c1b"];
+
+	const logoImage =
+		colorScheme === "dark"
+			? require("@/assets/images/logo-sm.png")
+			: require("@/assets/images/dark-logo-sm.png");
+
 	return (
-		<SafeAreaView className="relative w-full h-full bg-dark-shade">
+		<SafeAreaView className="relative w-full h-full bg-light-shade dark:bg-dark-shade">
 			<View className="items-center justify-between">
 				<LinearGradient
 					start={{ x: 0.2, y: 0.4 }}
-					// colors={["#171310", "#00FFFF"]}
-					colors={
-						colorScheme === "light"
-							? ["#BBA78D", "#ead9bf"]
-							: ["#171310", "#201c1b"]
-					}
+					colors={gradientColor}
 					className="absolute top-0 left-0 h-full w-full"
 				/>
 				<View className="absolute -bottom-[10%] -right-[25%] w-[300] h-[300] rounded-full bg-light-shade dark:bg-dark-shade" />
 
 				{/* Main Container */}
-				<View className="h-full w-full items-center justify-between p-8">
+				<View className="h-full w-full items-center justify-between p-4">
 					<View className="flex-row items-center justify-end w-full">
 						<ThemeButton />
 					</View>
 					<View className="gap-4">
-						{colorScheme === "dark" ? (
-							<Image
-								source={require("@/assets/images/logo-sm.png")}
-								className=" self-center"
-							/>
-						) : (
-							<Image
-								source={require("@/assets/images/dark-logo-sm.png")}
-								className=" self-center"
-							/>
-						)}
+						<Image source={logoImage} className=" self-center" />
 						<StyledText
 							type="title"
 							fontStyle="Makeba"
-							className="text-center tracking-widest font-[Makeba]">
+							className="text-center tracking-widest font-makeba">
 							Your AI-Powered Recipe Crafting Companion.
 						</StyledText>
 					</View>
 
-					<StyledPressable type="xl" onPress={() => window.alert("😊")}>
+					<StyledPressable
+						size="xl"
+						className="bg-orange-500"
+						onPress={() => window.alert("😊")}>
 						<StyledText
 							selectable={false}
-							className="text-white"
-							type="subtitle">
+							className="text-white text-xl "
+							type="bold">
 							Get Started
 						</StyledText>
 					</StyledPressable>
