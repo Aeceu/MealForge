@@ -9,11 +9,22 @@ module.exports = {
 	theme: {
 		extend: {
 			colors: {
-				"dark-shade": "#151210",
-				"light-shade": "#BBA78D",
-				"gray-shade": "#0a7ea4",
+				"main": "#B25A1C",
+
+				dark: {
+					DEFAULT: "#151210",
+					"light": "#201D1C",
+				},
+
+				light: {
+					DEFAULT: "#FFEDD5",
+					"dark": "#BBA78D",
+				},
+
+				"gray": "#0a7ea4",
 			},
 			fontFamily: {
+				chunk: ["Chunk", "sans-serif"],
 				pthin: ["Poppins-Thin", "sans-serif"],
 				pextralight: ["Poppins-ExtraLight", "sans-serif"],
 				plight: ["Poppins-Light", "sans-serif"],
