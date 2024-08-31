@@ -26,50 +26,50 @@ const index = () => {
 			/>
 			<SafeAreaView className="relative w-full h-full">
 				{/* <SafeAreaView className="relative w-full h-full bg-light dark:bg-dark"> */}
-				<View className="items-center justify-between">
-					<View className="absolute -bottom-[15%] -right-[30%] w-[300] h-[300] rounded-full bg-light-dark dark:bg-dark" />
+				<View className="absolute -bottom-[15%] -right-[30%] w-[300] h-[300] rounded-full bg-light-dark dark:bg-dark" />
 
-					{/* Main Container */}
-					<View className="items-center justify-between w-full h-full p-8 pt-6">
+				{/* Main Container */}
+				<View className="items-center justify-between w-full h-full p-8 pt-6">
 
-						<View className="flex-row items-center justify-end w-full">
-							<ThemeButton />
-						</View>
-
-						<View className="flex-1 w-full h-full pt-3">
-							<Image source={logoImage} className="self-center h-[20%]" resizeMode="contain" />
-
-							<View className="absolute justify-center flex-1 w-full h-full">
-								<StyledText
-									type="light"
-									fontStyle="default"
-									className="text-center"
-								>
-									Your AI-Powered
-								</StyledText>
-								<StyledText
-									type="light"
-									fontStyle="default"
-									className="text-center"
-								>
-									Recipe Crafting Companion.
-								</StyledText>
-							</View>
-						</View>
-
-						<StyledPressable
-							size="xl"
-							className="bg-main"
-							onPress={() => window.alert("😊")}>
-							<StyledText
-								selectable={false}
-								className="text-xl text-[#FFEDD5]"
-								fontStyle="Chunk"
-								type="bold">
-								Get Started
-							</StyledText>
-						</StyledPressable>
+					<View className="items-end justify-center w-full">
+						<ThemeButton />
 					</View>
+
+					<View className="flex-1 w-full h-full pt-3">
+						<View className="items-center w-full h-1/2">
+							<Image source={logoImage} className="absolute w-[80%] max-w-[500px] h-[80%] max-h-[500px] top-[30%]" resizeMode="contain" />
+						</View>
+
+						<View className="justify-center flex-1 w-full h-full">
+							<StyledText
+								type="light"
+								fontStyle="default"
+								className="text-center"
+							>
+								Your AI-Powered
+							</StyledText>
+							<StyledText
+								type="light"
+								fontStyle="default"
+								className="text-center"
+							>
+								Recipe Crafting Companion.
+							</StyledText>
+						</View>
+					</View>
+
+					<StyledPressable
+						size="xl"
+						className="bg-main"
+						onPress={() => window.alert("😊")}>
+						<StyledText
+							selectable={false}
+							className="text-xl text-[#FFEDD5]"
+							fontStyle="Chunk"
+							type="bold">
+							Get Started
+						</StyledText>
+					</StyledPressable>
 				</View>
 			</SafeAreaView>
 		</>
