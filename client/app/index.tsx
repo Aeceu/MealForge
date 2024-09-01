@@ -27,6 +27,8 @@ const index = () => {
 			<SafeAreaView className="relative w-full h-full">
 				{/* <SafeAreaView className="relative w-full h-full bg-light dark:bg-dark"> */}
 				<View className="absolute -bottom-[15%] -right-[30%] w-[300] h-[300] rounded-full bg-light-dark dark:bg-dark" />
+				{/* <View className="absolute -bottom-[15%] -left-[30%] w-[300] h-[300] rounded-full bg-light-dark dark:bg-dark" /> */}
+				{/* <View className="absolute -top-[15%] -right-[30%] w-[300] h-[300] rounded-full bg-light-dark dark:bg-dark-light" /> */}
 
 				{/* Main Container */}
 				<View className="items-center justify-between w-full h-full p-8 pt-6">
