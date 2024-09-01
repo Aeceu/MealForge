@@ -10,52 +10,71 @@ const index = () => {
 	const { colorScheme } = useColorScheme();
 
 	const gradientColor =
-		colorScheme === "light" ? ["#BBA78D", "#ead9bf"] : ["#171310", "#201c1b"];
+		colorScheme === "light" ? ["#BBA78D", "#FFEDD5"] : ["#151210", "#201D1C"];
 
 	const logoImage =
 		colorScheme === "dark"
-			? require("@/assets/images/logo-sm.png")
-			: require("@/assets/images/dark-logo-sm.png");
+			? require("@/assets/images/logo-light.png")
+			: require("@/assets/images/logo-dark.png");
 
 	return (
-		<SafeAreaView className="relative w-full h-full bg-light-shade dark:bg-dark-shade">
-			<View className="items-center justify-between">
-				<LinearGradient
-					start={{ x: 0.2, y: 0.4 }}
-					colors={gradientColor}
-					className="absolute top-0 left-0 h-full w-full"
-				/>
-				<View className="absolute -bottom-[10%] -right-[25%] w-[300] h-[300] rounded-full bg-light-shade dark:bg-dark-shade" />
+		<>
+			<LinearGradient
+				start={{ x: 0.9, y: 0.1 }}
+				colors={gradientColor}
+				className="absolute top-0 left-0 w-full h-full"
+			/>
+			<SafeAreaView className="relative w-full h-full">
+				{/* <SafeAreaView className="relative w-full h-full bg-light dark:bg-dark"> */}
+				<View className="absolute -bottom-[15%] -right-[30%] w-[300] h-[300] rounded-full bg-light-dark dark:bg-dark" />
+				{/* <View className="absolute -bottom-[15%] -left-[30%] w-[300] h-[300] rounded-full bg-light-dark dark:bg-dark" /> */}
+				{/* <View className="absolute -top-[15%] -right-[30%] w-[300] h-[300] rounded-full bg-light-dark dark:bg-dark-light" /> */}
 
 				{/* Main Container */}
-				<View className="h-full w-full items-center justify-between p-4">
-					<View className="flex-row items-center justify-end w-full">
+				<View className="items-center justify-between w-full h-full p-8 pt-6">
+
+					<View className="items-end justify-center w-full">
 						<ThemeButton />
 					</View>
-					<View className="gap-4">
-						<Image source={logoImage} className=" self-center" />
-						<StyledText
-							type="title"
-							fontStyle="Makeba"
-							className="text-center tracking-widest font-makeba">
-							Your AI-Powered Recipe Crafting Companion.
-						</StyledText>
+
+					<View className="flex-1 w-full h-full pt-3">
+						<View className="items-center w-full h-1/2">
+							<Image source={logoImage} className="absolute w-[80%] max-w-[500px] h-[80%] max-h-[500px] top-[30%]" resizeMode="contain" />
+						</View>
+
+						<View className="justify-center flex-1 w-full h-full">
+							<StyledText
+								type="light"
+								fontStyle="default"
+								className="text-center"
+							>
+								Your AI-Powered
+							</StyledText>
+							<StyledText
+								type="light"
+								fontStyle="default"
+								className="text-center"
+							>
+								Recipe Crafting Companion.
+							</StyledText>
+						</View>
 					</View>
 
 					<StyledPressable
 						size="xl"
-						className="bg-orange-500"
+						className="bg-main"
 						onPress={() => window.alert("😊")}>
 						<StyledText
 							selectable={false}
-							className="text-white text-xl "
+							className="text-xl text-[#FFEDD5]"
+							fontStyle="Chunk"
 							type="bold">
 							Get Started
 						</StyledText>
 					</StyledPressable>
 				</View>
-			</View>
-		</SafeAreaView>
+			</SafeAreaView>
+		</>
 	);
 };
 export default index;

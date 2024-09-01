@@ -12,7 +12,7 @@ const StyledPressable = ({ size = "default", ...rest }: Props) => {
         ${size === "default" && "w-1/2 py-3"}
         ${size === "lg" && "w-3/4 py-4"}
         ${size === "xl" && "w-full py-4"}
-         rounded-md items-center justify-center `}
+        rounded-xl items-center w-full justify-center `}
 			{...rest}
 		/>
 	);
