@@ -12,6 +12,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
 	const [loaded, error] = useFonts({
+		"Chunk": require("../assets/fonts/ChunkFive-Regular.ttf"),
 		"Poppins-Black": require("../assets/fonts/Poppins-Black.ttf"),
 		"Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
 		"Poppins-ExtraBold": require("../assets/fonts/Poppins-ExtraBold.ttf"),
