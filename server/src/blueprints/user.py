@@ -23,7 +23,7 @@ def handleSignup():
 
     try:
         with engine.connect() as conn:
-            result = conn.execute(text("SELECT * FROM user WHERE email = :email"), {"email": email})
+            result = conn.execute(text("SELECT * FROM users WHERE email = :email"), {"email": email})
             user_exists = result.fetchone()
 
             if user_exists:
@@ -34,7 +34,7 @@ def handleSignup():
 
             query = text(
                 """
-                INSERT INTO user (id, firstName, lastName, email, password)
+                INSERT INTO users (id, firstName, lastName, email, password)
                 VALUES (:id, :firstName, :lastName, :email, :password)
                 """)
 
@@ -68,15 +68,15 @@ def handleLogin():
 
     try:
         with engine.connect() as conn:
-            result = conn.execute(text("SELECT * FROM user WHERE email = :email"), {"email": email})
+            result = conn.execute(text("SELECT * FROM users WHERE email = :email"), {"email": email})
             user_exists = result.fetchone()
             if user_exists is None:
                 return jsonify({"error": "Email is not registered!"}), 400
 
             user = {
                 "id": user_exists.id,
-                "firstName": user_exists.first_name,
-                "lastName": user_exists.last_name,
+                "firstName": user_exists.firstName,
+                "lastName": user_exists.lastName,
                 "email": user_exists.email,
                 "password": user_exists.password
             }
@@ -89,7 +89,7 @@ def handleLogin():
             accessToken = create_access_token(identity=user["id"], additional_claims=user)
             refreshToken = create_refresh_token(identity=user["id"], additional_claims=user)
 
-            conn.execute(text("UPDATE user SET refreshToken = :refreshToken WHERE id = :id"), {
+            conn.execute(text("UPDATE users SET refreshToken = :refreshToken WHERE id = :id"), {
                 "refreshToken": refreshToken,
                 "id": user['id']
             })
@@ -127,7 +127,7 @@ def show_cookie():
         return jsonify({"error": "Token missing!"}), 401
 
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM user WHERE refreshToken = :refreshToken"), {"refreshToken": refreshToken})
+        result = conn.execute(text("SELECT * FROM users WHERE refreshToken = :refreshToken"), {"refreshToken": refreshToken})
         foundUser = result.fetchone()
         if foundUser is None:
             return jsonify({"error": "User not found!"}), 403
@@ -141,7 +141,7 @@ def refresh():
         current_user_id = get_jwt_identity()
 
         with engine.connect() as conn:
-            result = conn.execute(text("SELECT * FROM user WHERE id = :id"), {"id": current_user_id})
+            result = conn.execute(text("SELECT * FROM users WHERE id = :id"), {"id": current_user_id})
             user_exists = result.fetchone()
 
             if user_exists is None:
