@@ -30,7 +30,7 @@ class User(Base):
   __tablename__ = 'users'
 
   id = Column(GUID(), primary_key=True, default=uuid.uuid4)
-  username = Column(String(250),unique=True,nullable=False)
+  userName = Column(String(250),unique=True,nullable=False)
   firstName = Column(String(250),unique=True,nullable=False)
   lastName = Column(String(250),unique=True,nullable=False)
   email = Column(String(120),unique=True,nullable=False)
