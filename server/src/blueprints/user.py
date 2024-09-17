@@ -13,15 +13,17 @@ from utils.database import engine
 user_bp = Blueprint("user", __name__)
 bcrypt = Bcrypt()
 
+# TODO: Create user account
 @user_bp.route("/signup", methods=["POST"])
 def handleSignup():
     data = request.get_json()
+    userName = data.get("userName")
     firstName = data.get("firstName")
     lastName = data.get("lastName")
     email = data.get("email")
     password = data.get("password")
 
-    if not firstName or not lastName or not email or not password:
+    if not userName or not firstName or not lastName or not email or not password:
         return jsonify({"error": "Missing field!"}), 400
 
     try:
@@ -37,13 +39,14 @@ def handleSignup():
 
             query = text(
                 """
-                INSERT INTO users (id, firstName, lastName, email, password)
-                VALUES (:id, :firstName, :lastName, :email, :password)
+                INSERT INTO users (id, userName, firstName, lastName, email, password)
+                VALUES (:id, :userName, :firstName, :lastName, :email, :password)
                 """
             )
 
             conn.execute(query, {
                 "id": userID,
+                "userName":userName,
                 "firstName": firstName,
                 "lastName": lastName,
                 "email": email,
@@ -60,6 +63,7 @@ def handleSignup():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# TODO: Login user's account
 @user_bp.route("/signin", methods=["POST"])
 def handleLogin():
     data = request.get_json()
@@ -78,6 +82,7 @@ def handleLogin():
 
             user = {
                 "id": user_exists.id,
+                "userName":user_exists.userName,
                 "firstName": user_exists.firstName,
                 "lastName": user_exists.lastName,
                 "email": user_exists.email,
@@ -106,6 +111,7 @@ def handleLogin():
                 "message": "User authenticated!",
                 "user": {
                     "id": user["id"],
+                    "userName":user["userName"],
                     "firstName": user["firstName"],
                     "lastName": user["lastName"],
                     "email": user["email"],
@@ -122,6 +128,7 @@ def handleLogin():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# TODO: Show's the cookies set
 @user_bp.route("/showcookie", methods=["GET"])
 def show_cookie():
     refreshToken = request.cookies.get("refresh_token_cookie")
@@ -135,6 +142,7 @@ def show_cookie():
             return jsonify({"error": "User not found!"}), 403
         return jsonify({"message": "User authenticated!", "refreshToken": foundUser.refreshToken}), 200
 
+# TODO: Refresh user's cookies
 @user_bp.route("/refresh", methods=["GET"])
 def refresh():
     try:
@@ -151,6 +159,7 @@ def refresh():
 
             user = {
                 "id": user_exists.id,
+                "userName":user_exists.userName,
                 "firstName": user_exists.firstName,
                 "lastName": user_exists.lastName,
                 "email": user_exists.email,
@@ -183,6 +192,7 @@ def refresh():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# TODO: logout user's account
 @user_bp.route("/logout", methods=["GET"])
 @jwt_required(locations=["cookies"])
 def logout():
@@ -202,3 +212,120 @@ def logout():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+# TODO: GET the specific user
+@user_bp.route("/user/<id>",methods=["GET"])
+def getUser(id):
+    userId = id
+
+    if not userId:
+        return jsonify({"error":"User id not found!"})
+
+    try:
+      with engine.connect() as conn:
+          result = conn.execute(text("SELECT * FROM users WHERE id = :userId"),{"userId":userId})
+
+          userExists = result.fetchone()
+          if not userExists:
+              return jsonify({"error":"user does not exists!"}),400
+
+          user = {
+              "id":userExists.id,
+              "userName":userExists.userName,
+              "firstName":userExists.firstName,
+              "lastName":userExists.lastName,
+              "email":userExists.email,
+          }
+      return jsonify(user) , 200
+
+    except Exception as e:
+        return jsonify({ "error":str(e) }) , 500
+
+# TODO: GET all users
+@user_bp.route("/users",methods=["GET"])
+def getUsers():
+    try:
+      with engine.connect() as conn:
+          results = conn.execute(text("SELECT * FROM users")).mappings()
+          users = [{
+               "id":x["id"],
+              "userName":x["userName"],
+              "firstName":x["firstName"],
+              "lastName":x["lastName"],
+              "email":x["email"],
+          } for x in results.fetchall()]
+      return jsonify(users),200
+    except Exception as e:
+        return jsonify({"error":str(e)}),500
+
+# TODO: DELETE specific user account
+@user_bp.route("/user/<id>",methods=["DELETE"])
+def deleteUser(id):
+    userId = id
+    try:
+      with engine.connect() as conn:
+          conn.execute(text("DELETE FROM users WHERE id = :id"),{"id":userId})
+          conn.commit()
+          return jsonify({"message":"User's account deleted successfully!"}),200
+    except Exception as e:
+          return jsonify({"error":str(e)}),500
+
+# TODO: UPDATE user information
+@user_bp.route("/user/<id>",methods=["POST"])
+def updateUser(id):
+    data = request.get_json()
+    userName = data.get("userName")
+    firstName = data.get("firstName")
+    lastName = data.get("lastName")
+    email = data.get("email")
+    userId = id
+
+    if not userId:
+        return jsonify({"error":"UserId missing!"}),400
+
+    if not userName or not firstName or not lastName or not email:
+        return jsonify({"error": "Missing field!"}), 400
+
+
+    try:
+        with engine.connect() as conn:
+            conn.execute(text(
+                """
+                UPDATE users SET
+                userName = :userName,
+                firstName = :firstName,
+                lastName = :lastName,
+                email = :email
+                WHERE id = :userId
+                """
+            ),{
+                "userName":data.get("userName"),
+                "firstName":data.get("firstName"),
+                "lastName":data.get("lastName"),
+                "email":data.get("email"),
+                "userId":userId
+            })
+            conn.commit()
+            return jsonify({
+                "message":"User updated successfully!"
+            }),200
+    except Exception as e:
+        return jsonify({"error":str(e)}),500
+
+# TODO: Search user via username / email / firstname / lastName
+
+# TODO: follow / unfollow a user
+
+# TODO: Change user's password
+
+# TODO: Get all the follower
+
+# TODO: add profile picture
+
+# TODO: change profile picture
+
+# TODO: add / update user's prefrerence
+
+# TODO: ewan na
+
+# TODO: update yung user's model to the latest (add followers, preference and more)
