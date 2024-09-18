@@ -5,20 +5,22 @@ import { LinearGradient } from "expo-linear-gradient";
 import StyledText from "@/components/StyledText";
 import ThemeButton from "@/components/ThemeButton";
 import StyledPressable from "@/components/StyledPressable";
+import { router } from "expo-router";
+import { useThemeColors } from "../constants/constants";
+import { StatusBar } from "expo-status-bar";
 
 const index = () => {
+	const { gradientColor, logoImage } = useThemeColors();
 	const { colorScheme } = useColorScheme();
-
-	const gradientColor =
-		colorScheme === "light" ? ["#BBA78D", "#FFEDD5"] : ["#151210", "#201D1C"];
-
-	const logoImage =
-		colorScheme === "dark"
-			? require("@/assets/images/logo-light.png")
-			: require("@/assets/images/logo-dark.png");
 
 	return (
 		<>
+			{colorScheme === "dark" ?
+				<StatusBar style="light"></StatusBar>
+				:
+				<StatusBar style="dark"></StatusBar>
+
+			}
 			<LinearGradient
 				start={{ x: 0.9, y: 0.1 }}
 				colors={gradientColor}
@@ -26,9 +28,18 @@ const index = () => {
 			/>
 			<SafeAreaView className="relative w-full h-full">
 				{/* <SafeAreaView className="relative w-full h-full bg-light dark:bg-dark"> */}
+
+				{/* lower right */}
 				<View className="absolute -bottom-[15%] -right-[30%] w-[300] h-[300] rounded-full bg-light-dark dark:bg-dark" />
+
+				{/* lower left */}
 				{/* <View className="absolute -bottom-[15%] -left-[30%] w-[300] h-[300] rounded-full bg-light-dark dark:bg-dark" /> */}
-				{/* <View className="absolute -top-[15%] -right-[30%] w-[300] h-[300] rounded-full bg-light-dark dark:bg-dark-light" /> */}
+
+				{/* upper right */}
+				{/* <View className="absolute -top-[15%] -right-[30%] w-[300] h-[300] rounded-full bg-light-dark dark:bg-dark" /> */}
+
+				{/* upper left */}
+				{/* <View className="absolute -top-[15%] -left-[30%] w-[300] h-[300] rounded-full bg-light-dark dark:bg-dark" /> */}
 
 				{/* Main Container */}
 				<View className="items-center justify-between w-full h-full p-8 pt-6">
@@ -37,21 +48,21 @@ const index = () => {
 						<ThemeButton />
 					</View>
 
-					<View className="flex-1 w-full h-full pt-3">
-						<View className="items-center w-full h-1/2">
-							<Image source={logoImage} className="absolute w-[80%] max-w-[500px] h-[80%] max-h-[500px] top-[30%]" resizeMode="contain" />
+					<View className="flex-1 w-full h-full">
+						<View className="items-center justify-end w-full h-1/2">
+							<Image source={logoImage} className="absolute w-[80%] max-w-[500px] h-[80%] max-h-[500px]" resizeMode="contain" />
 						</View>
 
-						<View className="justify-center flex-1 w-full h-full">
+						<View className="justify-center flex-1 w-full h-full pb-10">
 							<StyledText
-								type="light"
+								type="subheading"
 								fontStyle="default"
 								className="text-center"
 							>
 								Your AI-Powered
 							</StyledText>
 							<StyledText
-								type="light"
+								type="subheading"
 								fontStyle="default"
 								className="text-center"
 							>
@@ -63,12 +74,11 @@ const index = () => {
 					<StyledPressable
 						size="xl"
 						className="bg-main"
-						onPress={() => window.alert("😊")}>
+						onPress={() => router.push('/(auth)/register')}>
 						<StyledText
 							selectable={false}
-							className="text-xl text-[#FFEDD5]"
 							fontStyle="Chunk"
-							type="bold">
+							type="button">
 							Get Started
 						</StyledText>
 					</StyledPressable>

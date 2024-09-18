@@ -2,9 +2,9 @@ import { useColorScheme } from "nativewind";
 import { Text, type TextProps } from "react-native";
 
 type Props = TextProps & {
-	type?: "default" | "title" | "subtitle" | "link" | "semibold" | "bold" | "light";
-	fontStyle?: "default" | "light" | "Makeba" | "Chunk";
-};
+	type?: "default" | "title" | "subtitle" | "link" | "button" | "paragraph" | "heading-1" | "heading-2" | "heading-3" | "subheading" | "label";
+	fontStyle?: "default" | "light" | "Makeba" | "Chunk" | "ChunkP";
+}
 
 const StyledText = ({
 	type = "default",
@@ -17,18 +17,30 @@ const StyledText = ({
 			className={` 
 				${colorScheme === "light" ? "text-dark" : "text-light"}
 
+
 				${fontStyle === "default" && "font-pregular"}
+
 				${fontStyle === "Makeba" && "font-makeba"}
 				${fontStyle === "Chunk" && "font-chunk"}
+				${fontStyle === "ChunkP" && "font-chunkp"}
 				${fontStyle === "light" && "font-plight"}
 
-				${type === "default" && "text-[16px] leading-6"}
-				${type === "light" && "text-[16px] leading-6"}
-				${type === "semibold" && "text-[16px] leading-6"}
-				${type === "bold" && "text-[16px] leading-6"}
-				${type === "title" && "text-[32px] leading-8"}
-				${type === "subtitle" && "text-[20px]"}
-				${type === "link" && "text-[16px] leading-[30px] text-gray"}
+
+				${type === "default" && "text-base "}
+
+				${type === "title" && "text-5xl "}
+				${type === "subtitle" && "text-2xl"}
+
+				${type === "button" && "text-xl text-light"}
+				${type === "link" && "text-base text-main underline"}
+				
+				${type === "heading-1" && "text-4xl"}
+				${type === "heading-2" && "text-3xl"}
+				${type === "heading-3" && "text-2xl"}
+				${type === "subheading" && "text-base"} 
+				
+				${type === "paragraph" && "text-base"}
+				${type === "label" && "text-sm"}
 
 				`}
 			{...rest}
