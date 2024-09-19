@@ -5,24 +5,24 @@ module.exports = {
 		"./components/**/*.{js,jsx,ts,tsx}",
 		"./hooks/**/*.{js,jsx,ts,tsx}",
 		"./redux/**/*.{js,jsx,ts,tsx}",
+		"./utils/**/*.{js,jsx,ts,tsx}",
 	],
 	theme: {
 		extend: {
 			colors: {
-				"main": "#B25A1C",
+				main: "#B25A1C",
 
 				dark: {
 					DEFAULT: "#151210",
-					"light": "#201D1C",
+					light: "#201D1C",
 				},
 
 				light: {
 					DEFAULT: "#FFEDD5",
-					"dark": "#BBA78D",
+					dark: "#BBA78D",
 				},
 
-				"gray": "#3A3A3A",
-
+				gray: "#3A3A3A",
 			},
 			fontFamily: {
 				chunk: ["Chunk", "sans-serif"],

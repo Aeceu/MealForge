@@ -55,7 +55,7 @@ def handleSignup():
 
             conn.commit()
 
-            return jsonify({"message": "User registered successfully!"}), 201
+            return jsonify({"message": "User registered successfully!"}), 200
 
     except IntegrityError:
         return jsonify({"error": "There's an error in database handling!"}), 409
@@ -67,6 +67,7 @@ def handleSignup():
 @user_bp.route("/signin", methods=["POST"])
 def handleLogin():
     data = request.get_json()
+    print(data)
     email = data.get("email")
     password = data.get("password")
 
