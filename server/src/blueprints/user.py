@@ -67,6 +67,7 @@ def handleSignup():
 @user_bp.route("/signin", methods=["POST"])
 def handleLogin():
     data = request.get_json()
+    print(data)
     email = data.get("email")
     password = data.get("password")
 
