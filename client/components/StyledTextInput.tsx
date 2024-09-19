@@ -12,7 +12,13 @@ import { useThemeColors } from "@/constants/constants";
 import { useColorScheme } from "nativewind";
 
 type Props = TextProps & {
-	title?: "default" | "Email" | "Password" | "Username";
+	title?:
+		| "default"
+		| "Email"
+		| "Password"
+		| "Username"
+		| "Firstname"
+		| "Lastname";
 	handleTextChange?: any;
 	value: string;
 	error?: string;

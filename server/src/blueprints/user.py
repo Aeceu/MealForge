@@ -55,7 +55,7 @@ def handleSignup():
 
             conn.commit()
 
-            return jsonify({"message": "User registered successfully!"}), 201
+            return jsonify({"message": "User registered successfully!"}), 200
 
     except IntegrityError:
         return jsonify({"error": "There's an error in database handling!"}), 409
