@@ -9,8 +9,13 @@ import { router } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { TUserSignup, UserSignupSchema } from "@/utils/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
+import { handleSignup } from "@/redux/actions/userActions";
 
 const Register = () => {
+	const dispatch = useDispatch<AppDispatch>();
+	const { status } = useSelector((state: RootState) => state.user);
 	const { gradientColor, logoImage } = useThemeColors();
 
 	const {
@@ -23,8 +28,11 @@ const Register = () => {
 	});
 
 	const onSubmit = async (data: TUserSignup) => {
-		Alert.alert("SUCCESS");
-		reset();
+		dispatch(handleSignup(data)).then((res) => {
+			reset();
+			Alert.alert(res.payload.message);
+			router.push("/(auth)/login");
+		});
 	};
 
 	return (
@@ -64,20 +72,55 @@ const Register = () => {
 						</StyledText>
 
 						<View className="flex-1">
+							{/* Username Input */}
 							<View className="w-full pt-8">
 								<Controller
 									control={control}
-									name="username"
+									name="userName"
 									render={({ field: { onChange, onBlur, value } }) => (
 										<StyledTextInput
 											className="w-full"
 											title="Username"
 											handleTextChange={onChange}
 											value={value}
-											error={errors.username?.message}
+											error={errors.userName?.message}
 										/>
 									)}
 								/>
+							</View>
+
+							{/* Name Inputs */}
+							<View className="w-full flex-row gap-2 pt-4">
+								<View className="flex-1">
+									<Controller
+										control={control}
+										name="firstName"
+										render={({ field: { onChange, onBlur, value } }) => (
+											<StyledTextInput
+												className="w-full"
+												title="Firstname"
+												handleTextChange={onChange}
+												value={value}
+												error={errors.firstName?.message}
+											/>
+										)}
+									/>
+								</View>
+								<View className="flex-1">
+									<Controller
+										control={control}
+										name="lastName"
+										render={({ field: { onChange, onBlur, value } }) => (
+											<StyledTextInput
+												className="w-full"
+												title="Lastname"
+												handleTextChange={onChange}
+												value={value}
+												error={errors.lastName?.message}
+											/>
+										)}
+									/>
+								</View>
 							</View>
 
 							{/* Email Input */}
@@ -97,6 +140,7 @@ const Register = () => {
 								/>
 							</View>
 
+							{/* Password Input */}
 							<View className="w-full pt-4">
 								<Controller
 									control={control}
@@ -135,9 +179,12 @@ const Register = () => {
 						<StyledPressable
 							size="xl"
 							className="mt-4 bg-main"
+							disabled={status === "pending"}
 							onPress={handleSubmit(onSubmit)}>
 							<StyledText selectable={false} fontStyle="Chunk" type="button">
-								Create Account
+								{status === "pending"
+									? "Creating account..."
+									: "Create Account"}
 							</StyledText>
 						</StyledPressable>
 					</View>
