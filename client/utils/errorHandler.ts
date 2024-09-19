@@ -1,12 +1,24 @@
 import { AxiosError, isAxiosError } from "axios";
 
-export const handleError = (error: unknown) => {
+interface ErrorResponse {
+	error?: string; // The error message from the server
+}
+
+export const handleError = (error: unknown): string => {
 	if (isAxiosError(error)) {
-		const axiosError = error as AxiosError;
-		if (typeof axiosError.response?.data === "string") {
-			return axiosError.response?.data;
+		const axiosError = error as AxiosError<ErrorResponse>;
+		if (axiosError.response?.data) {
+			if (typeof axiosError.response?.data === "string") {
+				return axiosError.response?.data;
+			}
+
+			if (axiosError.response?.data.error) {
+				return axiosError.response?.data.error;
+			}
 		}
-		return axiosError;
+
+		return axiosError.message;
 	}
-	return error;
+
+	return "An unknown error occurred";
 };
