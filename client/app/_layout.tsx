@@ -1,7 +1,7 @@
 import { store } from "@/redux/store";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-
 import { useFonts } from "expo-font";
+
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
@@ -12,6 +12,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
 	const [loaded, error] = useFonts({
+		"Chunk-Print": require("../assets/fonts/Chunk-Five-Print.ttf"),
 		"Chunk": require("../assets/fonts/ChunkFive-Regular.ttf"),
 		"Poppins-Black": require("../assets/fonts/Poppins-Black.ttf"),
 		"Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),

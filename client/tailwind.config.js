@@ -21,10 +21,12 @@ module.exports = {
 					"dark": "#BBA78D",
 				},
 
-				"gray": "#0a7ea4",
+				"gray": "#3A3A3A",
+
 			},
 			fontFamily: {
 				chunk: ["Chunk", "sans-serif"],
+				chunkp: ["Chunk-Print", "sans-serif"],
 				pthin: ["Poppins-Thin", "sans-serif"],
 				pextralight: ["Poppins-ExtraLight", "sans-serif"],
 				plight: ["Poppins-Light", "sans-serif"],
