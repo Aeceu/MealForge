@@ -314,18 +314,26 @@ def updateUser(id):
 
 # TODO: Search user via username / email / firstname / lastName
 
+
 # TODO: follow / unfollow a user
+
 
 # TODO: Change user's password
 
+
 # TODO: Get all the follower
+
 
 # TODO: add profile picture
 
+
 # TODO: change profile picture
 
-# TODO: add / update user's prefrerence
+
+# TODO: add or update user's prefrerence
+
 
 # TODO: ewan na
+
 
 # TODO: update yung user's model to the latest (add followers, preference and more)
