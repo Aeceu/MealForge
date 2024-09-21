@@ -1,15 +1,12 @@
 import { styled, useColorScheme } from "nativewind";
-import StyledText from "./StyledText";
 import { Image, Pressable, View } from "react-native";
+import { icons } from "@/constants";
 
 const StyledPressable = styled(Pressable);
 const ThemeButton = () => {
 	const { colorScheme, toggleColorScheme } = useColorScheme();
 
-	const icon =
-		colorScheme === "dark"
-			? require("@/assets/icons/moon.png")
-			: require("@/assets/icons/sun.png");
+	const icon = colorScheme === "dark" ? icons.moon : icons.sun;
 
 	return (
 		<StyledPressable onPress={toggleColorScheme} className="">

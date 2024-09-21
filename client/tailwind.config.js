@@ -6,6 +6,7 @@ module.exports = {
 		"./hooks/**/*.{js,jsx,ts,tsx}",
 		"./redux/**/*.{js,jsx,ts,tsx}",
 		"./utils/**/*.{js,jsx,ts,tsx}",
+		"./constants/**/*.{js,jsx,ts,tsx}",
 	],
 	theme: {
 		extend: {

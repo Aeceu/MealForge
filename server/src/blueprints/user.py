@@ -201,13 +201,11 @@ def logout():
         user_id = get_jwt_identity()
 
         with engine.connect() as conn:
-            # Clear the refresh token in the database
             conn.execute(text("UPDATE users SET refreshToken = NULL WHERE id = :id"), {"id": user_id})
             conn.commit()
 
-        # Create response object and unset JWT cookies
         response = jsonify({"message": "Logged out successfully!"})
-        unset_jwt_cookies(response)  # This will remove access and refresh tokens from cookies
+        unset_jwt_cookies(response)
 
         return response, 200
 
