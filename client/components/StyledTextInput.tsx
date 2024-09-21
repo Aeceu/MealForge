@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import StyledText from "./StyledText";
-import { useThemeColors } from "@/constants/constants";
+import { useThemeColors } from "@/constants/colors";
 import { useColorScheme } from "nativewind";
 
 type Props = TextProps & {

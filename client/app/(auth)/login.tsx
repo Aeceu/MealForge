@@ -1,7 +1,7 @@
 import { View, SafeAreaView, Image, ScrollView, Alert } from "react-native";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { useThemeColors } from "../../constants/constants";
+import { useThemeColors } from "../../constants/colors";
 import StyledText from "@/components/StyledText";
 import StyledTextInput from "@/components/StyledTextInput";
 import StyledPressable from "@/components/StyledPressable";
@@ -22,7 +22,7 @@ const Login = () => {
 	const {
 		control,
 		handleSubmit,
-		formState: { errors, isSubmitting },
+		formState: { errors },
 		reset,
 	} = useForm<TUserLogin>({
 		resolver: zodResolver(UserLoginSchema),
@@ -33,7 +33,7 @@ const Login = () => {
 			reset();
 		});
 	};
-
+	console.log(user);
 	return (
 		<>
 			<LinearGradient
@@ -92,7 +92,7 @@ const Login = () => {
 								<Controller
 									control={control}
 									name="password"
-									render={({ field: { onChange, onBlur, value } }) => (
+									render={({ field: { onChange, value } }) => (
 										<StyledTextInput
 											className="w-full"
 											title="Password"
