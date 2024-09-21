@@ -1,7 +1,7 @@
 import { View, SafeAreaView, Image, ScrollView, Alert } from "react-native";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { useThemeColors } from "../../constants/constants";
+import { useThemeColors } from "../../constants/colors";
 import StyledText from "@/components/StyledText";
 import StyledTextInput from "@/components/StyledTextInput";
 import StyledPressable from "@/components/StyledPressable";
