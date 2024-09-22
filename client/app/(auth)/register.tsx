@@ -1,4 +1,12 @@
-import { View, SafeAreaView, Image, ScrollView, Alert } from "react-native";
+import {
+	View,
+	SafeAreaView,
+	Image,
+	ScrollView,
+	Alert,
+	Platform,
+	KeyboardAvoidingView,
+} from "react-native";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { useThemeColors } from "../../constants/colors";
@@ -36,7 +44,10 @@ const Register = () => {
 	};
 
 	return (
-		<>
+		<KeyboardAvoidingView
+			behavior={Platform.OS === "ios" ? "padding" : "height"}
+			style={{ flex: 1 }}
+			keyboardVerticalOffset={Platform.OS === "ios" ? 60 : -300}>
 			<LinearGradient
 				start={{ x: 0.9, y: 0.1 }}
 				colors={gradientColor}
@@ -190,7 +201,7 @@ const Register = () => {
 					</View>
 				</ScrollView>
 			</SafeAreaView>
-		</>
+		</KeyboardAvoidingView>
 	);
 };
 

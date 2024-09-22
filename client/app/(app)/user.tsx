@@ -1,3 +1,4 @@
+import Loading from "@/components/Loading";
 import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
 import ThemeButton from "@/components/ThemeButton";
@@ -23,8 +24,15 @@ const user = () => {
 		dispatch(handleRefresh());
 	};
 
+	if (pageLoading) {
+		return (
+			<View className="w-full h-full flex-col items-center justify-center bg-light dark:bg-dark">
+				<Loading />
+			</View>
+		);
+	}
 	return (
-		<View className="w-full h-full flex-col items-center justify-center">
+		<View className="w-full h-full flex-col items-center justify-center bg-light dark:bg-dark ">
 			<ThemeButton />
 			<StyledText type="title" fontStyle="Makeba" className="text-red-500">
 				HOME
@@ -40,18 +48,10 @@ const user = () => {
 				</StyledText>
 			</StyledPressable>
 			<View className="flex-col gap-2 p-2">
-				<StyledText type="label" className="text-black">
-					ID : {user?.id}
-				</StyledText>
-				<StyledText type="label" className="text-black">
-					USERNAME : {user?.userName}
-				</StyledText>
-				<StyledText type="label" className="text-black">
-					EMAIL : {user?.email}
-				</StyledText>
-				<StyledText type="label" className="text-black">
-					ACCESSTOKEN : {accessToken}
-				</StyledText>
+				<StyledText type="label">ID : {user?.id}</StyledText>
+				<StyledText type="label">USERNAME : {user?.userName}</StyledText>
+				<StyledText type="label">EMAIL : {user?.email}</StyledText>
+				<StyledText type="label">ACCESSTOKEN : {accessToken}</StyledText>
 			</View>
 		</View>
 	);

@@ -1,5 +1,5 @@
 import { useColorScheme } from "nativewind";
-import { Image, Pressable, View } from "react-native";
+import { Image, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import StyledText from "@/components/StyledText";
@@ -39,19 +39,10 @@ const index = () => {
 				{/* <SafeAreaView className="relative w-full h-full bg-light dark:bg-dark"> */}
 
 				{/* lower right */}
-				<View className="absolute -bottom-[15%] -right-[30%] w-[300] h-[300] rounded-full bg-light-dark dark:bg-dark" />
-
-				{/* lower left */}
-				{/* <View className="absolute -bottom-[15%] -left-[30%] w-[300] h-[300] rounded-full bg-light-dark dark:bg-dark" /> */}
-
-				{/* upper right */}
-				{/* <View className="absolute -top-[15%] -right-[30%] w-[300] h-[300] rounded-full bg-light-dark dark:bg-dark" /> */}
-
-				{/* upper left */}
-				{/* <View className="absolute -top-[15%] -left-[30%] w-[300] h-[300] rounded-full bg-light-dark dark:bg-dark" /> */}
+				<View className="absolute -bottom-[15%] -left-[30%] w-[300] h-[300] rounded-full bg-light-dark dark:bg-dark" />
 
 				{/* Main Container */}
-				<View className="items-center justify-between w-full h-full p-8 pt-6">
+				<View className="items-center justify-between w-full h-full p-8 pt-6 ">
 					<View className="items-end justify-center w-full">
 						<ThemeButton />
 					</View>
