@@ -20,7 +20,7 @@ export const useThemeColors = () => {
 
 	const logoImage = colorScheme === "dark" ? icons.logo_light : icons.logo_dark;
 	const textColor = colorScheme === "light" ? colors.dark : colors.light;
-	const backgroundColor = colorScheme === "dark" ? colors.dark : colors.light;
+	const tabColor = colorScheme === "dark" ? colors.darkLight : colors.light;
 	const inActiveColor = colorScheme === "light" ? colors.dark : colors.light;
 	const statusColor = colorScheme === "light" ? colors.dark : colors.light;
 	const placeholderColor =
@@ -32,7 +32,7 @@ export const useThemeColors = () => {
 		logoImage,
 		textColor,
 		statusColor,
-		backgroundColor,
+		tabColor,
 		placeholderColor,
 	};
 };

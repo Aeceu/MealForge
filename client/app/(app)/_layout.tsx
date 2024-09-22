@@ -1,11 +1,11 @@
-import React from "react";
-import { Redirect, Tabs } from "expo-router";
+import React, { useEffect } from "react";
+import { Redirect, router, Tabs } from "expo-router";
 import { View, Image, Text, ImageProps } from "react-native";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import StyledText from "@/components/StyledText";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
 import { useThemeColors } from "@/constants/colors";
 import { icons } from "@/constants";
+import { handleRefresh } from "@/redux/actions/userActions";
 
 type TabIconProps = {
 	icon: ImageProps;
@@ -16,7 +16,6 @@ type TabIconProps = {
 
 const TabIcon: React.FC<TabIconProps> = ({ icon, color, name, focused }) => {
 	return (
-		// <View className={`flex-col items-center justify-center `}>
 		<View
 			className={`flex-col items-center justify-center   ${
 				focused && "text-red-500"
@@ -37,20 +36,24 @@ const TabIcon: React.FC<TabIconProps> = ({ icon, color, name, focused }) => {
 };
 
 const AppLayout = () => {
-	const { accessToken, user, pageLoading } = useSelector(
+	const { accessToken, user, pageLoading, error } = useSelector(
 		(state: RootState) => state.user
 	);
-	const { textColor, inActiveColor, backgroundColor } = useThemeColors();
+	const dispatch = useDispatch<AppDispatch>();
+	const { textColor, inActiveColor, tabColor } = useThemeColors();
 
-	if (pageLoading) {
-		return (
-			<View className="w-full h-full flex-col items-center justify-center">
-				<StyledText type="title" fontStyle="Makeba" className="text-red-500">
-					LOADING....
-				</StyledText>
-			</View>
-		);
-	}
+	useEffect(() => {
+		const verifyRefreshToken = async () => {
+			try {
+				dispatch(handleRefresh());
+			} catch (axiosError) {
+				console.log(axiosError);
+				console.log(error);
+				router.push("/(auth)/login");
+			}
+		};
+		!user || (!accessToken && verifyRefreshToken);
+	}, []);
 
 	if (!user && !accessToken && !pageLoading) {
 		console.log("Redirect");
@@ -65,8 +68,8 @@ const AppLayout = () => {
 					tabBarInactiveTintColor: inActiveColor,
 					tabBarShowLabel: false,
 					tabBarStyle: {
-						backgroundColor: backgroundColor,
-						borderTopColor: backgroundColor,
+						backgroundColor: tabColor,
+						borderTopColor: tabColor,
 						borderTopWidth: 1,
 						height: 84,
 					},
