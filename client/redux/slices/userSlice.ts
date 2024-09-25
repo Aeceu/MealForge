@@ -1,10 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-	handleLogin,
-	handleLogout,
-	handleRefresh,
-	handleSignup,
-} from "../actions/userActions";
+import { getUser } from "../actions/userActions";
 
 type TInitialState = {
 	user: {
@@ -14,7 +9,6 @@ type TInitialState = {
 		userName: string;
 		email: string;
 	} | null;
-	accessToken: string | null;
 	status: "idle" | "pending" | "completed" | "failed";
 	pageLoading: boolean;
 	error: any | null;
@@ -22,7 +16,6 @@ type TInitialState = {
 
 const initialState: TInitialState = {
 	user: null,
-	accessToken: null,
 	status: "idle",
 	pageLoading: false,
 	error: null,
@@ -38,55 +31,16 @@ const userSlice = createSlice({
 	},
 	extraReducers: (builder) => {
 		builder
-			.addCase(handleLogin.pending, (state) => {
-				state.status = "pending";
-				state.error = null;
-			})
-			.addCase(handleLogin.fulfilled, (state, action) => {
-				state.user = action.payload.user;
-				state.accessToken = action.payload.accessToken;
-				state.status = "completed";
-				state.error = null;
-			})
-			.addCase(handleLogin.rejected, (state, action) => {
-				state.status = "failed";
-				state.error = action.payload as string;
-			})
-			.addCase(handleSignup.pending, (state) => {
-				state.status = "pending";
-			})
-			.addCase(handleSignup.fulfilled, (state, action) => {
-				state.status = "completed";
-			})
-			.addCase(handleSignup.rejected, (state, action) => {
-				state.status = "failed";
-				state.error = action.payload as string;
-			})
-			.addCase(handleRefresh.pending, (state, action) => {
+			.addCase(getUser.pending, (state, action) => {
 				state.pageLoading = true;
 			})
-			.addCase(handleRefresh.fulfilled, (state, action) => {
-				state.user = action.payload.user;
-				state.accessToken = action.payload.accessToken;
+			.addCase(getUser.fulfilled, (state, action) => {
 				state.pageLoading = false;
-				state.error = null;
+				state.user = action.payload;
 			})
-			.addCase(handleRefresh.rejected, (state, action) => {
+			.addCase(getUser.rejected, (state, action) => {
 				state.pageLoading = false;
-				state.error = action.payload as string;
-			})
-			.addCase(handleLogout.pending, (state, action) => {
-				state.status = "pending";
-			})
-			.addCase(handleLogout.fulfilled, (state, action) => {
-				state.user = null;
-				state.accessToken = null;
-				state.status = "completed";
-				state.error = null;
-			})
-			.addCase(handleLogout.rejected, (state, action) => {
-				state.status = "failed";
-				state.error = action.payload as string;
+				state.error = action.error.message;
 			});
 	},
 });

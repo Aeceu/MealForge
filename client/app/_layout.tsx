@@ -1,4 +1,4 @@
-import { store } from "@/redux/store";
+import { persistor, store } from "@/redux/store";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 
@@ -7,6 +7,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -47,9 +48,11 @@ export default function RootLayout() {
 function RootLayoutNav() {
 	return (
 		<Provider store={store}>
-			<Stack screenOptions={{ headerShown: false }}>
-				<Stack.Screen name="index" options={{ headerShown: false }} />
-			</Stack>
+			<PersistGate loading={null} persistor={persistor}>
+				<Stack screenOptions={{ headerShown: false }}>
+					<Stack.Screen name="index" options={{ headerShown: false }} />
+				</Stack>
+			</PersistGate>
 		</Provider>
 	);
 }
