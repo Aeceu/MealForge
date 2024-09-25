@@ -1,4 +1,12 @@
-import { View, SafeAreaView, Image, ScrollView, Alert } from "react-native";
+import {
+	View,
+	SafeAreaView,
+	Image,
+	ScrollView,
+	Alert,
+	KeyboardAvoidingView,
+	Platform,
+} from "react-native";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { useThemeColors } from "../../constants/colors";
@@ -12,12 +20,17 @@ import { UserLoginSchema } from "@/utils/types/user";
 import { TUserLogin } from "../../utils/types/user";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { handleLogin } from "@/redux/actions/userActions";
+import { handleLogin } from "@/redux/actions/authActions";
 
 const Login = () => {
 	const dispatch = useDispatch<AppDispatch>();
-	const user = useSelector((state: RootState) => state.user);
+	const user = useSelector((state: RootState) => state.auth);
 	const { gradientColor, logoImage } = useThemeColors();
+	const onSubmit = async (data: TUserLogin) => {
+		dispatch(handleLogin(data)).finally(() => {
+			reset();
+		});
+	};
 
 	const {
 		control,
@@ -28,22 +41,19 @@ const Login = () => {
 		resolver: zodResolver(UserLoginSchema),
 	});
 
-	const onSubmit = async (data: TUserLogin) => {
-		dispatch(handleLogin(data)).finally(() => {
-			reset();
-		});
-	};
-	console.log(user);
 	return (
-		<>
+		<KeyboardAvoidingView
+			behavior={Platform.OS === "ios" ? "padding" : "height"}
+			style={{ flex: 1 }}
+			keyboardVerticalOffset={Platform.OS === "ios" ? 60 : -300}>
 			<LinearGradient
 				start={{ x: 0.9, y: 0.1 }}
 				colors={gradientColor}
 				className="absolute top-0 left-0 w-full h-full"
 			/>
 			<SafeAreaView className="relative w-full h-full">
-				{/* lower left */}
-				<View className="absolute -bottom-[15%] -left-[30%] w-[300] h-[300] rounded-full bg-light-dark dark:bg-dark" />
+				{/* Circle stays at the bottom */}
+				<View className="absolute -bottom-[15%] -left-[30%] w-[300] h-[300] rounded-full bg-light-dark/100  dark:bg-dark" />
 
 				<ScrollView>
 					<View className="items-center flex-1 w-full max-h-full min-h-screen p-10 pb-4">
@@ -54,7 +64,6 @@ const Login = () => {
 								resizeMode="contain"
 							/>
 						</View>
-
 						<StyledText
 							type="heading-1"
 							fontStyle="ChunkP"
@@ -141,7 +150,7 @@ const Login = () => {
 					</View>
 				</ScrollView>
 			</SafeAreaView>
-		</>
+		</KeyboardAvoidingView>
 	);
 };
 

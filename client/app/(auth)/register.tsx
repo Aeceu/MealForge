@@ -1,4 +1,12 @@
-import { View, SafeAreaView, Image, ScrollView, Alert } from "react-native";
+import {
+	View,
+	SafeAreaView,
+	Image,
+	ScrollView,
+	Alert,
+	Platform,
+	KeyboardAvoidingView,
+} from "react-native";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { useThemeColors } from "../../constants/colors";
@@ -11,11 +19,11 @@ import { TUserSignup, UserSignupSchema } from "@/utils/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { handleSignup } from "@/redux/actions/userActions";
+import { handleSignup } from "@/redux/actions/authActions";
 
 const Register = () => {
 	const dispatch = useDispatch<AppDispatch>();
-	const { status } = useSelector((state: RootState) => state.user);
+	const { status } = useSelector((state: RootState) => state.auth);
 	const { gradientColor, logoImage } = useThemeColors();
 
 	const {
@@ -36,7 +44,10 @@ const Register = () => {
 	};
 
 	return (
-		<>
+		<KeyboardAvoidingView
+			behavior={Platform.OS === "ios" ? "padding" : "height"}
+			style={{ flex: 1 }}
+			keyboardVerticalOffset={Platform.OS === "ios" ? 60 : -300}>
 			<LinearGradient
 				start={{ x: 0.9, y: 0.1 }}
 				colors={gradientColor}
@@ -190,7 +201,7 @@ const Register = () => {
 					</View>
 				</ScrollView>
 			</SafeAreaView>
-		</>
+		</KeyboardAvoidingView>
 	);
 };
 
