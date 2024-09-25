@@ -19,11 +19,11 @@ import { TUserSignup, UserSignupSchema } from "@/utils/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { handleSignup } from "@/redux/actions/userActions";
+import { handleSignup } from "@/redux/actions/authActions";
 
 const Register = () => {
 	const dispatch = useDispatch<AppDispatch>();
-	const { status } = useSelector((state: RootState) => state.user);
+	const { status } = useSelector((state: RootState) => state.auth);
 	const { gradientColor, logoImage } = useThemeColors();
 
 	const {

@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useThemeColors } from "@/constants/colors";
 import { icons } from "@/constants";
-import { handleRefresh } from "@/redux/actions/userActions";
+import { handleRefresh } from "@/redux/actions/authActions";
+import { getUser } from "@/redux/actions/userActions";
 
 type TabIconProps = {
 	icon: ImageProps;
@@ -36,106 +37,96 @@ const TabIcon: React.FC<TabIconProps> = ({ icon, color, name, focused }) => {
 };
 
 const AppLayout = () => {
-	const { accessToken, user, pageLoading, error } = useSelector(
-		(state: RootState) => state.user
+	const { accessToken, refreshToken } = useSelector(
+		(state: RootState) => state.auth
 	);
+	const { user, pageLoading } = useSelector((state: RootState) => state.user);
 	const dispatch = useDispatch<AppDispatch>();
 	const { textColor, inActiveColor, tabColor } = useThemeColors();
 
 	useEffect(() => {
-		const verifyRefreshToken = async () => {
-			try {
-				dispatch(handleRefresh());
-			} catch (axiosError) {
-				console.log(axiosError);
-				console.log(error);
-				router.push("/(auth)/login");
-			}
-		};
-		!user || (!accessToken && verifyRefreshToken);
+		dispatch(getUser(accessToken));
 	}, []);
 
-	if (!user && !accessToken && !pageLoading) {
+	if (!user && !accessToken && !refreshToken && !pageLoading) {
 		console.log("Redirect");
 		return <Redirect href={"/(auth)/login"} />;
 	}
 
 	return (
-		<>
-			<Tabs
-				screenOptions={{
-					tabBarActiveTintColor: textColor,
-					tabBarInactiveTintColor: inActiveColor,
-					tabBarShowLabel: false,
-					tabBarStyle: {
-						backgroundColor: tabColor,
-						borderTopColor: tabColor,
-						borderTopWidth: 1,
-						height: 84,
-					},
-				}}>
-				<Tabs.Screen
-					name="home"
-					options={{
-						title: "Home",
-						headerShown: false,
-						tabBarIcon: ({ color, focused }) => (
-							<TabIcon
-								icon={icons.home_light}
-								color={color}
-								name="Home"
-								focused={focused}
-							/>
-						),
-					}}
-				/>
-				<Tabs.Screen
-					name="drawer"
-					options={{
-						title: "Drawer",
-						headerShown: false,
-						tabBarIcon: ({ color, focused }) => (
-							<TabIcon
-								icon={icons.drawer_light}
-								color={color}
-								name="Drawer"
-								focused={focused}
-							/>
-						),
-					}}
-				/>
-				<Tabs.Screen
-					name="bookmark"
-					options={{
-						title: "Bookmark",
-						headerShown: false,
-						tabBarIcon: ({ color, focused }) => (
-							<TabIcon
-								icon={icons.bookmark_light}
-								color={color}
-								name="Bookmark"
-								focused={focused}
-							/>
-						),
-					}}
-				/>
-				<Tabs.Screen
-					name="user"
-					options={{
-						title: "User",
-						headerShown: false,
-						tabBarIcon: ({ color, focused }) => (
-							<TabIcon
-								icon={icons.user_light}
-								color={color}
-								name="User"
-								focused={focused}
-							/>
-						),
-					}}
-				/>
-			</Tabs>
-		</>
+		<Tabs
+			screenOptions={{
+				tabBarActiveTintColor: textColor,
+				tabBarInactiveTintColor: inActiveColor,
+				tabBarShowLabel: false,
+				tabBarStyle: {
+					backgroundColor: tabColor,
+					borderTopColor: tabColor,
+					borderTopWidth: 1,
+					height: 84,
+				},
+			}}>
+			<Tabs.Screen
+				name="home"
+				options={{
+					title: "Home",
+					headerShown: false,
+					tabBarIcon: ({ color, focused }) => (
+						<TabIcon
+							icon={icons.home_light}
+							color={color}
+							name="Home"
+							focused={focused}
+						/>
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name="drawer"
+				options={{
+					title: "Drawer",
+					headerShown: false,
+					tabBarIcon: ({ color, focused }) => (
+						<TabIcon
+							icon={icons.drawer_light}
+							color={color}
+							name="Drawer"
+							focused={focused}
+						/>
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name="bookmark"
+				options={{
+					title: "Bookmark",
+					headerShown: false,
+					tabBarIcon: ({ color, focused }) => (
+						<TabIcon
+							icon={icons.bookmark_light}
+							color={color}
+							name="Bookmark"
+							focused={focused}
+						/>
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name="user"
+				options={{
+					title: "User",
+					headerShown: false,
+					tabBarIcon: ({ color, focused }) => (
+						<TabIcon
+							icon={icons.user_light}
+							color={color}
+							name="User"
+							focused={focused}
+						/>
+					),
+				}}
+			/>
+		</Tabs>
 	);
 };
 

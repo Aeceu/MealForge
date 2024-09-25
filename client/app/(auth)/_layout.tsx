@@ -4,11 +4,13 @@ import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 
 const AuthLayout = () => {
-	const { accessToken, user, pageLoading } = useSelector(
-		(state: RootState) => state.user
+	const { user, pageLoading } = useSelector((state: RootState) => state.user);
+	const { refreshToken, accessToken } = useSelector(
+		(state: RootState) => state.auth
 	);
-
-	if (user && accessToken && !pageLoading) {
+	if (refreshToken && accessToken) {
+		console.log(refreshToken);
+		console.log(accessToken);
 		console.log("Redirect");
 		return <Redirect href={"/(app)/home"} />;
 	}
