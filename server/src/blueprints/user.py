@@ -1,14 +1,15 @@
 from flask import Blueprint, jsonify, make_response, request
 from flask_jwt_extended import (
     create_access_token, create_refresh_token, jwt_required,
-    get_jwt_identity, set_access_cookies, set_refresh_cookies, unset_jwt_cookies
+    get_jwt_identity,
 )
 from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
 from sqlalchemy import text
 import uuid
 from utils.database import engine
-
+import jwt
+import os
 
 user_bp = Blueprint("user", __name__)
 bcrypt = Bcrypt()
@@ -117,12 +118,10 @@ def handleLogin():
                     "lastName": user["lastName"],
                     "email": user["email"],
                 },
-                "accessToken": accessToken
+                "accessToken": accessToken,
+                "refreshToken": refreshToken,
             })
 
-            # Set cookies with access and refresh tokens
-            set_access_cookies(response, accessToken, max_age=86400)
-            set_refresh_cookies(response, refreshToken, max_age=86400)
 
             return response, 200
 
@@ -145,100 +144,109 @@ def show_cookie():
 
 # TODO: Refresh user's cookies
 @user_bp.route("/refresh", methods=["GET"])
+@jwt_required()
 def refresh():
     try:
-        refreshToken = request.cookies.get("refresh_token_cookie")
-        if not refreshToken:
+        current_user_id = get_jwt_identity()
+        print("USERID:", current_user_id)
+        if not current_user_id:
             return jsonify({"error": "Token missing!"}), 401
 
         with engine.connect() as conn:
-            result = conn.execute(text("SELECT * FROM users WHERE refreshToken = :refreshToken"), {"refreshToken": refreshToken})
-            user_exists = result.fetchone()
+          result = conn.execute(text("SELECT * FROM users WHERE id = :userId"), {"userId": current_user_id})
 
-            if user_exists is None:
+          user_exists = result.fetchone()
+
+          if user_exists is None:
                 return jsonify({"error": "User not found!"}), 403
 
-            user = {
-                "id": user_exists.id,
-                "userName":user_exists.userName,
-                "firstName": user_exists.firstName,
-                "lastName": user_exists.lastName,
-                "email": user_exists.email,
-            }
+          user = {
+              "id": user_exists.id,
+              "userName":user_exists.userName,
+              "firstName": user_exists.firstName,
+              "lastName": user_exists.lastName,
+              "email": user_exists.email,
+          }
 
             # Generate new access token and refresh token
-            new_access_token = create_access_token(identity=user["id"], additional_claims=user)
-            new_refresh_token = create_refresh_token(identity=user["id"], additional_claims=user)
+          new_access_token = create_access_token(identity=user["id"], additional_claims=user)
+          new_refresh_token = create_refresh_token(identity=user["id"], additional_claims=user)
 
-            # Update refresh token in the database
-            conn.execute(text("UPDATE users SET refreshToken = :new_refresh_token WHERE id = :id"), {
-                "new_refresh_token": new_refresh_token,
-                "id": user['id']
-            })
-            conn.commit()
+          # Update refresh token in the database
+          conn.execute(text("UPDATE users SET refreshToken = :new_refresh_token WHERE id = :id"), {
+              "new_refresh_token": new_refresh_token,
+              "id": user['id']
+          })
+          conn.commit()
 
-            # Update the cookie with the new refresh token
-            secure_cookie = True if request.is_secure else False
-            response = jsonify({
-                "accessToken": new_access_token,
-                "refreshToken": new_refresh_token,
-                "user": user,
-                "message": "Token refreshed successfully!"
-            })
-            set_access_cookies(response, new_access_token)
-            set_refresh_cookies(response, new_refresh_token)
+          # Update the cookie with the new refresh token
+          secure_cookie = True if request.is_secure else False
+          response = jsonify({
+              "accessToken": new_access_token,
+              "refreshToken": new_refresh_token,
+              "user":user,
+              "message": "Token refreshed successfully!"
+          })
 
-            return response, 200
+          return response, 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 # TODO: logout user's account
 @user_bp.route("/logout", methods=["GET"])
-@jwt_required(locations=["cookies"])
+@jwt_required()
 def logout():
+    user_id = get_jwt_identity()
+    print(user_id)
     try:
-        user_id = get_jwt_identity()
-
         with engine.connect() as conn:
             conn.execute(text("UPDATE users SET refreshToken = NULL WHERE id = :id"), {"id": user_id})
             conn.commit()
 
         response = jsonify({"message": "Logged out successfully!"})
-        unset_jwt_cookies(response)
-
         return response, 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
 # TODO: GET the specific user
-@user_bp.route("/user/<id>",methods=["GET"])
-def getUser(id):
-    userId = id
-
-    if not userId:
-        return jsonify({"error":"User id not found!"})
-
+@user_bp.route("/user",methods=["GET"])
+@jwt_required()
+def getUser():
+    current_user_id = get_jwt_identity()
+    print(current_user_id)
+    if not current_user_id:
+        print("TOKEN IS MISSING")
+        return jsonify({"error":"Token is missing"}),401
     try:
-      with engine.connect() as conn:
-          result = conn.execute(text("SELECT * FROM users WHERE id = :userId"),{"userId":userId})
+          with engine.connect() as conn:
+            result = conn.execute(text("SELECT * FROM users WHERE id = :userId"), {"userId": current_user_id})
+            userExists = result.fetchone()
+            if not userExists:
+                return jsonify({"error": "User does not exist!"}), 400
 
-          userExists = result.fetchone()
-          if not userExists:
-              return jsonify({"error":"user does not exists!"}),400
+            user = {
+                "id": userExists.id,
+                "userName": userExists.userName,
+                "firstName": userExists.firstName,
+                "lastName": userExists.lastName,
+                "email": userExists.email,
+            }
 
-          user = {
-              "id":userExists.id,
-              "userName":userExists.userName,
-              "firstName":userExists.firstName,
-              "lastName":userExists.lastName,
-              "email":userExists.email,
-          }
-      return jsonify(user) , 200
+          return jsonify(user), 200
 
+    except jwt.ExpiredSignatureError:
+        print("Token has expired")
+        return jsonify({"error": "Token has expired!"}), 401
+    except jwt.InvalidTokenError:
+        print("Invalid Token")
+        return jsonify({"error": "Invalid token!"}), 401
     except Exception as e:
-        return jsonify({ "error":str(e) }) , 500
+        print(str(e))
+        return jsonify({"error": str(e)}), 500
+
 
 # TODO: GET all users
 @user_bp.route("/users",methods=["GET"])

@@ -20,12 +20,17 @@ import { UserLoginSchema } from "@/utils/types/user";
 import { TUserLogin } from "../../utils/types/user";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { handleLogin } from "@/redux/actions/userActions";
+import { handleLogin } from "@/redux/actions/authActions";
 
 const Login = () => {
 	const dispatch = useDispatch<AppDispatch>();
-	const user = useSelector((state: RootState) => state.user);
+	const user = useSelector((state: RootState) => state.auth);
 	const { gradientColor, logoImage } = useThemeColors();
+	const onSubmit = async (data: TUserLogin) => {
+		dispatch(handleLogin(data)).finally(() => {
+			reset();
+		});
+	};
 
 	const {
 		control,
@@ -35,12 +40,6 @@ const Login = () => {
 	} = useForm<TUserLogin>({
 		resolver: zodResolver(UserLoginSchema),
 	});
-
-	const onSubmit = async (data: TUserLogin) => {
-		dispatch(handleLogin(data)).finally(() => {
-			reset();
-		});
-	};
 
 	return (
 		<KeyboardAvoidingView
@@ -65,7 +64,6 @@ const Login = () => {
 								resizeMode="contain"
 							/>
 						</View>
-
 						<StyledText
 							type="heading-1"
 							fontStyle="ChunkP"

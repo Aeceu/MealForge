@@ -14,11 +14,12 @@ import { useSelector } from "react-redux";
 const index = () => {
 	const { gradientColor, logoImage } = useThemeColors();
 	const { colorScheme } = useColorScheme();
-	const { accessToken, user, pageLoading } = useSelector(
-		(state: RootState) => state.user
+	const { refreshToken, accessToken } = useSelector(
+		(state: RootState) => state.auth
 	);
+	const { user } = useSelector((state: RootState) => state.user);
 
-	if (user && accessToken && !pageLoading) {
+	if (refreshToken && accessToken) {
 		console.log("Redirect");
 		return <Redirect href={"/(app)/home"} />;
 	}
@@ -46,7 +47,10 @@ const index = () => {
 					<View className="items-end justify-center w-full">
 						<ThemeButton />
 					</View>
-
+					<StyledPressable
+						onPress={() => console.log(user, accessToken, refreshToken)}>
+						<StyledText>Click me for data</StyledText>
+					</StyledPressable>
 					<View className="flex-1 w-full h-full">
 						<View className="items-center justify-end w-full h-1/2">
 							<Image
