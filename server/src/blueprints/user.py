@@ -9,7 +9,6 @@ from sqlalchemy import text
 import uuid
 from utils.database import engine
 import jwt
-import os
 
 user_bp = Blueprint("user", __name__)
 bcrypt = Bcrypt()
@@ -148,7 +147,6 @@ def show_cookie():
 def refresh():
     try:
         current_user_id = get_jwt_identity()
-        print("USERID:", current_user_id)
         if not current_user_id:
             return jsonify({"error": "Token missing!"}), 401
 
