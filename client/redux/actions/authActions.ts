@@ -9,10 +9,11 @@ import { setUser } from "../slices/userSlice";
 
 export const handleLogin = createAsyncThunk(
 	"auth/handleLogin",
-	async (data: TUserLogin, { rejectWithValue }) => {
+	async (data: TUserLogin, { rejectWithValue, dispatch }) => {
 		try {
 			const res = await axios.post("/signin", data);
 			console.log(Alert.alert("SUCCESS"));
+			dispatch(setUser(res.data.user));
 			router.navigate("/(app)/home");
 			return res.data;
 		} catch (error) {
@@ -62,9 +63,6 @@ export const handleLogout = createAsyncThunk(
 				},
 			});
 			console.log(res.data);
-
-			await AsyncStorage.removeItem("accessToken");
-			await AsyncStorage.removeItem("refreshTOken");
 
 			return res.data;
 		} catch (error) {

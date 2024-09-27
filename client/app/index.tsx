@@ -8,18 +8,19 @@ import StyledPressable from "@/components/StyledPressable";
 import { Redirect, router } from "expo-router";
 import { useThemeColors } from "../constants/colors";
 import { StatusBar } from "expo-status-bar";
-import { RootState } from "@/redux/store";
-import { useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { getUser } from "@/redux/actions/userActions";
 
 const index = () => {
 	const { gradientColor, logoImage } = useThemeColors();
 	const { colorScheme } = useColorScheme();
-	const { refreshToken, accessToken } = useSelector(
+	const { refreshToken, accessToken, pageLoading } = useSelector(
 		(state: RootState) => state.auth
 	);
-	const { user } = useSelector((state: RootState) => state.user);
+	const dispatch = useDispatch<AppDispatch>();
 
-	if (refreshToken && accessToken) {
+	if (refreshToken && accessToken && !pageLoading) {
 		console.log("Redirect");
 		return <Redirect href={"/(app)/home"} />;
 	}
@@ -47,8 +48,7 @@ const index = () => {
 					<View className="items-end justify-center w-full">
 						<ThemeButton />
 					</View>
-					<StyledPressable
-						onPress={() => console.log(user, accessToken, refreshToken)}>
+					<StyledPressable onPress={() => dispatch(getUser(accessToken))}>
 						<StyledText>Click me for data</StyledText>
 					</StyledPressable>
 					<View className="flex-1 w-full h-full">
