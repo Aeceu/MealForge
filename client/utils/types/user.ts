@@ -19,3 +19,82 @@ export const UserSignupSchema = z.object({
 
 export type TUserLogin = z.infer<typeof UserLoginSchema>;
 export type TUserSignup = z.infer<typeof UserSignupSchema>;
+
+export type TUser = {
+	id: string;
+	firstName: string;
+	lastName: string;
+	userName: string;
+	email: string;
+
+	ingredients: {
+		id: string;
+		name: string;
+		measurements: string;
+		expirationDate: string | null;
+		date_added: string | null;
+	}[];
+
+	recipes: {
+		id: string;
+		name: string;
+		instruction: string;
+		type_of_cuisine: string;
+		nutrient_counts: string;
+		serve_hot_or_cold: string;
+		cooking_time: string;
+		benefits: string | null;
+		serve_for: string;
+		user_id: string;
+		ingredients: string;
+	}[];
+
+	recipePosts: {
+		id: string;
+		recipe_id: string;
+		user_id: string;
+		posted_at: string;
+		recipe: {
+			id: string;
+			name: string;
+			instruction: string;
+			type_of_cuisine: string;
+			nutrient_counts: string;
+			serve_hot_or_cold: string;
+			cooking_time: string;
+			benefits: string | null;
+			serve_for: string;
+			user_id: string;
+			ingredients: string;
+		};
+		likes: TLike[];
+	}[];
+} | null;
+
+export type TLike = {
+	id: string;
+	user_id: string;
+	post_id: string;
+	liked_at: string;
+};
+
+export type TRecipePost = {
+	id: string;
+	recipe_id: string;
+	user_id: string;
+	posted_at: string;
+	recipe: {
+		id: string;
+		name: string;
+		instruction: string;
+		type_of_cuisine: string;
+		nutrient_counts: string;
+		serve_hot_or_cold: string;
+		cooking_time: string;
+		benefits: string | null;
+		serve_for: string;
+		user_id: string;
+		ingredients: string;
+	};
+	likes: TLike[];
+};

@@ -1,14 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getUser } from "../actions/userActions";
+import { TUser } from "@/utils/types/user";
 
 type TInitialState = {
-	user: {
-		id: string;
-		firstName: string;
-		lastName: string;
-		userName: string;
-		email: string;
-	} | null;
+	user: TUser | null;
 	status: "idle" | "pending" | "completed" | "failed";
 	pageLoading: boolean;
 	error: any | null;

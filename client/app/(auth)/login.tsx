@@ -26,6 +26,7 @@ const Login = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const user = useSelector((state: RootState) => state.auth);
 	const { gradientColor, logoImage } = useThemeColors();
+
 	const onSubmit = async (data: TUserLogin) => {
 		dispatch(handleLogin(data)).finally(() => {
 			reset();

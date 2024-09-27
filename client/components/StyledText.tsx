@@ -2,9 +2,21 @@ import { useColorScheme } from "nativewind";
 import { Text, type TextProps } from "react-native";
 
 type Props = TextProps & {
-	type?: "default" | "title" | "subtitle" | "link" | "button" | "paragraph" | "heading-1" | "heading-2" | "heading-3" | "subheading" | "label";
+	type?:
+		| "default"
+		| "title"
+		| "subtitle"
+		| "link"
+		| "button"
+		| "paragraph"
+		| "heading-1"
+		| "heading-2"
+		| "heading-3"
+		| "heading-4"
+		| "subheading"
+		| "label";
 	fontStyle?: "default" | "light" | "Makeba" | "Chunk" | "ChunkP";
-}
+};
 
 const StyledText = ({
 	type = "default",
@@ -14,7 +26,7 @@ const StyledText = ({
 	const { colorScheme } = useColorScheme();
 	return (
 		<Text
-			className={` 
+			className={`
 				${colorScheme === "light" ? "text-dark" : "text-light"}
 
 
@@ -28,17 +40,18 @@ const StyledText = ({
 
 				${type === "default" && "text-base "}
 
-				${type === "title" && "text-5xl "}
 				${type === "subtitle" && "text-2xl"}
 
 				${type === "button" && "text-xl text-light"}
 				${type === "link" && "text-base text-main underline"}
-				
+
+				${type === "title" && "text-5xl "}
 				${type === "heading-1" && "text-4xl"}
 				${type === "heading-2" && "text-3xl"}
 				${type === "heading-3" && "text-2xl"}
-				${type === "subheading" && "text-base"} 
-				
+				${type === "heading-4" && "text-xl"}
+				${type === "subheading" && "text-base"}
+
 				${type === "paragraph" && "text-base"}
 				${type === "label" && "text-sm"}
 

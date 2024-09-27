@@ -1,7 +1,6 @@
 import { View, ScrollView, RefreshControl } from "react-native";
 import React from "react";
 import StyledText from "@/components/StyledText";
-import ThemeButton from "@/components/ThemeButton";
 import Loading from "@/components/Loading";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
@@ -21,14 +20,14 @@ const Home = () => {
 
 	return (
 		<ScrollView
+			contentContainerStyle={{ flexGrow: 1 }}
+			className=" bg-light dark:bg-dark"
 			refreshControl={
 				<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
 			}>
-			<View className="w-full h-screen flex-col items-center justify-center bg-light dark:bg-dark">
-				<ThemeButton />
-
-				<StyledText type="title" fontStyle="Makeba" className="text-red-500">
-					HOME
+			<View className="w-full h-full flex-col p-4">
+				<StyledText type="heading-3" className="w-full text-center mt-8 p-6">
+					My Home
 				</StyledText>
 			</View>
 		</ScrollView>

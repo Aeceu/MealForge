@@ -13,7 +13,6 @@ recipe_ingredients_table = Table(
     Column('ingredient_id', GUID(), ForeignKey('ingredients.id'), primary_key=True)
 )
 
-# User Model
 class User(Base):
     __tablename__ = 'users'
 
@@ -26,6 +25,8 @@ class User(Base):
     refreshToken = Column(Text, nullable=True)
 
     recipes = relationship('Recipe', back_populates='user', cascade="all, delete-orphan")
+    recipe_posts = relationship('RecipePost', back_populates='user', cascade="all, delete-orphan")
+    likes = relationship('Like', back_populates='user', cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<User(firstName={self.firstName}, lastName={self.lastName}, email={self.email})>"
@@ -63,6 +64,39 @@ class Recipe(Base):
     user = relationship('User', back_populates='recipes')
 
     ingredients = relationship('Ingredient', secondary=recipe_ingredients_table, backref='recipes')
+    recipe_posts = relationship('RecipePost', back_populates='recipe', cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<Recipe(name={self.name}, type_of_cuisine={self.type_of_cuisine}, serve_for={self.serve_for})>"
+
+class Like(Base):
+    __tablename__ = 'likes'
+
+    id = Column(GUID(), primary_key=True, default=uuid.uuid4)
+    user_id = Column(GUID(), ForeignKey('users.id'), nullable=False)
+    post_id = Column(GUID(), ForeignKey('recipe_posts.id'), nullable=False)
+    liked_at = Column(String(20), nullable=False, default=func.current_date())
+
+    # Relationships
+    user = relationship("User", back_populates="likes")
+    recipe_post = relationship("RecipePost", back_populates="likes")
+
+    def __repr__(self):
+        return f"<Like(user_id={self.user_id}, post_id={self.post_id}, liked_at={self.liked_at})>"
+
+# RecipePost model that allows users to post recipes and track likes
+class RecipePost(Base):
+    __tablename__ = 'recipe_posts'
+
+    id = Column(GUID(), primary_key=True, default=uuid.uuid4)
+    user_id = Column(GUID(), ForeignKey('users.id'), nullable=False)
+    recipe_id = Column(GUID(), ForeignKey('recipes.id'), nullable=False)
+    posted_at = Column(String(20), nullable=False, default=func.current_date())
+
+    # Relationships
+    user = relationship("User", back_populates="recipe_posts")
+    recipe = relationship("Recipe", back_populates="recipe_posts")
+    likes = relationship("Like", back_populates="recipe_post", cascade="all, delete-orphan")
+
+    def __repr__(self):
+        return f"<RecipePost(user_id={self.user_id}, recipe_id={self.recipe_id}, posted_at={self.posted_at})>"
