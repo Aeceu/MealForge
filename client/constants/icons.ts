@@ -8,8 +8,8 @@ import bookmark_light from "@/assets/icons/bookmark-light.png";
 import bookmark_dark from "@/assets/icons/bookmark-dark.png";
 import user_light from "@/assets/icons/user-light.png";
 import user_dark from "@/assets/icons/user-dark.png";
-import settings_light from "@/assets/icons/settings-light.png";
-import settings_dark from "@/assets/icons/settings-dark.png";
+import settingslightDark from "@/assets/icons/settings-light-dark.png";
+import settingsDarkLight from "@/assets/icons/settings-dark-light.png";
 import moon from "@/assets/icons/moon.png";
 import sun from "@/assets/icons/sun.png";
 import chevronRightLightDark from "@/assets/icons/chevron-right-light-dark.png";
@@ -21,6 +21,8 @@ import lockDarkLight from "@/assets/icons/lock-dark-light.png";
 import lockLightDark from "@/assets/icons/lock-light-dark.png";
 import moonLightDark from "@/assets/icons/moon-light-dark.png";
 import moonDarkLight from "@/assets/icons/moon-dark-light.png";
+import sunLightDark from "@/assets/icons/sun-light-dark.png";
+import sunDarkLight from "@/assets/icons/sun-dark-light.png";
 import userLightDark from "@/assets/icons/user-light-dark.png";
 import userDarkLight from "@/assets/icons/user-dark-light.png";
 
@@ -35,8 +37,8 @@ export default {
 	bookmark_dark,
 	user_light,
 	user_dark,
-	settings_light,
-	settings_dark,
+	settingslightDark,
+	settingsDarkLight,
 	moon,
 	sun,
 	chevronRightLightDark,
@@ -50,4 +52,6 @@ export default {
 	moonDarkLight,
 	userLightDark,
 	userDarkLight,
+	sunDarkLight,
+	sunLightDark,
 };

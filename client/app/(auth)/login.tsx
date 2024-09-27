@@ -79,9 +79,9 @@ const Login = () => {
 							Login to your account.
 						</StyledText>
 
-						<View className="flex-1">
+						<View className="flex-1 flex-col ">
 							{/* Email Input */}
-							<View className="w-full pt-8">
+							<View className="w-full  pt-8">
 								<Controller
 									control={control}
 									name="email"

@@ -9,7 +9,7 @@ const AuthLayout = () => {
 		(state: RootState) => state.auth
 	);
 	if (refreshToken && accessToken && !pageLoading) {
-		return <Redirect href={"/(app)/home"} />;
+		return <Redirect href={"/(tabs)/home"} />;
 	}
 	return (
 		<>

@@ -72,6 +72,8 @@ const authSlice = createSlice({
 				state.error = null;
 			})
 			.addCase(handleRefresh.rejected, (state, action) => {
+				state.accessToken = null;
+				state.refreshToken = null;
 				state.pageLoading = false;
 				state.error = action.payload as string;
 			})
@@ -85,6 +87,8 @@ const authSlice = createSlice({
 				state.error = null;
 			})
 			.addCase(handleLogout.rejected, (state, action) => {
+				state.accessToken = null;
+				state.refreshToken = null;
 				state.status = "failed";
 				state.error = action.payload as string;
 			});

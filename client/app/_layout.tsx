@@ -4,6 +4,7 @@ import { useFonts } from "expo-font";
 
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
+import { useColorScheme } from "nativewind";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import { Provider } from "react-redux";
@@ -27,7 +28,6 @@ export default function RootLayout() {
 		Makeba: require("../assets/fonts/Makeba.ttf"),
 		...FontAwesome.font,
 	});
-
 	useEffect(() => {
 		if (error) throw error;
 	}, [error]);
@@ -51,6 +51,7 @@ function RootLayoutNav() {
 			<PersistGate loading={null} persistor={persistor}>
 				<Stack screenOptions={{ headerShown: false }}>
 					<Stack.Screen name="index" options={{ headerShown: false }} />
+					<Stack.Screen name="(user_screen)" options={{ headerShown: false }} />
 				</Stack>
 			</PersistGate>
 		</Provider>

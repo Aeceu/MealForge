@@ -17,17 +17,17 @@ const TabIcon: React.FC<TabIconProps> = ({ icon, color, name, focused }) => {
 	return (
 		<View
 			className={`flex-col items-center justify-center   ${
-				focused && "text-red-500"
+				focused && "#f43f5e"
 			}`}>
 			<Image
 				source={icon}
 				resizeMode="contain"
-				tintColor={focused ? "#ef4444" : color}
+				tintColor={focused ? "#f43f5e" : color}
 				className="w-6 h-6"
 			/>
 			<Text
 				className={`${focused ? "font-psemibold" : "font-pregular "} text-xs`}
-				style={{ color: focused ? "#ef4444" : color }}>
+				style={{ color: focused ? "#f43f5e" : color }}>
 				{name}
 			</Text>
 		</View>
