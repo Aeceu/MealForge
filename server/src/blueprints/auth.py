@@ -146,7 +146,6 @@ def show_cookie():
 def refresh():
     try:
         current_user_id = get_jwt_identity()
-        print("USERID:", current_user_id)
         if not current_user_id:
             return jsonify({"error": "Token missing!"}), 401
 

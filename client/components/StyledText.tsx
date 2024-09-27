@@ -27,37 +27,30 @@ const StyledText = ({
 	return (
 		<Text
 			className={`
-				${colorScheme === "light" ? "text-dark" : "text-light"}
+        ${colorScheme === "light" ? "text-dark" : "text-light"}
 
+        ${fontStyle === "default" && "font-pregular"}
+        ${fontStyle === "Makeba" && "font-makeba"}
+        ${fontStyle === "Chunk" && "font-chunk"}
+        ${fontStyle === "ChunkP" && "font-chunkp"}
+        ${fontStyle === "light" && "font-plight"}
 
-				${fontStyle === "default" && "font-pregular"}
-
-				${fontStyle === "Makeba" && "font-makeba"}
-				${fontStyle === "Chunk" && "font-chunk"}
-				${fontStyle === "ChunkP" && "font-chunkp"}
-				${fontStyle === "light" && "font-plight"}
-
-
-				${type === "default" && "text-base "}
-
-				${type === "subtitle" && "text-2xl"}
-
-				${type === "button" && "text-xl text-light"}
-				${type === "link" && "text-base text-main underline"}
-
-				${type === "title" && "text-5xl "}
-				${type === "heading-1" && "text-4xl"}
-				${type === "heading-2" && "text-3xl"}
-				${type === "heading-3" && "text-2xl"}
-				${type === "heading-4" && "text-xl"}
-				${type === "subheading" && "text-base"}
-
-				${type === "paragraph" && "text-base"}
-				${type === "label" && "text-sm"}
-
-				`}
+        ${type === "default" && "text-base"}
+        ${type === "subtitle" && "text-2xl"}
+        ${type === "button" && "text-xl text-light"}
+        ${type === "link" && "text-base text-main underline"}
+        ${type === "title" && "text-5xl"}
+        ${type === "heading-1" && "text-4xl"}
+        ${type === "heading-2" && "text-3xl"}
+        ${type === "heading-3" && "text-2xl"}
+        ${type === "heading-4" && "text-xl"}
+        ${type === "subheading" && "text-base"}
+        ${type === "paragraph" && "text-base"}
+        ${type === "label" && "text-sm"}
+      `}
 			{...rest}
 		/>
 	);
 };
+
 export default StyledText;
