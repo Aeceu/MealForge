@@ -4,6 +4,8 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
 from blueprints.user import user_bp
+from blueprints.ingredients import ingredients_bp
+from blueprints.recipe import recipes_bp
 
 load_dotenv()
 app = Flask(__name__)
@@ -22,7 +24,8 @@ app.config['JWT_COOKIE_SAMESITE'] = 'None'
 app.config['JWT_COOKIE_CSRF_PROTECT'] = True
 
 app.register_blueprint(user_bp)
-# app.register_blueprint(ingredient_bp)
+app.register_blueprint(recipes_bp)
+app.register_blueprint(ingredients_bp)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=4200, debug=True)
