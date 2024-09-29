@@ -22,7 +22,7 @@ const index = () => {
 
 	if (refreshToken && accessToken && !pageLoading) {
 		console.log("Redirect");
-		return <Redirect href={"/(tabs)/user"} />;
+		return <Redirect href={"/(tabs)/home"} />;
 	}
 
 	return (
