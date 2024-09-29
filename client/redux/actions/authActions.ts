@@ -4,16 +4,17 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../api/axios";
 import { Alert } from "react-native";
 import { router } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setUser } from "../slices/userSlice";
+import { clearToken } from "../slices/authSlice";
 
 export const handleLogin = createAsyncThunk(
 	"auth/handleLogin",
-	async (data: TUserLogin, { rejectWithValue }) => {
+	async (data: TUserLogin, { rejectWithValue, dispatch }) => {
 		try {
 			const res = await axios.post("/signin", data);
 			console.log(Alert.alert("SUCCESS"));
-			router.navigate("/(app)/home");
+			dispatch(setUser(res.data.user));
+			router.push("/(tabs)/home");
 			return res.data;
 		} catch (error) {
 			const resError = handleError(error);
@@ -62,9 +63,6 @@ export const handleLogout = createAsyncThunk(
 				},
 			});
 			console.log(res.data);
-
-			await AsyncStorage.removeItem("accessToken");
-			await AsyncStorage.removeItem("refreshTOken");
 
 			return res.data;
 		} catch (error) {

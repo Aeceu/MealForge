@@ -1,12 +1,10 @@
-import React, { useEffect } from "react";
-import { Redirect, router, Tabs } from "expo-router";
+import React from "react";
+import { Redirect, Tabs } from "expo-router";
 import { View, Image, Text, ImageProps } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 import { useThemeColors } from "@/constants/colors";
 import { icons } from "@/constants";
-import { handleRefresh } from "@/redux/actions/authActions";
-import { getUser } from "@/redux/actions/userActions";
 
 type TabIconProps = {
 	icon: ImageProps;
@@ -19,17 +17,17 @@ const TabIcon: React.FC<TabIconProps> = ({ icon, color, name, focused }) => {
 	return (
 		<View
 			className={`flex-col items-center justify-center   ${
-				focused && "text-red-500"
+				focused && "#f97316"
 			}`}>
 			<Image
 				source={icon}
 				resizeMode="contain"
-				tintColor={focused ? "#ef4444" : color}
+				tintColor={focused ? "#f97316" : color}
 				className="w-6 h-6"
 			/>
 			<Text
 				className={`${focused ? "font-psemibold" : "font-pregular "} text-xs`}
-				style={{ color: focused ? "#ef4444" : color }}>
+				style={{ color: focused ? "#f97316" : color }}>
 				{name}
 			</Text>
 		</View>
@@ -37,22 +35,14 @@ const TabIcon: React.FC<TabIconProps> = ({ icon, color, name, focused }) => {
 };
 
 const AppLayout = () => {
-	const { accessToken, refreshToken } = useSelector(
+	const { accessToken, refreshToken, pageLoading } = useSelector(
 		(state: RootState) => state.auth
 	);
-	const { user, pageLoading } = useSelector((state: RootState) => state.user);
-	const dispatch = useDispatch<AppDispatch>();
 	const { textColor, inActiveColor, tabColor } = useThemeColors();
 
-	useEffect(() => {
-		dispatch(getUser(accessToken));
-	}, []);
-
-	if (!user && !accessToken && !refreshToken && !pageLoading) {
-		console.log("Redirect");
+	if (!accessToken && !refreshToken && !pageLoading) {
 		return <Redirect href={"/(auth)/login"} />;
 	}
-
 	return (
 		<Tabs
 			screenOptions={{

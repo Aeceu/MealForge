@@ -1,0 +1,104 @@
+import StyledPressable from "@/components/StyledPressable";
+import StyledText from "@/components/StyledText";
+import StyledTextInput from "@/components/StyledTextInput";
+import { icons } from "@/constants";
+import { changePassword } from "@/redux/actions/userActions";
+import { AppDispatch, RootState } from "@/redux/store";
+import { ChangePasswordSchema, TChangePassword } from "@/utils/types/user";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useColorScheme } from "nativewind";
+import { Controller, useForm } from "react-hook-form";
+import { Alert, Image, ScrollView, Text, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+
+const ChangePassword = () => {
+	const { user, status } = useSelector((state: RootState) => state.user);
+
+	const dispatch = useDispatch<AppDispatch>();
+	const {
+		control,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<TChangePassword>({
+		resolver: zodResolver(ChangePasswordSchema),
+	});
+
+	const onSubmit = async (data: TChangePassword) => {
+		if (!user) {
+			return Alert.alert("User not found!");
+		}
+
+		dispatch(
+			changePassword({
+				id: user.id,
+				currentPassword: data.currentPassword,
+				newPassword: data.newPassword,
+			})
+		);
+	};
+
+	return (
+		<ScrollView
+			contentContainerStyle={{ flexGrow: 1 }}
+			className="w-full h-full bg-light dark:bg-dark flex-col p-4">
+			<View className="flex-1">
+				<View className="w-full pt-8">
+					<Controller
+						control={control}
+						name="currentPassword"
+						render={({ field: { onChange, onBlur, value } }) => (
+							<StyledTextInput
+								className="w-full"
+								title="Current Password"
+								handleTextChange={onChange}
+								value={value}
+								error={errors.currentPassword?.message}
+							/>
+						)}
+					/>
+				</View>
+				<View className="w-full pt-8">
+					<Controller
+						control={control}
+						name="retypeCurrentPassword"
+						render={({ field: { onChange, onBlur, value } }) => (
+							<StyledTextInput
+								className="w-full"
+								title="Retype Current Password"
+								handleTextChange={onChange}
+								value={value}
+								error={errors.retypeCurrentPassword?.message}
+							/>
+						)}
+					/>
+				</View>
+				<View className="w-full pt-8">
+					<Controller
+						control={control}
+						name="newPassword"
+						render={({ field: { onChange, onBlur, value } }) => (
+							<StyledTextInput
+								className="w-full"
+								title="New Password"
+								handleTextChange={onChange}
+								value={value}
+								error={errors.newPassword?.message}
+							/>
+						)}
+					/>
+				</View>
+				<View className="w-full flex-row items-center justify-end mt-8">
+					<StyledPressable
+						disabled={status === "pending"}
+						onPress={handleSubmit(onSubmit)}
+						className="rounded-md bg-light-dark dark:bg-dark-light">
+						<StyledText type="subheading" className="text-emerald-500">
+							{status === "pending" ? "Updating..." : "Save changes"}
+						</StyledText>
+					</StyledPressable>
+				</View>
+			</View>
+		</ScrollView>
+	);
+};
+export default ChangePassword;
