@@ -1,4 +1,7 @@
 import Loading from "@/components/Loading";
+import General from "@/components/SettingsUI/General";
+import Preference from "@/components/SettingsUI/Preference";
+import SecurityPrivacy from "@/components/SettingsUI/SecurityPrivacy";
 import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
 import { icons, images } from "@/constants";
@@ -15,13 +18,6 @@ import {
 	View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { Href } from "expo-router";
-
-type GeneralItem = {
-	icon: ImageProps;
-	title: string;
-	href: Href<string | object>;
-};
 
 const Settings = () => {
 	const { colorScheme } = useColorScheme();
@@ -29,29 +25,6 @@ const Settings = () => {
 		(state: RootState) => state.auth
 	);
 	const dispatch = useDispatch<AppDispatch>();
-
-	const General: GeneralItem[] = [
-		{
-			icon: colorScheme === "dark" ? icons.editLightDark : icons.editDarkLight,
-			title: "Edit Information",
-			href: "/(user_screen)/EditInformation" as Href,
-		},
-		{
-			icon: colorScheme === "dark" ? icons.userLightDark : icons.userDarkLight,
-			title: "User Preferences",
-			href: "/(user_screen)/UserPreferences" as Href,
-		},
-		{
-			icon: colorScheme === "dark" ? icons.lockLightDark : icons.lockDarkLight,
-			title: "Change Password",
-			href: "/(user_screen)/Theme" as Href,
-		},
-		{
-			icon: colorScheme === "dark" ? icons.moonLightDark : icons.moonDarkLight,
-			title: "Theme",
-			href: "/(user_screen)/Theme" as Href,
-		},
-	];
 
 	const logout = () => {
 		dispatch(handleLogout(accessToken)).then((res) => {
@@ -67,57 +40,34 @@ const Settings = () => {
 	const onRefresh = async () => {
 		await dispatch(handleRefresh(accessToken));
 	};
-	// dispatch(clearToken());
 
 	if (pageLoading) return <Loading />;
 
 	return (
 		<ScrollView
 			contentContainerStyle={{ flexGrow: 1 }}
-			className=" bg-light dark:bg-dark"
+			className="w-full h-screen bg-light dark:bg-dark"
 			refreshControl={
 				<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
 			}>
-			<View className="w-full h-full flex-col px-4">
+			<View className="w-full h-full flex-col px-4 pb-4">
 				<StyledText type="heading-4" className="font-bold py-3  ">
 					General
 				</StyledText>
 
-				<View className="w-full h-max rounded-lg flex-col px-6 py-3 bg-light-dark dark:bg-dark-light">
-					{General.map((item, key) => (
-						<StyledPressable
-							onPress={() => router.push(item.href)}
-							key={key}
-							size="xl"
-							className={`flex-row items-center justify-between py-4 ${
-								key !== General.length - 1
-									? "border-b border-dark/30 dark:border-light/30"
-									: ""
-							}`}>
-							<View className="flex-row items-center">
-								<Image
-									source={item.icon}
-									resizeMode="contain"
-									className="w-6 h-6"
-								/>
-								<StyledText className="ml-3 text-base">{item.title}</StyledText>
-							</View>
-							<Image
-								source={
-									colorScheme === "dark"
-										? icons.chevronRightLightDark
-										: icons.chevronRightDarkLight
-								}
-								resizeMode="cover"
-								className="w-7 h-7"
-							/>
-						</StyledPressable>
-					))}
-				</View>
+				<General />
 
-				{/* <StyledText type="heading-4" className="font-bold py-3 ">
-        Support
-      </StyledText> */}
+				<StyledText type="heading-4" className="font-bold py-3  ">
+					UI Preferences
+				</StyledText>
+
+				<Preference />
+
+				<StyledText type="heading-4" className="font-bold py-3  ">
+					Privacy & Security
+				</StyledText>
+
+				<SecurityPrivacy />
 
 				<StyledPressable
 					onPress={logout}

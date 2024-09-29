@@ -28,8 +28,10 @@ const Login = () => {
 	const { gradientColor, logoImage } = useThemeColors();
 
 	const onSubmit = async (data: TUserLogin) => {
-		dispatch(handleLogin(data)).finally(() => {
-			reset();
+		dispatch(handleLogin(data)).then((res) => {
+			if (res.meta.requestStatus === "rejected") {
+				Alert.alert(res.payload);
+			}
 		});
 	};
 

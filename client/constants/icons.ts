@@ -25,6 +25,11 @@ import sunLightDark from "@/assets/icons/sun-light-dark.png";
 import sunDarkLight from "@/assets/icons/sun-dark-light.png";
 import userLightDark from "@/assets/icons/user-light-dark.png";
 import userDarkLight from "@/assets/icons/user-dark-light.png";
+import userDelete from "@/assets/icons/user-delete.png";
+import eyeDarkLight from "@/assets/icons/eye-dark-light.png";
+import eyeLightDark from "@/assets/icons/eye-light-dark.png";
+import eyeOffDarkLight from "@/assets/icons/eye-off-dark-light.png";
+import eyeOffLightDark from "@/assets/icons/eye-off-light-dark.png";
 
 export default {
 	logo_dark,
@@ -54,4 +59,9 @@ export default {
 	userDarkLight,
 	sunDarkLight,
 	sunLightDark,
+	userDelete,
+	eyeDarkLight,
+	eyeLightDark,
+	eyeOffDarkLight,
+	eyeOffLightDark,
 };

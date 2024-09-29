@@ -92,10 +92,10 @@ def updateUser(id):
     if not userName or not firstName or not lastName or not email:
         return jsonify({"error": "Missing field!"}), 400
 
-
+    print(data)
     try:
         with engine.connect() as conn:
-            conn.execute(text(
+             conn.execute(text(
                 """
                 UPDATE users SET
                 userName = :userName,
@@ -111,18 +111,57 @@ def updateUser(id):
                 "email":data.get("email"),
                 "userId":userId
             })
-            conn.commit()
-            return jsonify({
+             conn.commit()
+
+             return jsonify({
                 "message":"User updated successfully!"
-            }),200
+              }),200
     except Exception as e:
         return jsonify({"error":str(e)}),500
+
+# TODO: Change user's password
+@user_bp.route("/user/password/<id>",methods=["POST"])
+def changePassword(id):
+    data = request.get_json()
+    currentPassword = data.get("currentPassword")
+    newPassword = data.get("newPassword")
+    try:
+        with engine.connect() as conn:
+            result = conn.execute(text("SELECT * FROM users WHERE id = :id"),{
+                "id":id
+            })
+
+            user_exists = result.fetchone()
+            if user_exists is None:
+                return jsonify({"error":"User not found!"}), 400
+
+            user = {
+                "id": user_exists.id,
+                "userName":user_exists.userName,
+                "firstName": user_exists.firstName,
+                "lastName": user_exists.lastName,
+                "email": user_exists.email,
+                "password": user_exists.password
+            }
+
+            valid_password  = bcrypt.check_password_hash(user["password"],currentPassword)
+            hashPass = bcrypt.generate_password_hash(newPassword).decode('utf-8')
+            if not valid_password:
+                return jsonify({"error": "Password incorrect!"}), 400
+
+            conn.execute(text("UPDATE users SET password = :newPassword WHERE id = :id"),{
+                "newPassword":hashPass,
+                "id":user["id"]
+            })
+            conn.commit()
+            return jsonify({"message":"User's password updated successfully!"})
+    except Exception as e:
+        return jsonify({"error":str(e)}),500
+
 
 # TODO: Search user via username / email / firstname / lastName
 
 # TODO: follow / unfollow a user
-
-# TODO: Change user's password
 
 # TODO: Get all the follower
 

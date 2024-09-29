@@ -50,6 +50,28 @@ const AuthLayout = () => {
 						headerTintColor: colorScheme === "dark" ? "#FFEDD5" : "#151210",
 					}}
 				/>
+				<Stack.Screen
+					name="ChangePassword"
+					options={{
+						headerShown: true,
+						title: "Change Password",
+						headerStyle: {
+							backgroundColor: colorScheme === "dark" ? "#151210" : "#FFEDD5",
+						},
+						headerTintColor: colorScheme === "dark" ? "#FFEDD5" : "#151210",
+					}}
+				/>
+				<Stack.Screen
+					name="DeleteAccount"
+					options={{
+						headerShown: true,
+						title: "Account Deletion",
+						headerStyle: {
+							backgroundColor: colorScheme === "dark" ? "#151210" : "#FFEDD5",
+						},
+						headerTintColor: colorScheme === "dark" ? "#FFEDD5" : "#151210",
+					}}
+				/>
 			</Stack>
 		</>
 	);

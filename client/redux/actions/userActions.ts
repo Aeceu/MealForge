@@ -1,96 +1,9 @@
 import { handleError } from "@/utils/errorHandler";
-import { TUserLogin, TUserSignup } from "@/utils/types/user";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../api/axios";
 import { Alert } from "react-native";
+import { clearToken } from "../slices/authSlice";
 import { router } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { setUser } from "../slices/userSlice";
-
-// export const handleLogin = createAsyncThunk(
-// 	"auth/handleLogin",
-// 	async (data: TUserLogin, { rejectWithValue }) => {
-// 		try {
-// 			const res = await axios.post("/signin", data);
-// 			await AsyncStorage.setItem("refreshToken", res.data.refreshToken);
-// 			console.log(Alert.alert("SUCCESS"));
-// 			router.navigate("/(app)/home");
-// 			return res.data;
-// 		} catch (error) {
-// 			const resError = handleError(error);
-// 			console.log("resError:", resError);
-// 			return rejectWithValue(resError);
-// 		}
-// 	}
-// );
-
-// export const handleSignup = createAsyncThunk(
-// 	"auth/handleSignup",
-// 	async (data: TUserSignup, { rejectWithValue }) => {
-// 		try {
-// 			const res = await axios.post("/signup", data);
-// 			return res.data;
-// 		} catch (error) {
-// 			const resError = handleError(error);
-// 			console.log("resError:", resError);
-// 			return rejectWithValue(resError);
-// 		}
-// 	}
-// );
-
-// export const handleShowCookie = createAsyncThunk(
-// 	"auth/handleShowCookie",
-// 	async (_, { rejectWithValue }) => {
-// 		try {
-// 			const res = await axios.get("/showcookie");
-// 			return res.data;
-// 		} catch (error) {
-// 			const resError = handleError(error);
-// 			console.log("resError:", resError);
-// 			return rejectWithValue(resError);
-// 		}
-// 	}
-// );
-
-// export const handleLogout = createAsyncThunk(
-// 	"auth/handleLogout",
-// 	async (token: string | null, { rejectWithValue }) => {
-// 		try {
-// 			const res = await axios.get("/logout", {
-// 				headers: {
-// 					"Content-Type": "application/json",
-// 					Authorization: `Bearer ${token}`,
-// 				},
-// 			});
-// 			await AsyncStorage.removeItem("refreshToken");
-// 			router.push("/(auth)/login");
-// 			return res.data;
-// 		} catch (error) {
-// 			const resError = handleError(error);
-// 			console.log(resError);
-// 			return rejectWithValue(resError);
-// 		}
-// 	}
-// );
-
-// export const handleRefresh = createAsyncThunk(
-// 	"auth/handleRefresh",
-// 	async (token: string | null, { rejectWithValue, dispatch }) => {
-// 		try {
-// 			const res = await axios.get("/refresh", {
-// 				headers: {
-// 					"Content-Type": "application/json",
-// 					Authorization: `Bearer ${token}`,
-// 				},
-// 			});
-// 			return res.data;
-// 		} catch (error) {
-// 			const resError = handleError(error);
-// 			console.log(resError);
-// 			return rejectWithValue(resError);
-// 		}
-// 	}
-// );
 
 export const getUser = createAsyncThunk(
 	"user/getUser",
@@ -108,6 +21,76 @@ export const getUser = createAsyncThunk(
 		} catch (error) {
 			const resError = handleError(error);
 			console.log("resError:", resError);
+			return rejectWithValue(resError);
+		}
+	}
+);
+
+export const editUser = createAsyncThunk(
+	"user/EditUser",
+	async (
+		data: {
+			userId: string;
+			email: string;
+			userName: string;
+			firstName: string;
+			lastName: string;
+		},
+		{ rejectWithValue }
+	) => {
+		try {
+			const res = await axios.post(`/user/${data.userId}`, {
+				userName: data.userName,
+				email: data.email,
+				firstName: data.firstName,
+				lastName: data.lastName,
+			});
+			Alert.alert(res.data.message);
+			return res.data;
+		} catch (error) {
+			const resError = handleError(error);
+			console.log("resError:");
+			console.log(resError);
+			return rejectWithValue(resError);
+		}
+	}
+);
+
+export const changePassword = createAsyncThunk(
+	"user/changePassword",
+	async (
+		data: {
+			id: string;
+			currentPassword: string;
+			newPassword: string;
+		},
+		{ rejectWithValue }
+	) => {
+		try {
+			const res = await axios.post(`/user/password/${data.id}`, {
+				currentPassword: data.currentPassword,
+				newPassword: data.newPassword,
+			});
+			Alert.alert(res.data.message);
+		} catch (error) {
+			const resError = handleError(error);
+			console.log("resError");
+			console.log(resError);
+			return rejectWithValue(resError);
+		}
+	}
+);
+
+export const deleteAccount = createAsyncThunk(
+	"user/deleteAccount",
+	async (userId: string, { rejectWithValue }) => {
+		try {
+			const res = await axios.delete(`/user/${userId}`);
+			return res.data;
+		} catch (error) {
+			const resError = handleError(error);
+			console.log("resError");
+			console.log(resError);
 			return rejectWithValue(resError);
 		}
 	}
