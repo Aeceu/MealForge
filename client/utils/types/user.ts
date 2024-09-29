@@ -17,8 +17,30 @@ export const UserSignupSchema = z.object({
 		.min(6, "Password should atleast more than 6 characters."),
 });
 
+export const EditInfoSchema = z.object({
+	userName: z.string().min(2, "Required"),
+	firstName: z.string().min(2, "Required"),
+	lastName: z.string().min(2, "Required"),
+	email: z.string().email({ message: "Required" }),
+});
+
+export const ChangePasswordSchema = z
+	.object({
+		currentPassword: z.string(),
+		retypeCurrentPassword: z.string(),
+		newPassword: z
+			.string()
+			.min(6, "Password should atleast more than 6 characters."),
+	})
+	.refine((data) => data.currentPassword === data.retypeCurrentPassword, {
+		message: "Password doesn't match!",
+		path: ["retypeCurrentPassword"],
+	});
+
 export type TUserLogin = z.infer<typeof UserLoginSchema>;
 export type TUserSignup = z.infer<typeof UserSignupSchema>;
+export type TEditUser = z.infer<typeof EditInfoSchema>;
+export type TChangePassword = z.infer<typeof ChangePasswordSchema>;
 
 export type TUser = {
 	id: string;

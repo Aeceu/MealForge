@@ -13,6 +13,7 @@ type Props = TextProps & {
 		| "heading-2"
 		| "heading-3"
 		| "heading-4"
+		| "heading-5"
 		| "subheading"
 		| "label";
 	fontStyle?: "default" | "light" | "Makeba" | "Chunk" | "ChunkP";
@@ -44,6 +45,7 @@ const StyledText = ({
         ${type === "heading-2" && "text-3xl"}
         ${type === "heading-3" && "text-2xl"}
         ${type === "heading-4" && "text-xl"}
+        ${type === "heading-5" && "text-lg"}
         ${type === "subheading" && "text-base"}
         ${type === "paragraph" && "text-base"}
         ${type === "label" && "text-sm"}

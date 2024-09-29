@@ -10,6 +10,8 @@ import React, { useState } from "react";
 import StyledText from "./StyledText";
 import { useThemeColors } from "@/constants/colors";
 import { useColorScheme } from "nativewind";
+import { icons } from "@/constants";
+import StyledPressable from "./StyledPressable";
 
 type Props = TextProps & {
 	title?:
@@ -18,7 +20,8 @@ type Props = TextProps & {
 		| "Password"
 		| "Username"
 		| "Firstname"
-		| "Lastname";
+		| "Lastname"
+		| string;
 	handleTextChange?: any;
 	value: string;
 	error?: string;
@@ -35,8 +38,8 @@ const StyledTextInput = ({
 	const { colorScheme } = useColorScheme();
 
 	return (
-		<View className="w-full space-y-1">
-			<StyledText type="label" fontStyle="default" className="px-5">
+		<View className="w-full">
+			<StyledText type="label" fontStyle="default" className="px-3 mb-2">
 				{title}
 			</StyledText>
 
@@ -49,15 +52,37 @@ const StyledTextInput = ({
 					placeholderTextColor={placeholderColor}
 					value={value}
 					onChangeText={handleTextChange}
-					secureTextEntry={title === "Password" && !showPassword}
+					secureTextEntry={
+						(title === "Password" ||
+							title === "Current Password" ||
+							title === "Retype Current Password" ||
+							title === "New Password") &&
+						!showPassword
+					}
 					style={{ alignSelf: "center" }}
 				/>
 
-				{/* {title === 'Password' && (
-          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-            <Image source={!showPassword ? icons.eye : icons.eyeActive} className="w-6 h-full mr-5" resizeMode='contain'></Image>
-          </TouchableOpacity>
-        )} */}
+				{(title === "Password" ||
+					title === "Current Password" ||
+					title === "Retype Current Password" ||
+					title === "New Password") && (
+					<StyledPressable
+						size="icon"
+						onPress={() => setShowPassword(!showPassword)}>
+						<Image
+							source={
+								colorScheme === "dark"
+									? showPassword
+										? icons.eyeLightDark
+										: icons.eyeOffLightDark
+									: showPassword
+									? icons.eyeDarkLight
+									: icons.eyeOffDarkLight
+							}
+							className="w-6 h-full mr-5"
+							resizeMode="contain"></Image>
+					</StyledPressable>
+				)}
 
 				<View
 					className={`absolute w-full h-full rounded-lg -z-10
