@@ -26,9 +26,12 @@ const Login = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const user = useSelector((state: RootState) => state.auth);
 	const { gradientColor, logoImage } = useThemeColors();
+
 	const onSubmit = async (data: TUserLogin) => {
-		dispatch(handleLogin(data)).finally(() => {
-			reset();
+		dispatch(handleLogin(data)).then((res) => {
+			if (res.meta.requestStatus === "rejected") {
+				Alert.alert(res.payload);
+			}
 		});
 	};
 
@@ -78,9 +81,9 @@ const Login = () => {
 							Login to your account.
 						</StyledText>
 
-						<View className="flex-1">
+						<View className="flex-1 flex-col ">
 							{/* Email Input */}
-							<View className="w-full pt-8">
+							<View className="w-full  pt-8">
 								<Controller
 									control={control}
 									name="email"

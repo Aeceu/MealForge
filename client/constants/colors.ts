@@ -24,7 +24,7 @@ export const useThemeColors = () => {
 	const inActiveColor = colorScheme === "light" ? colors.dark : colors.light;
 	const statusColor = colorScheme === "light" ? colors.dark : colors.light;
 	const placeholderColor =
-		colorScheme === "light" ? colors.lightDark : colors.gray;
+		colorScheme === "light" ? colors.darkLight : colors.lightDark;
 
 	return {
 		inActiveColor,
