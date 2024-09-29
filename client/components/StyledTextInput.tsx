@@ -22,7 +22,7 @@ type Props = TextProps & {
 		| "Firstname"
 		| "Lastname"
 		| string;
-	handleTextChange?: any;
+	handleTextChange?: ((text: string) => void) | undefined;
 	value: string;
 	error?: string;
 };

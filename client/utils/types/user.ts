@@ -103,7 +103,13 @@ export type TLike = {
 export type TRecipePost = {
 	id: string;
 	recipe_id: string;
-	user_id: string;
+	user: {
+		id: string;
+		firstName: string;
+		lastName: string;
+		userName: string;
+		email: string;
+	};
 	posted_at: string;
 	recipe: {
 		id: string;

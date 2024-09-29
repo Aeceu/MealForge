@@ -30,6 +30,18 @@ import eyeDarkLight from "@/assets/icons/eye-dark-light.png";
 import eyeLightDark from "@/assets/icons/eye-light-dark.png";
 import eyeOffDarkLight from "@/assets/icons/eye-off-dark-light.png";
 import eyeOffLightDark from "@/assets/icons/eye-off-light-dark.png";
+import bookmarkLightDark from "@/assets/icons/bookmark-light-dark.png";
+import bookmarkDarkLight from "@/assets/icons/bookmark-dark-light.png";
+import liked from "@/assets/icons/liked.png";
+import unliked from "@/assets/icons/unliked.png";
+import likesDarkLight from "@/assets/icons/likes-dark-light.png";
+import likesLightDark from "@/assets/icons/likes-light-dark.png";
+import unlikesDarkLight from "@/assets/icons/unlikes-dark-light.png";
+import unlikesLightDark from "@/assets/icons/unlikes-light-dark.png";
+import loadingDarkLight from "@/assets/icons/loading-dark-light.png";
+import loadingLightDark from "@/assets/icons/loading-light-dark.png";
+import searchDarkLight from "@/assets/icons/search-dark-ight.png";
+import searchLightDark from "@/assets/icons/search-light-dark.png";
 
 export default {
 	logo_dark,
@@ -64,4 +76,16 @@ export default {
 	eyeLightDark,
 	eyeOffDarkLight,
 	eyeOffLightDark,
+	bookmarkDarkLight,
+	bookmarkLightDark,
+	liked,
+	unliked,
+	likesDarkLight,
+	likesLightDark,
+	unlikesDarkLight,
+	unlikesLightDark,
+	loadingDarkLight,
+	loadingLightDark,
+	searchDarkLight,
+	searchLightDark,
 };
