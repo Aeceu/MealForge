@@ -16,9 +16,8 @@ type TabIconProps = {
 const TabIcon: React.FC<TabIconProps> = ({ icon, color, name, focused }) => {
 	return (
 		<View
-			className={`flex-col items-center justify-center   ${
-				focused && "#f97316"
-			}`}>
+			className={`flex-col items-center justify-center space-y-1 ${focused && "#f97316"
+				}`}>
 			<Image
 				source={icon}
 				resizeMode="contain"
@@ -40,9 +39,9 @@ const AppLayout = () => {
 	);
 	const { textColor, inActiveColor, tabColor } = useThemeColors();
 
-	if (!accessToken && !refreshToken && !pageLoading) {
-		return <Redirect href={"/(auth)/login"} />;
-	}
+	// if (!accessToken && !refreshToken && !pageLoading) {
+	// 	return <Redirect href={"/(auth)/login"} />;
+	// }
 	return (
 		<Tabs
 			screenOptions={{
@@ -53,7 +52,7 @@ const AppLayout = () => {
 					backgroundColor: tabColor,
 					borderTopColor: tabColor,
 					borderTopWidth: 1,
-					height: 84,
+					height: 70,
 				},
 			}}>
 			<Tabs.Screen

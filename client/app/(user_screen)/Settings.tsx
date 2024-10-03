@@ -49,21 +49,22 @@ const Settings = () => {
 			className="w-full h-screen bg-light dark:bg-dark"
 			refreshControl={
 				<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
-			}>
-			<View className="w-full h-full flex-col px-4 pb-4">
-				<StyledText type="heading-4" className="font-bold py-3  ">
+			}
+		>
+			<View className="flex-col w-full h-full px-4 pb-4">
+				<StyledText type="heading-3" className="pt-4 pb-4">
 					General
 				</StyledText>
 
 				<General />
 
-				<StyledText type="heading-4" className="font-bold py-3  ">
+				<StyledText type="heading-3" className="pt-8 pb-4">
 					UI Preferences
 				</StyledText>
 
 				<Preference />
 
-				<StyledText type="heading-4" className="font-bold py-3  ">
+				<StyledText type="heading-3" className="pt-8 pb-4">
 					Privacy & Security
 				</StyledText>
 
@@ -71,13 +72,13 @@ const Settings = () => {
 
 				<StyledPressable
 					onPress={logout}
-					className="mt-4 w-full h-max rounded-lg flex-row items-center justify-start px-6 py-4 bg-light-dark dark:bg-dark-light">
+					className="flex-row items-center justify-start w-full px-6 py-4 mt-16 bg-red-600 rounded-lg h-max">
 					<Image
 						source={icons.logout}
 						resizeMode="contain"
 						className="w-7 h-7"
 					/>
-					<StyledText className="ml-3 text-lg text-rose-500">
+					<StyledText className="ml-3 text-white dark:text-main-light">
 						Log Out
 					</StyledText>
 				</StyledPressable>

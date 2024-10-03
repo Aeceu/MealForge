@@ -15,13 +15,13 @@ import StyledPressable from "./StyledPressable";
 
 type Props = TextProps & {
 	title?:
-		| "default"
-		| "Email"
-		| "Password"
-		| "Username"
-		| "Firstname"
-		| "Lastname"
-		| string;
+	| "default"
+	| "Email"
+	| "Password"
+	| "Username"
+	| "Firstname"
+	| "Lastname"
+	| string;
 	handleTextChange?: ((text: string) => void) | undefined;
 	value: string;
 	error?: string;
@@ -39,15 +39,18 @@ const StyledTextInput = ({
 
 	return (
 		<View className="w-full">
-			<StyledText type="label" fontStyle="default" className="px-3 mb-2">
+			<StyledText type="label" fontStyle="default" className="px-4 mb-2">
 				{title}
 			</StyledText>
 
-			<View className="flex-row items-center w-full border rounded-lg shadow-sm h-14 border-gray focus:border-main focus:border">
+			<View className={`flex-row items-center w-full border rounded-lg shadow-sm h-14 
+				${colorScheme === "light"
+					? "border-light-border focus:border-gray"
+					: "border-dark-border focus:border-main"}
+			${error && "border-red-600"}`}>
 				<TextInput
-					className={`flex-1 h-full px-5 text-base ${
-						colorScheme === "light" ? "text-dark" : "text-light"
-					}`}
+					className={`flex-1 h-full px-4 text-base ${colorScheme === "light" ? "text-dark" : "text-main-light"
+						}`}
 					placeholder={title}
 					placeholderTextColor={placeholderColor}
 					value={value}
@@ -66,27 +69,27 @@ const StyledTextInput = ({
 					title === "Current Password" ||
 					title === "Retype Current Password" ||
 					title === "New Password") && (
-					<StyledPressable
-						size="icon"
-						onPress={() => setShowPassword(!showPassword)}>
-						<Image
-							source={
-								colorScheme === "dark"
-									? showPassword
-										? icons.eyeLightDark
-										: icons.eyeOffLightDark
-									: showPassword
-									? icons.eyeDarkLight
-									: icons.eyeOffDarkLight
-							}
-							className="w-6 h-full mr-5"
-							resizeMode="contain"></Image>
-					</StyledPressable>
-				)}
+						<StyledPressable
+							size="icon"
+							onPress={() => setShowPassword(!showPassword)}>
+							<Image
+								source={
+									colorScheme === "dark"
+										? showPassword
+											? icons.eyeLightDark
+											: icons.eyeOffLightDark
+										: showPassword
+											? icons.eyeDarkLight
+											: icons.eyeOffDarkLight
+								}
+								className="w-6 h-full mr-4"
+								resizeMode="contain"></Image>
+						</StyledPressable>
+					)}
 
 				<View
 					className={`absolute w-full h-full rounded-lg -z-10
-          ${colorScheme === "light" ? "bg-light opacity-40" : "bg-dark-light"}
+          ${colorScheme === "light" ? "bg-white" : "bg-dark-light"}
         `}></View>
 				{/* <BlurView intensity={100} tint='dark' className="">
           <Text>asds</Text>
@@ -94,7 +97,7 @@ const StyledTextInput = ({
 			</View>
 			{/* Display error message if present */}
 			{error && (
-				<StyledText fontStyle="default" className="px-5 text-red-600">
+				<StyledText fontStyle="default" className="px-4 text-red-600">
 					{error}
 				</StyledText>
 			)}

@@ -40,9 +40,9 @@ const ChangePassword = () => {
 	return (
 		<ScrollView
 			contentContainerStyle={{ flexGrow: 1 }}
-			className="w-full h-full bg-light dark:bg-dark flex-col p-4">
-			<View className="flex-1">
-				<View className="w-full pt-8">
+			className="flex-col w-full h-full p-4 bg-light dark:bg-dark">
+			<View className="flex-1 py-4 space-y-8">
+				<View className="w-full">
 					<Controller
 						control={control}
 						name="currentPassword"
@@ -57,7 +57,7 @@ const ChangePassword = () => {
 						)}
 					/>
 				</View>
-				<View className="w-full pt-8">
+				<View className="w-full">
 					<Controller
 						control={control}
 						name="retypeCurrentPassword"
@@ -72,7 +72,7 @@ const ChangePassword = () => {
 						)}
 					/>
 				</View>
-				<View className="w-full pt-8">
+				<View className="w-full">
 					<Controller
 						control={control}
 						name="newPassword"
@@ -87,12 +87,12 @@ const ChangePassword = () => {
 						)}
 					/>
 				</View>
-				<View className="w-full flex-row items-center justify-end mt-8">
+				<View className="w-full pt-6">
 					<StyledPressable
 						disabled={status === "pending"}
 						onPress={handleSubmit(onSubmit)}
-						className="rounded-md bg-light-dark dark:bg-dark-light">
-						<StyledText type="subheading" className="text-emerald-500">
+						className="w-full py-4 rounded-md bg-main">
+						<StyledText type="subheading" className="text-white dark:text-main-light">
 							{status === "pending" ? "Updating..." : "Save changes"}
 						</StyledText>
 					</StyledPressable>
