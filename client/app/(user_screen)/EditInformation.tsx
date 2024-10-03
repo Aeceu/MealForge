@@ -72,22 +72,24 @@ const EditInformation = () => {
 			className="w-full h-full bg-light dark:bg-dark"
 			refreshControl={
 				<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
-			}>
-			<View className="w-full h-full flex-col items-center  p-4">
+			}
+		>
+			<View className="flex-col items-center w-full h-full p-4">
 				<Image
 					source={images.loading_light}
 					resizeMode="contain"
-					className="w-[80px] h-[80px]"
+					className="w-[80px] h-[80px] rounded"
 				/>
 
-				<View className="mt-2 w-full flex-row items-center justify-center">
-					<StyledPressable className="bg-light-dark dark:bg-dark-light">
-						<StyledText type="label">Change Profile</StyledText>
-					</StyledPressable>
-				</View>
+				<View className="flex-1 w-full space-y-8">
+					<View className="flex-row items-center justify-center w-full mt-2">
+						<StyledPressable
+							className="border rounded border-main">
+							<StyledText type="label" className="text-main">Change Profile</StyledText>
+						</StyledPressable>
+					</View>
 
-				<View className="flex-1">
-					<View className="w-full pt-8">
+					<View className="w-full">
 						<Controller
 							control={control}
 							name="userName"
@@ -103,8 +105,8 @@ const EditInformation = () => {
 						/>
 					</View>
 
-					<View className="w-full flex-row pt-4">
-						<View className="flex-1 mr-2">
+					<View className="flex-row w-full space-x-4">
+						<View className="flex-1 w-full">
 							<Controller
 								control={control}
 								name="firstName"
@@ -119,7 +121,7 @@ const EditInformation = () => {
 								)}
 							/>
 						</View>
-						<View className="flex-1 ml-2">
+						<View className="flex-1 w-full">
 							<Controller
 								control={control}
 								name="lastName"
@@ -136,7 +138,7 @@ const EditInformation = () => {
 						</View>
 					</View>
 
-					<View className="w-full pt-4">
+					<View className="w-full">
 						<Controller
 							control={control}
 							name="email"
@@ -151,17 +153,18 @@ const EditInformation = () => {
 							)}
 						/>
 					</View>
-				</View>
 
-				<View className="w-full flex-row items-center justify-end mt-8">
-					<StyledPressable
-						disabled={status === "pending"}
-						onPress={handleSubmit(onSubmit)}
-						className="rounded-md bg-light-dark dark:bg-dark-light">
-						<StyledText type="subheading" className="text-emerald-500">
-							{status === "pending" ? "Updating..." : "Save changes"}
-						</StyledText>
-					</StyledPressable>
+					<View className="w-full pt-6">
+						<StyledPressable
+							disabled={status === "pending"}
+							onPress={handleSubmit(onSubmit)}
+							className="w-full py-4 rounded-md bg-main">
+							<StyledText type="subheading" className="text-white dark:text-main-light">
+								{status === "pending" ? "Updating..." : "Save changes"}
+							</StyledText>
+						</StyledPressable>
+					</View>
+
 				</View>
 			</View>
 		</ScrollView>

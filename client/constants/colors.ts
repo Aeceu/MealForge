@@ -5,26 +5,40 @@ export const useThemeColors = () => {
 	const { colorScheme } = useColorScheme();
 
 	const colors = {
-		dark: "#151210", // eto main dark color natin
-		light: "#FEDAAA", // eto main light color natin
-		gray: "#3A3A3A", // light mode placeholder
-		lightDark: "#BBA78D", // darkmode placeholder
-		darkLight: "#201D1C", // used in gradient
+		// icons
+		// dark: "#201D1C",
+		// light: "#BBA78D",
+
+		main: "#B25A1C", //orange
+		main50: "#FFEDD5", // light yellowish
+		mainLight: "#BBA78D", // more yellowish
+
+		dark: "#151210", // eto main dark color natin, main bg
+		darkLight: "#201D1C", // used in gradient, main content bg
+		darkBorder: "#272626",
+
+		light: "#F6F6F6", // darker shade pang bg
+		white: "#ffffff",// white na main light color, main content bg
+		lightBorder: "#E0E0E0",
+		lightDark: "#E7E7E7", // mas darker shade
+
+		gray: "#3A3A3A", // dark mode placeholder, light mode input focus border
+		grayLight: "#a4a4a4", // light mode placeholder
+
 		// TODO: add new color for inactive tab icons and text (light and dark mode)
 	};
 
 	const gradientColor =
 		colorScheme === "light"
-			? [colors.lightDark, colors.light]
+			? [colors.light, colors.white]
 			: [colors.dark, colors.darkLight];
 
 	const logoImage = colorScheme === "dark" ? icons.logo_light : icons.logo_dark;
-	const textColor = colorScheme === "light" ? colors.dark : colors.light;
-	const tabColor = colorScheme === "dark" ? colors.darkLight : colors.light;
-	const inActiveColor = colorScheme === "light" ? colors.dark : colors.light;
+	const textColor = colorScheme === "light" ? colors.dark : colors.main50;
+	const tabColor = colorScheme === "light" ? colors.white : colors.darkLight;
+	const inActiveColor = colorScheme === "light" ? colors.dark : colors.mainLight;
 	const statusColor = colorScheme === "light" ? colors.dark : colors.light;
-	const placeholderColor =
-		colorScheme === "light" ? colors.darkLight : colors.lightDark;
+	const placeholderColor = colorScheme === "light" ? colors.grayLight : colors.gray;
 
 	return {
 		inActiveColor,

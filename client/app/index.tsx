@@ -11,6 +11,7 @@ import { StatusBar } from "expo-status-bar";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "@/redux/actions/userActions";
+import Circle from "@/components/Circle";
 
 const index = () => {
 	const { gradientColor, logoImage } = useThemeColors();
@@ -25,6 +26,8 @@ const index = () => {
 		return <Redirect href={"/(tabs)/home"} />;
 	}
 
+	// return <Redirect href={"/(tabs)/user"} />;
+
 	return (
 		<>
 			{colorScheme === "dark" ? (
@@ -32,16 +35,18 @@ const index = () => {
 			) : (
 				<StatusBar style="dark"></StatusBar>
 			)}
-			<LinearGradient
-				start={{ x: 0.9, y: 0.1 }}
-				colors={gradientColor}
-				className="absolute top-0 left-0 w-full h-full"
-			/>
-			<SafeAreaView className="relative w-full h-full">
-				{/* <SafeAreaView className="relative w-full h-full bg-light dark:bg-dark"> */}
 
-				{/* lower right */}
-				<View className="absolute -bottom-[15%] -left-[30%] w-[300] h-[300] rounded-full bg-light-dark dark:bg-dark" />
+			{colorScheme === "dark" ? (
+				<LinearGradient
+					start={{ x: 0.9, y: 0.1 }}
+					colors={gradientColor}
+					className="absolute top-0 left-0 w-full h-full"
+				/>
+			) : null}
+
+			<SafeAreaView className="relative w-full h-full bg-light dark:bg-transparent">
+
+				<Circle position="bl" />
 
 				{/* Main Container */}
 				<View className="items-center justify-between w-full h-full p-8 pt-6 ">
