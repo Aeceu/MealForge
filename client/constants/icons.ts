@@ -42,6 +42,9 @@ import loadingDarkLight from "@/assets/icons/loading-dark-light.png";
 import loadingLightDark from "@/assets/icons/loading-light-dark.png";
 import searchDarkLight from "@/assets/icons/search-dark-ight.png";
 import searchLightDark from "@/assets/icons/search-light-dark.png";
+import closeDarkLight from "@/assets/icons/close-dark-light.png";
+import closeLightDark from "@/assets/icons/close-light-dark.png";
+import plus from "@/assets/icons/plus.png";
 
 export default {
 	logo_dark,
@@ -88,4 +91,7 @@ export default {
 	loadingLightDark,
 	searchDarkLight,
 	searchLightDark,
+	closeDarkLight,
+	closeLightDark,
+	plus,
 };
