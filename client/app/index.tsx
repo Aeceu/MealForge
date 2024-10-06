@@ -8,9 +8,8 @@ import StyledPressable from "@/components/StyledPressable";
 import { Redirect, router } from "expo-router";
 import { useThemeColors } from "../constants/colors";
 import { StatusBar } from "expo-status-bar";
-import { AppDispatch, RootState } from "@/redux/store";
-import { useDispatch, useSelector } from "react-redux";
-import { getUser } from "@/redux/actions/userActions";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 import Circle from "@/components/Circle";
 
 const index = () => {
@@ -19,14 +18,11 @@ const index = () => {
 	const { refreshToken, accessToken, pageLoading } = useSelector(
 		(state: RootState) => state.auth
 	);
-	const dispatch = useDispatch<AppDispatch>();
 
 	if (refreshToken && accessToken && !pageLoading) {
 		console.log("Redirect");
 		return <Redirect href={"/(tabs)/home"} />;
 	}
-
-	// return <Redirect href={"/(tabs)/user"} />;
 
 	return (
 		<>
@@ -45,7 +41,6 @@ const index = () => {
 			) : null}
 
 			<SafeAreaView className="relative w-full h-full bg-light dark:bg-transparent">
-
 				<Circle position="bl" />
 
 				{/* Main Container */}
@@ -53,9 +48,6 @@ const index = () => {
 					<View className="items-end justify-center w-full">
 						<ThemeButton />
 					</View>
-					<StyledPressable onPress={() => dispatch(getUser(accessToken))}>
-						<StyledText>Click me for data</StyledText>
-					</StyledPressable>
 					<View className="flex-1 w-full h-full">
 						<View className="items-center justify-end w-full h-1/2">
 							<Image

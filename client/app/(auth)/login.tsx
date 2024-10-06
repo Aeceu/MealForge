@@ -50,9 +50,7 @@ const Login = () => {
 		<KeyboardAvoidingView
 			behavior={Platform.OS === "ios" ? "padding" : "height"}
 			style={{ flex: 1 }}
-			keyboardVerticalOffset={Platform.OS === "ios" ? 60 : -300}
-		>
-
+			keyboardVerticalOffset={Platform.OS === "ios" ? 60 : -300}>
 			{colorScheme === "dark" ? (
 				<LinearGradient
 					start={{ x: 0.9, y: 0.1 }}
@@ -62,11 +60,7 @@ const Login = () => {
 			) : null}
 
 			<SafeAreaView className="relative w-full h-full bg-light dark:bg-transparent">
-
-				<ScrollView
-					showsVerticalScrollIndicator={false}
-					className=""
-				>
+				<ScrollView showsVerticalScrollIndicator={false} className="">
 					<View className="items-center flex-1 w-full max-h-full min-h-screen p-10 pb-4">
 						<View className="items-center w-full max-h-[100px]">
 							<Image
@@ -153,15 +147,9 @@ const Login = () => {
 							size="xl"
 							className="mt-4 bg-main"
 							disabled={user.status === "pending"}
-							// onPress={() => router.push("/(tabs)/home")}>
 							onPress={handleSubmit(onSubmit)}>
-							<StyledText
-								selectable={false}
-								fontStyle="Chunk"
-								type="button">
-								{user.status === "pending"
-									? "Logging in..."
-									: "Log in"}
+							<StyledText selectable={false} fontStyle="Chunk" type="button">
+								{user.status === "pending" ? "Logging in..." : "Log in"}
 							</StyledText>
 						</StyledPressable>
 					</View>
