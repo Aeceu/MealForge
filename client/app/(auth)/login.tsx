@@ -22,6 +22,7 @@ import { TUserLogin } from "../../utils/types/user";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { handleLogin } from "@/redux/actions/authActions";
+import Spin from "@/components/animations/Spin";
 
 const Login = () => {
 	const dispatch = useDispatch<AppDispatch>();
@@ -145,10 +146,19 @@ const Login = () => {
 
 						<StyledPressable
 							size="xl"
-							className="mt-4 bg-main"
+							className={`mt-4 bg-main flex-row items-center ${
+								user.status === "pending" && "bg-main/20"
+							}`}
 							disabled={user.status === "pending"}
 							onPress={handleSubmit(onSubmit)}>
-							<StyledText selectable={false} fontStyle="Chunk" type="button">
+							{user.status === "pending" && (
+								<Spin size="md" loading={user.status === "pending"} />
+							)}
+							<StyledText
+								className="ml-2"
+								selectable={false}
+								fontStyle="Chunk"
+								type="button">
 								{user.status === "pending" ? "Logging in..." : "Log in"}
 							</StyledText>
 						</StyledPressable>

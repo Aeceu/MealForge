@@ -18,7 +18,7 @@ export const useThemeColors = () => {
 		darkBorder: "#272626",
 
 		light: "#F6F6F6", // darker shade pang bg
-		white: "#ffffff",// white na main light color, main content bg
+		white: "#ffffff", // white na main light color, main content bg
 		lightBorder: "#E0E0E0",
 		lightDark: "#E7E7E7", // mas darker shade
 
@@ -36,9 +36,10 @@ export const useThemeColors = () => {
 	const logoImage = colorScheme === "dark" ? icons.logo_light : icons.logo_dark;
 	const textColor = colorScheme === "light" ? colors.dark : colors.main50;
 	const tabColor = colorScheme === "light" ? colors.white : colors.darkLight;
-	const inActiveColor = colorScheme === "light" ? colors.dark : colors.mainLight;
+	const inActiveColor = colorScheme === "light" ? colors.dark : colors.main50;
 	const statusColor = colorScheme === "light" ? colors.dark : colors.light;
-	const placeholderColor = colorScheme === "light" ? colors.grayLight : colors.gray;
+	const placeholderColor =
+		colorScheme === "light" ? colors.grayLight : colors.gray;
 
 	return {
 		inActiveColor,

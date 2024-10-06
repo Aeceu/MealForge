@@ -3,19 +3,19 @@ import { Text, type TextProps } from "react-native";
 
 type Props = TextProps & {
 	type?:
-	| "default"
-	| "title"
-	| "subtitle"
-	| "link"
-	| "button"
-	| "paragraph"
-	| "heading-1"
-	| "heading-2"
-	| "heading-3"
-	| "heading-4"
-	| "heading-5"
-	| "subheading"
-	| "label";
+		| "default"
+		| "title"
+		| "subtitle"
+		| "link"
+		| "button"
+		| "paragraph"
+		| "heading-1"
+		| "heading-2"
+		| "heading-3"
+		| "heading-4"
+		| "heading-5"
+		| "subheading"
+		| "label";
 	fontStyle?: "default" | "light" | "Makeba" | "Chunk" | "ChunkP";
 };
 
@@ -28,7 +28,7 @@ const StyledText = ({
 	return (
 		<Text
 			className={`
-        ${colorScheme === "light" ? "text-dark" : "text-main-light"}
+        ${colorScheme === "light" ? "text-dark" : "text-main-50"}
 
         ${fontStyle === "default" && "font-pregular"}
         ${fontStyle === "Makeba" && "font-makeba"}
@@ -38,7 +38,7 @@ const StyledText = ({
 
         ${type === "default" && "text-base"}
         ${type === "subtitle" && "text-2xl"}
-        ${type === "button" && "text-xl text-light dark:text-main-light"}
+        ${type === "button" && "text-xl"}
         ${type === "link" && "text-base text-main underline"}
         ${type === "title" && "text-5xl"}
         ${type === "heading-1" && "text-4xl"}

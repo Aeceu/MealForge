@@ -1,10 +1,17 @@
 import React from "react";
-import { Stack } from "expo-router";
-import { useColorScheme } from "nativewind";
+import { Redirect, Stack } from "expo-router";
 import { useThemeColors } from "@/constants/colors";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 const AuthLayout = () => {
-	const { colorScheme } = useColorScheme();
+	const { accessToken, refreshToken, pageLoading } = useSelector(
+		(state: RootState) => state.auth
+	);
 	const { tabColor, textColor } = useThemeColors();
+
+	if (!accessToken && !refreshToken && !pageLoading) {
+		return <Redirect href={"/(auth)/login"} />;
+	}
 
 	return (
 		<>
@@ -18,7 +25,7 @@ const AuthLayout = () => {
 							backgroundColor: tabColor,
 						},
 						headerTintColor: textColor,
-						headerShadowVisible: false
+						headerShadowVisible: false,
 					}}
 				/>
 				<Stack.Screen
@@ -30,7 +37,7 @@ const AuthLayout = () => {
 							backgroundColor: tabColor,
 						},
 						headerTintColor: textColor,
-						headerShadowVisible: false
+						headerShadowVisible: false,
 					}}
 				/>
 				<Stack.Screen
@@ -42,7 +49,7 @@ const AuthLayout = () => {
 							backgroundColor: tabColor,
 						},
 						headerTintColor: textColor,
-						headerShadowVisible: false
+						headerShadowVisible: false,
 					}}
 				/>
 				<Stack.Screen
@@ -54,7 +61,7 @@ const AuthLayout = () => {
 							backgroundColor: tabColor,
 						},
 						headerTintColor: textColor,
-						headerShadowVisible: false
+						headerShadowVisible: false,
 					}}
 				/>
 				<Stack.Screen
@@ -66,7 +73,7 @@ const AuthLayout = () => {
 							backgroundColor: tabColor,
 						},
 						headerTintColor: textColor,
-						headerShadowVisible: false
+						headerShadowVisible: false,
 					}}
 				/>
 				<Stack.Screen
@@ -78,7 +85,7 @@ const AuthLayout = () => {
 							backgroundColor: tabColor,
 						},
 						headerTintColor: textColor,
-						headerShadowVisible: false
+						headerShadowVisible: false,
 					}}
 				/>
 			</Stack>

@@ -21,6 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { handleSignup } from "@/redux/actions/authActions";
+import Spin from "@/components/animations/Spin";
 
 const Register = () => {
 	const dispatch = useDispatch<AppDispatch>();
@@ -50,7 +51,6 @@ const Register = () => {
 			behavior={Platform.OS === "ios" ? "padding" : "height"}
 			style={{ flex: 1 }}
 			keyboardVerticalOffset={Platform.OS === "ios" ? 60 : -300}>
-
 			{colorScheme === "dark" ? (
 				<LinearGradient
 					start={{ x: 0.9, y: 0.1 }}
@@ -60,10 +60,8 @@ const Register = () => {
 			) : null}
 
 			<SafeAreaView className="relative w-full h-full bg-light dark:bg-transparent">
-
 				{/* scroll container*/}
-				<ScrollView
-					showsVerticalScrollIndicator={false}>
+				<ScrollView showsVerticalScrollIndicator={false}>
 					<View className="items-center flex-1 w-full max-h-full min-h-screen p-10 pb-4">
 						<View className="items-center w-full max-h-[100px]">
 							<Image
@@ -194,13 +192,22 @@ const Register = () => {
 
 						<StyledPressable
 							size="xl"
-							className="mt-4 bg-main"
+							className={`mt-4 bg-main flex-row items-center ${
+								status === "pending" && "bg-main/20"
+							}`}
 							disabled={status === "pending"}
 							onPress={handleSubmit(onSubmit)}>
-							<StyledText selectable={false} fontStyle="Chunk" type="button">
+							{status === "pending" && (
+								<Spin size="md" loading={status === "pending"} />
+							)}
+							<StyledText
+								className="ml-2"
+								selectable={false}
+								fontStyle="Chunk"
+								type="button">
 								{status === "pending"
 									? "Creating account..."
-									: "Create Account"}
+									: "Create account"}
 							</StyledText>
 						</StyledPressable>
 					</View>
