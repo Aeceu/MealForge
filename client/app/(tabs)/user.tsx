@@ -26,8 +26,7 @@ const user = () => {
 			className="w-full h-full bg-light dark:bg-dark"
 			refreshControl={
 				<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
-			}
-		>
+			}>
 			<View className="flex-col items-center w-full h-full p-4">
 				<View className="flex-row items-start mt-6 mb-4">
 					<View className="my-auto border rounded-xl border-light-border dark:border-dark-border">
@@ -40,12 +39,10 @@ const user = () => {
 
 					<View className="flex-1 ml-4">
 						<StyledText className="font-chunk" type="heading-3">
-							First Name Last Name
+							{user?.firstName} {user?.lastName}
 						</StyledText>
-						<StyledText
-							type="label"
-							className="text-main">
-							@{user?.userName}kuahsdkjasdhkjsh
+						<StyledText type="label" className="text-main">
+							@{user?.userName}
 						</StyledText>
 
 						<View className="flex-row justify-between flex-1 mt-4">
@@ -87,21 +84,27 @@ const user = () => {
 						<StyledText type="paragraph" className="font-chunk">
 							22
 						</StyledText>
-						<StyledText type="label" fontStyle="light">Ingredients</StyledText>
+						<StyledText type="label" fontStyle="light">
+							Ingredients
+						</StyledText>
 					</View>
 
 					<View className="flex-col items-center flex-grow basis-1/3">
 						<StyledText type="paragraph" className="font-chunk">
 							8
 						</StyledText>
-						<StyledText type="label" fontStyle="light">Recipes</StyledText>
+						<StyledText type="label" fontStyle="light">
+							Recipes
+						</StyledText>
 					</View>
 
 					<View className="flex-col items-center flex-grow basis-1/3">
 						<StyledText type="paragraph" className="font-chunk">
 							1.2 k
 						</StyledText>
-						<StyledText type="label" fontStyle="light">Likes</StyledText>
+						<StyledText type="label" fontStyle="light">
+							Likes
+						</StyledText>
 					</View>
 				</View>
 
@@ -114,7 +117,7 @@ const user = () => {
 					</StyledPressable>
 				</View>
 			</View>
-		</ScrollView >
+		</ScrollView>
 	);
 };
 export default user;
