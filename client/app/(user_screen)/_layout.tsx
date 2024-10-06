@@ -1,8 +1,11 @@
 import React from "react";
 import { Stack } from "expo-router";
 import { useColorScheme } from "nativewind";
+import { useThemeColors } from "@/constants/colors";
 const AuthLayout = () => {
 	const { colorScheme } = useColorScheme();
+	const { tabColor, textColor } = useThemeColors();
+
 	return (
 		<>
 			<Stack screenOptions={{ headerShown: false }}>
@@ -12,9 +15,10 @@ const AuthLayout = () => {
 						headerShown: true,
 						title: "Edit Information",
 						headerStyle: {
-							backgroundColor: colorScheme === "dark" ? "#151210" : "#FFEDD5",
+							backgroundColor: tabColor,
 						},
-						headerTintColor: colorScheme === "dark" ? "#FFEDD5" : "#151210",
+						headerTintColor: textColor,
+						headerShadowVisible: false
 					}}
 				/>
 				<Stack.Screen
@@ -23,9 +27,10 @@ const AuthLayout = () => {
 						headerShown: true,
 						title: "Personal Preferences",
 						headerStyle: {
-							backgroundColor: colorScheme === "dark" ? "#151210" : "#FFEDD5",
+							backgroundColor: tabColor,
 						},
-						headerTintColor: colorScheme === "dark" ? "#FFEDD5" : "#151210",
+						headerTintColor: textColor,
+						headerShadowVisible: false
 					}}
 				/>
 				<Stack.Screen
@@ -34,9 +39,10 @@ const AuthLayout = () => {
 						headerShown: true,
 						title: "Theme",
 						headerStyle: {
-							backgroundColor: colorScheme === "dark" ? "#151210" : "#FFEDD5",
+							backgroundColor: tabColor,
 						},
-						headerTintColor: colorScheme === "dark" ? "#FFEDD5" : "#151210",
+						headerTintColor: textColor,
+						headerShadowVisible: false
 					}}
 				/>
 				<Stack.Screen
@@ -45,9 +51,10 @@ const AuthLayout = () => {
 						headerShown: true,
 						title: "Settings",
 						headerStyle: {
-							backgroundColor: colorScheme === "dark" ? "#151210" : "#FFEDD5",
+							backgroundColor: tabColor,
 						},
-						headerTintColor: colorScheme === "dark" ? "#FFEDD5" : "#151210",
+						headerTintColor: textColor,
+						headerShadowVisible: false
 					}}
 				/>
 				<Stack.Screen
@@ -56,9 +63,10 @@ const AuthLayout = () => {
 						headerShown: true,
 						title: "Change Password",
 						headerStyle: {
-							backgroundColor: colorScheme === "dark" ? "#151210" : "#FFEDD5",
+							backgroundColor: tabColor,
 						},
-						headerTintColor: colorScheme === "dark" ? "#FFEDD5" : "#151210",
+						headerTintColor: textColor,
+						headerShadowVisible: false
 					}}
 				/>
 				<Stack.Screen
@@ -67,9 +75,10 @@ const AuthLayout = () => {
 						headerShown: true,
 						title: "Account Deletion",
 						headerStyle: {
-							backgroundColor: colorScheme === "dark" ? "#151210" : "#FFEDD5",
+							backgroundColor: tabColor,
 						},
-						headerTintColor: colorScheme === "dark" ? "#FFEDD5" : "#151210",
+						headerTintColor: textColor,
+						headerShadowVisible: false
 					}}
 				/>
 			</Stack>

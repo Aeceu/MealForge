@@ -29,43 +29,45 @@ const DeleteAccount = () => {
 	return (
 		<ScrollView
 			contentContainerStyle={{ flexGrow: 1 }}
-			className="w-full h-full bg-light dark:bg-dark flex-col  p-4">
-			<View className="w-full h-full flex-col items-center justify-between">
-				<View className="w-full h-full flex-1">
+			className="flex-col w-full h-full p-4 bg-light dark:bg-dark">
+			<View className="flex-col items-center justify-between w-full h-full">
+				<View className="flex-1 w-full h-full">
 					<StyledText
 						type="heading-3"
-						className="font-bold text-red-500 text-center mb-6">
+						className="mb-8 font-bold text-center text-red-500">
 						Are you sure you want to permanently delete your account?
 					</StyledText>
 
-					<StyledText type="label">
+					<StyledText className="mb-2">
 						By deleting your account, the following will happen:
 					</StyledText>
 					<StyledText
-						type="label"
-						className="text-rose-600 dark:text-rose-400 mt-2">
+						type="subheading"
+						className="mt-2 ml-4">
 						• All your personal information will be erased.
 					</StyledText>
 					<StyledText
-						type="label"
-						className="text-rose-600 dark:text-rose-400 mt-2">
+						type="subheading"
+						className="mt-2 ml-4">
 						• All your personal preferences will be erased.
 					</StyledText>
 					<StyledText
-						type="label"
-						className="text-rose-600 dark:text-rose-400 mt-2">
+						type="subheading"
+						className="mt-2 ml-4">
 						• All your ingredients and recipes will be erased.
 					</StyledText>
 					<StyledText
-						type="label"
-						className="text-rose-600 dark:text-rose-400 mt-1">
+						type="subheading"
+						className="mt-2 ml-4">
 						• You will lose access to saved content and settings.
 					</StyledText>
 					<StyledText
-						type="label"
-						className="text-rose-600 dark:text-rose-400 mt-1">
+						type="subheading"
+						className="mt-2 ml-4">
 						• This action is{" "}
-						<StyledText className="font-bold text-red-500 ">
+						<StyledText
+							type="subheading"
+							className="text-red-500 font-pbold ">
 							irreversible
 						</StyledText>{" "}
 						and cannot be undone.
@@ -76,8 +78,8 @@ const DeleteAccount = () => {
 					disabled={status === "pending"}
 					onPress={handleDelete}
 					size="xl"
-					className="bg-red-600 p-4 w-full rounded-lg mb-4">
-					<StyledText className="text-white text-center font-semibold">
+					className="w-full p-4 mb-4 bg-red-600 rounded-lg">
+					<StyledText type="subheading" className="text-center text-white font-psemibold">
 						{status === "pending"
 							? "Deleting Account . . . ."
 							: "Delete Account"}

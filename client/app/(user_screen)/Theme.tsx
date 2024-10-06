@@ -9,19 +9,18 @@ const Theme = () => {
 	return (
 		<ScrollView
 			contentContainerStyle={{ flexGrow: 1 }}
-			className="w-full h-full bg-light dark:bg-dark flex-col p-4">
+			className="flex-col w-full h-full p-4 bg-light dark:bg-dark">
 			<StyledText
 				type="heading-4"
-				className="font-bold py-3 mb-4 border-b border-dark/30 dark:border-light/30">
+				className="py-2 mb-6 font-bold border-b border-light-border dark:border-dark-border">
 				Select your prefered theme
 			</StyledText>
 
 			<StyledPressable
 				onPress={toggleColorScheme}
 				size="xl"
-				className={`flex-row items-center justify-between py-6 px-6   ${
-					colorScheme === "dark" && "bg-dark-light"
-				}`}>
+				className={`flex-row items-center justify-between py-4 px-6   ${colorScheme === "dark" && "bg-dark-light"
+					}`}>
 				<View className="flex-row items-center">
 					<Image
 						source={
@@ -38,9 +37,8 @@ const Theme = () => {
 			<StyledPressable
 				onPress={toggleColorScheme}
 				size="xl"
-				className={`flex-row items-center justify-between py-6 px-6 ${
-					colorScheme === "light" && "bg-light-dark"
-				} `}>
+				className={`flex-row items-center justify-between py-4 px-6 ${colorScheme === "light" && "bg-white"
+					} `}>
 				<View className="flex-row items-center">
 					<Image
 						source={

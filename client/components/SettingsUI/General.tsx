@@ -28,17 +28,16 @@ const General = () => {
 	];
 
 	return (
-		<View className="w-full h-max rounded-lg flex-col px-6 py-3 bg-light-dark dark:bg-dark-light">
+		<View className="flex-col w-full px-6 bg-white rounded-lg h-max dark:bg-dark-light">
 			{General.map((item, key) => (
 				<StyledPressable
 					onPress={() => router.push(item.href)}
 					key={key}
 					size="xl"
-					className={`flex-row items-center justify-between py-4 ${
-						key !== General.length - 1
-							? "border-b border-dark/30 dark:border-light/30"
-							: ""
-					}`}>
+					className={`flex-row items-center rounded-none justify-between py-4 ${key !== General.length - 1
+						? "border-b border-light-border dark:border-dark-border"
+						: ""
+						}`}>
 					<View className="flex-row items-center">
 						<Image
 							source={item.icon}

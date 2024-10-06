@@ -15,11 +15,11 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 	const { colorScheme } = useColorScheme();
 	const [loading, setLoading] = useState(false);
 	return (
-		<View className="w-full bg-light-dark  dark:bg-dark-light p-4 rounded-xl mt-4">
+		<View className="w-full p-4 mt-4 bg-white border border-light-border dark:bg-dark-light dark:border-dark-border rounded-xl">
 			{/* Header */}
 			<View className="flex-col">
-				<View className="w-full flex-row items-center justify-between">
-					<StyledText type="heading-4" className="font-semibold">
+				<View className="flex-row items-center justify-between w-full">
+					<StyledText type="heading-4" className="font-chunk">
 						{recipe.recipe.name}
 					</StyledText>
 					<StyledPressable onPress={() => setLoading(!loading)} size="icon">
@@ -38,13 +38,13 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 						)}
 					</StyledPressable>
 				</View>
-				<Text className="text-sm text-dark-light dark:text-light-dark">
+				<StyledText type="label" className="text-main">
 					@{recipe.user.userName}
-				</Text>
+				</StyledText>
 			</View>
 
 			{/* Body */}
-			<View className="mt-2 w-full  flex-col rounded-xl border border-dark-light/10 dark:border-light-dark/10">
+			<View className="flex-col w-full mt-4 border rounded-xl border-dark-light/10 dark:border-dark-border">
 				<Image
 					source={images.adobo}
 					resizeMode="cover"
@@ -54,12 +54,12 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 					horizontal
 					showsHorizontalScrollIndicator={false}
 					className="w-full">
-					<View className="w-full flex-row items-start justify-center px-1 py-2">
+					<View className="flex-row items-start justify-center w-full px-1 pt-2 pb-1">
 						{recipe.recipe.ingredients.split(",").map((item, i) => (
 							<StyledText
 								key={i}
 								type="label"
-								className="w-max bg-light dark:bg-dark px-3 py-1.5 rounded-full mx-0.5 ">
+								className="w-max bg-light-dark dark:bg-dark px-3 py-1.5 rounded-full mx-0.5 ">
 								{item}
 							</StyledText>
 						))}
@@ -70,12 +70,12 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 					horizontal
 					showsHorizontalScrollIndicator={false}
 					className="w-full">
-					<View className="w-full flex-row items-start justify-center px-1 py-2">
+					<View className="flex-row items-start justify-center w-full px-1 pt-1 pb-2">
 						{[recipe.recipe.nutrient_counts.split(",")].map((item, i) => (
 							<StyledText
 								key={i}
 								type="label"
-								className="w-max bg-light dark:bg-dark px-3 py-1.5 rounded-full mx-0.5 ">
+								className="w-max bg-light-dark dark:bg-dark px-3 py-1.5 rounded-full mx-0.5 ">
 								{item}
 							</StyledText>
 						))}
@@ -84,16 +84,20 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 			</View>
 
 			{/* Footer */}
-			<View className="p-2 w-full flex-row items-center justify-between mt-4">
-				<View className="flex-row items-center ">
-					<StyledText className="">{recipe.likes.length}</StyledText>
-					<StyledText className="text-sm ml-1 ">Likes</StyledText>
-					<StyledText className="text-2xl mx-2 ">•</StyledText>
-					<StyledText className="">0</StyledText>
-					<StyledText className="text-sm ml-1 ">Dislikes</StyledText>
+			<View className="flex-row items-center justify-between w-full p-2 pt-4">
+				<View className="flex-row items-center">
+					<StyledText className="font-psemibold">{recipe.likes.length}</StyledText>
+					<StyledText className="ml-1" type="label" fontStyle="light">
+						{recipe.likes.length === 1 ? "Like" : "Likes"}
+					</StyledText>
+					<StyledText className="mx-2 text-2xl ">•</StyledText>
+					<StyledText className="font-psemibold">0</StyledText>
+					<StyledText className="ml-1" type="label" fontStyle="light">
+						{recipe.likes.length === 1 ? "Dislike" : "Dislikes"}
+					</StyledText>
 				</View>
 
-				<View className="flex-row items-center ">
+				<View className="flex-row items-center">
 					<StyledPressable size="icon">
 						<Image
 							source={

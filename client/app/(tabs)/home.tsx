@@ -40,13 +40,15 @@ const Home = () => {
 	return (
 		<ScrollView
 			contentContainerStyle={{ flexGrow: 1 }}
-			className=" bg-light dark:bg-dark"
+			className="bg-light dark:bg-dark"
+			showsVerticalScrollIndicator={false}
 			refreshControl={
 				<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
-			}>
-			<View className="w-full h-full flex-col p-4">
+			}
+		>
+			<View className="flex-col w-full h-full p-4">
 				{/* Header */}
-				<View className="mt-6 py-4 w-full flex-row items-center justify-between">
+				<View className="flex-row items-center justify-between w-full py-4 mt-2">
 					<Image
 						source={
 							colorScheme === "dark"
@@ -72,12 +74,16 @@ const Home = () => {
 				</View>
 
 				{/* Search Box */}
-				<View className="w-full h-[50px] flex-row items-center justify-between bg-light-dark dark:bg-dark-light rounded-lg pr-3 border border-dark/10 dark:border-light/10">
+				<View
+					className={`w-full px-4 h-[50px] flex-row items-center justify-between bg-white dark:bg-dark-light rounded-lg pr-3 border 
+						${colorScheme === "light"
+							? "border-light-border focus:border-gray"
+							: "border-dark-border focus:border-main"}`}>
 					<TextInput
 						value={search}
 						onChangeText={(e) => setSearch(e)}
 						placeholder="Search recipes"
-						className="w-full h-full px-3 flex-1 text-dark-light dark:text-light-dark"
+						className="flex-1 w-full h-full text-dark dark:text-main-light"
 						placeholderTextColor={placeholderColor}
 					/>
 					<StyledPressable size="icon">
@@ -88,7 +94,7 @@ const Home = () => {
 									: icons.searchDarkLight
 							}
 							resizeMode="contain"
-							className="w-6 h-6 flex-1"
+							className="flex-1 w-6 h-6"
 						/>
 					</StyledPressable>
 				</View>

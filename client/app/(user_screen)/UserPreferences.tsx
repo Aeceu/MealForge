@@ -21,7 +21,8 @@ const UserPreferences = () => {
 			className=" bg-light dark:bg-dark"
 			refreshControl={
 				<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
-			}>
+			}
+		>
 			<Text>UserPreferences</Text>
 		</ScrollView>
 	);
