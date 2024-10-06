@@ -28,18 +28,17 @@ const SecurityPrivacy = () => {
 	];
 
 	return (
-		<View className="w-full h-max rounded-lg flex-col px-6 py-3 bg-light-dark dark:bg-dark-light">
+		<View className="flex-col w-full px-6 bg-white rounded-lg h-max dark:bg-dark-light">
 			{SecurityAndPrivacy.map((item, key) => (
 				<StyledPressable
 					onPress={() => router.push(item.href)}
 					key={key}
 					size="xl"
-					className={`flex-row items-center justify-between py-4
-          ${
-						item.href === "/(user_screen)/DeleteAccount"
+					className={`flex-row items-center rounded-none justify-between py-4
+          ${item.href === "/(user_screen)/DeleteAccount"
 							? "text-rose-500"
-							: "border-b border-dark/30 dark:border-light/30"
-					}`}>
+							: "border-b border-light-border dark:border-dark-border"
+						}`}>
 					<View className="flex-row items-center">
 						<Image
 							source={item.icon}
@@ -47,9 +46,8 @@ const SecurityPrivacy = () => {
 							className="w-6 h-6"
 						/>
 						<StyledText
-							className={`ml-3 text-base ${
-								item.href === "/(user_screen)/DeleteAccount" && "text-rose-500"
-							}`}>
+							className={`ml-3 text-base ${item.href === "/(user_screen)/DeleteAccount" && "text-rose-500"
+								}`}>
 							{item.title}
 						</StyledText>
 					</View>

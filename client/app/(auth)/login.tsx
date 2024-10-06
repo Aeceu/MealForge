@@ -10,6 +10,7 @@ import {
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { useThemeColors } from "../../constants/colors";
+import { useColorScheme } from "nativewind";
 import StyledText from "@/components/StyledText";
 import StyledTextInput from "@/components/StyledTextInput";
 import StyledPressable from "@/components/StyledPressable";
@@ -25,6 +26,7 @@ import { handleLogin } from "@/redux/actions/authActions";
 const Login = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const user = useSelector((state: RootState) => state.auth);
+	const { colorScheme } = useColorScheme();
 	const { gradientColor, logoImage } = useThemeColors();
 
 	const onSubmit = async (data: TUserLogin) => {
@@ -48,17 +50,23 @@ const Login = () => {
 		<KeyboardAvoidingView
 			behavior={Platform.OS === "ios" ? "padding" : "height"}
 			style={{ flex: 1 }}
-			keyboardVerticalOffset={Platform.OS === "ios" ? 60 : -300}>
-			<LinearGradient
-				start={{ x: 0.9, y: 0.1 }}
-				colors={gradientColor}
-				className="absolute top-0 left-0 w-full h-full"
-			/>
-			<SafeAreaView className="relative w-full h-full">
-				{/* Circle stays at the bottom */}
-				<View className="absolute -bottom-[15%] -left-[30%] w-[300] h-[300] rounded-full bg-light-dark/100  dark:bg-dark" />
+			keyboardVerticalOffset={Platform.OS === "ios" ? 60 : -300}
+		>
 
-				<ScrollView>
+			{colorScheme === "dark" ? (
+				<LinearGradient
+					start={{ x: 0.9, y: 0.1 }}
+					colors={gradientColor}
+					className="absolute top-0 left-0 w-full h-full"
+				/>
+			) : null}
+
+			<SafeAreaView className="relative w-full h-full bg-light dark:bg-transparent">
+
+				<ScrollView
+					showsVerticalScrollIndicator={false}
+					className=""
+				>
 					<View className="items-center flex-1 w-full max-h-full min-h-screen p-10 pb-4">
 						<View className="items-center w-full max-h-[100px]">
 							<Image
@@ -81,9 +89,9 @@ const Login = () => {
 							Login to your account.
 						</StyledText>
 
-						<View className="flex-1 flex-col ">
+						<View className="flex-col flex-1 ">
 							{/* Email Input */}
-							<View className="w-full  pt-8">
+							<View className="w-full pt-8">
 								<Controller
 									control={control}
 									name="email"
@@ -116,7 +124,7 @@ const Login = () => {
 								/>
 							</View>
 
-							<StyledPressable size="text" className="w-full px-5 mt-4">
+							<StyledPressable size="text" className="w-full px-4 mt-4">
 								<StyledText selectable={false} fontStyle="default" type="link">
 									Forgot Password?
 								</StyledText>
@@ -145,9 +153,15 @@ const Login = () => {
 							size="xl"
 							className="mt-4 bg-main"
 							disabled={user.status === "pending"}
+							// onPress={() => router.push("/(tabs)/home")}>
 							onPress={handleSubmit(onSubmit)}>
-							<StyledText selectable={false} fontStyle="Chunk" type="button">
-								{user.status === "pending" ? "Logging in..." : "Log in"}
+							<StyledText
+								selectable={false}
+								fontStyle="Chunk"
+								type="button">
+								{user.status === "pending"
+									? "Logging in..."
+									: "Log in"}
 							</StyledText>
 						</StyledPressable>
 					</View>

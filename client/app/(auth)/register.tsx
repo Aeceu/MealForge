@@ -10,6 +10,7 @@ import {
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { useThemeColors } from "../../constants/colors";
+import { useColorScheme } from "nativewind";
 import StyledText from "@/components/StyledText";
 import StyledTextInput from "@/components/StyledTextInput";
 import StyledPressable from "@/components/StyledPressable";
@@ -23,6 +24,7 @@ import { handleSignup } from "@/redux/actions/authActions";
 
 const Register = () => {
 	const dispatch = useDispatch<AppDispatch>();
+	const { colorScheme } = useColorScheme();
 	const { status } = useSelector((state: RootState) => state.auth);
 	const { gradientColor, logoImage } = useThemeColors();
 
@@ -48,17 +50,20 @@ const Register = () => {
 			behavior={Platform.OS === "ios" ? "padding" : "height"}
 			style={{ flex: 1 }}
 			keyboardVerticalOffset={Platform.OS === "ios" ? 60 : -300}>
-			<LinearGradient
-				start={{ x: 0.9, y: 0.1 }}
-				colors={gradientColor}
-				className="absolute top-0 left-0 w-full h-full"
-			/>
-			<SafeAreaView className="relative w-full h-full">
-				{/* lower left */}
-				<View className="absolute -bottom-[15%] -left-[30%] w-[300] h-[300] rounded-full bg-light-dark dark:bg-dark" />
+
+			{colorScheme === "dark" ? (
+				<LinearGradient
+					start={{ x: 0.9, y: 0.1 }}
+					colors={gradientColor}
+					className="absolute top-0 left-0 w-full h-full"
+				/>
+			) : null}
+
+			<SafeAreaView className="relative w-full h-full bg-light dark:bg-transparent">
 
 				{/* scroll container*/}
-				<ScrollView>
+				<ScrollView
+					showsVerticalScrollIndicator={false}>
 					<View className="items-center flex-1 w-full max-h-full min-h-screen p-10 pb-4">
 						<View className="items-center w-full max-h-[100px]">
 							<Image
@@ -101,7 +106,7 @@ const Register = () => {
 							</View>
 
 							{/* Name Inputs */}
-							<View className="w-full flex-row gap-2 pt-4">
+							<View className="flex-row w-full gap-2 pt-4">
 								<View className="flex-1">
 									<Controller
 										control={control}

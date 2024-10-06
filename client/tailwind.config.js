@@ -11,19 +11,28 @@ module.exports = {
 	theme: {
 		extend: {
 			colors: {
-				main: "#B25A1C",
+				main: {
+					DEFAULT: "#B25A1C",
+					50: "#FFEDD5",
+					light: "#BBA78D",
+				},
 
 				dark: {
 					DEFAULT: "#151210",
 					light: "#201D1C",
+					border: "#272626",
 				},
 
 				light: {
-					DEFAULT: "#FFEDD5",
-					dark: "#BBA78D",
+					DEFAULT: "#F6F6F6",
+					dark: "#E7E7E7",
+					border: "#E0E0E0",
 				},
 
-				gray: "#3A3A3A",
+				gray: {
+					DEFAULT: "#3A3A3A",
+					light: "#a4a4a4",
+				},
 			},
 			fontFamily: {
 				chunk: ["Chunk", "sans-serif"],
