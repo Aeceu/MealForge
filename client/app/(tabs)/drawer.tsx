@@ -7,15 +7,16 @@ import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
 import { icons } from "@/constants";
 import { handleRefresh } from "@/redux/actions/authActions";
+import { getIngredients } from "@/redux/actions/ingredientsAction";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useState } from "react";
-import { Image, Modal, RefreshControl, ScrollView, View } from "react-native";
+import { Image, RefreshControl, ScrollView, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 const drawer = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const [selectedTab, setSelectedTab] = useState("ingredients");
-	const { pageLoading } = useSelector((state: RootState) => state.user);
+	const { pageLoading, user } = useSelector((state: RootState) => state.user);
 	const { accessToken } = useSelector((state: RootState) => state.auth);
 	const [showTestModal, setShowTestModal] = useState<boolean>(false);
 
@@ -23,17 +24,23 @@ const drawer = () => {
 		setShowTestModal(false);
 	};
 	const onRefresh = async () => {
-		await dispatch(handleRefresh(accessToken));
+		dispatch(handleRefresh(accessToken)).then((res) => {
+			if (res.meta.requestStatus === "fulfilled") {
+				if (!user?.id) return;
+				dispatch(getIngredients(user.id));
+			}
+		});
 	};
 
 	if (pageLoading) return <Loading />;
 	return (
 		<ScrollView
+			contentContainerStyle={{ flex: 1 }}
 			className="w-full h-full bg-light dark:bg-dark"
 			refreshControl={
 				<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
 			}>
-			<View className="w-full h-screen">
+			<View className="flex-col items-center w-full h-full">
 				<Header />
 
 				{/* Tabs */}
@@ -61,7 +68,7 @@ const drawer = () => {
 				{/* ADD button */}
 				<StyledPressable
 					size="icon"
-					className="absolute bottom-12 right-4 rounded-full bg-main"
+					className="absolute bottom-5 right-5 rounded-full bg-main"
 					onPress={() => setShowTestModal(true)}>
 					<Image
 						source={icons.plus}
