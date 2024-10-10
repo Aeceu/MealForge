@@ -39,7 +39,10 @@ const user = () => {
 
 					<View className="flex-1 ml-4">
 						<StyledText className="font-chunk" type="heading-3">
-							{user?.firstName} {user?.lastName}
+							{user?.firstName}
+						</StyledText>
+						<StyledText className="font-chunk" type="heading-3">
+							{user?.lastName}
 						</StyledText>
 						<StyledText type="label" className="text-main">
 							@{user?.userName}

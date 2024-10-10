@@ -1,6 +1,5 @@
 from flask import Blueprint, jsonify,request
 from sqlalchemy.exc import IntegrityError
-from flask_bcrypt import Bcrypt
 from sqlalchemy import text
 import uuid
 from utils.database import engine
@@ -27,6 +26,7 @@ def get_ingredients(userId):
               ingredients_list.append({
                   "id": str(ingredient.id),
                   "name": ingredient.name,
+                  "type": ingredient.type,
                   "measurements": ingredient.measurements,
                   "expirationDate": ingredient.expirationDate,
                   "date_added": ingredient.date_added
@@ -42,12 +42,13 @@ def create_ingredient(userId):
     data = request.get_json()
 
     name = data.get("name")
+    type = data.get("type")
     measurements = data.get("measurements")
     expiration_date = data.get("expirationDate")
 
     date_added = datetime.now().strftime("%Y-%m-%d")
 
-    if not name or not measurements or not userId:
+    if not name or not measurements or not type or not userId:
         return jsonify({"error": "Missing required fields: 'name', 'measurements', and 'user_id'"}), 400
 
     try:
@@ -61,13 +62,14 @@ def create_ingredient(userId):
             ingredient_id = str(uuid.uuid4())
 
             query = text("""
-                INSERT INTO ingredients (id, name, measurements, expirationDate, date_added, user_id)
-                VALUES (:id, :name, :measurements, :expirationDate, :date_added, :user_id)
+                INSERT INTO ingredients (id, name, type, measurements, expirationDate, date_added, user_id)
+                VALUES (:id, :name, :type, :measurements, :expirationDate, :date_added, :user_id)
             """)
 
             conn.execute(query, {
                 "id": ingredient_id,
                 "name": name,
+                "type":type,
                 "measurements": measurements,
                 "expirationDate": expiration_date if expiration_date else None,
                 "date_added": date_added,
@@ -81,6 +83,7 @@ def create_ingredient(userId):
                 "ingredient": {
                     "id": ingredient_id,
                     "name": name,
+                    "type":type,
                     "measurements": measurements,
                     "expirationDate": expiration_date,
                     "date_added": date_added,

@@ -2,8 +2,6 @@ import { handleError } from "@/utils/errorHandler";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../api/axios";
 import { Alert } from "react-native";
-import { clearToken } from "../slices/authSlice";
-import { router } from "expo-router";
 
 export const getUser = createAsyncThunk(
 	"user/getUser",
