@@ -36,9 +36,10 @@ class Ingredient(Base):
 
     id = Column(GUID(), primary_key=True, default=uuid.uuid4)
     name = Column(String(250), nullable=False)
+    type = Column(String(250), nullable=False)
     measurements = Column(String(100), nullable=False)
-    expirationDate = Column(String(20), nullable=True)
-    date_added = Column(String(20), nullable=False, default=func.current_date())
+    expirationDate = Column(String(250), nullable=True)
+    date_added = Column(String(250), nullable=False, default=func.current_date())
 
     user_id = Column(GUID(), ForeignKey('users.id'), nullable=False)
     user = relationship("User", backref="ingredients")

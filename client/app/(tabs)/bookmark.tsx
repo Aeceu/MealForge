@@ -18,6 +18,7 @@ const bookmark = () => {
 	if (pageLoading) return <Loading />;
 	return (
 		<ScrollView
+			contentContainerStyle={{ flex: 1 }}
 			refreshControl={
 				<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
 			}>
