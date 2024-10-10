@@ -24,8 +24,6 @@ export const useThemeColors = () => {
 
 		gray: "#3A3A3A", // dark mode placeholder, light mode input focus border
 		grayLight: "#a4a4a4", // light mode placeholder
-
-		// TODO: add new color for inactive tab icons and text (light and dark mode)
 	};
 
 	const gradientColor =
