@@ -97,7 +97,7 @@ def create_ingredient(userId):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@ingredients_bp.route("/user/dele_ingredients/<ingredientsId>",methods=["DELETE"])
+@ingredients_bp.route("/user/delete_ingredients/<ingredientsId>",methods=["DELETE"])
 def delete_ingredients(ingredientsId):
     try:
         with engine.connect() as conn:
@@ -112,6 +112,7 @@ def delete_ingredients(ingredientsId):
                 DELETE FROM ingredients
                 WHERE id = :ingredientsId
                 """),{"ingredientsId":ingredientsId})
+            conn.commit()
             return jsonify({"message":"ingredients deleted successfully!"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500

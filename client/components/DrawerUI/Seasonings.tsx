@@ -1,10 +1,80 @@
-import { StyleSheet, Text, View } from "react-native";
+import StyledText from "../StyledText";
+import Pulse from "../animations/Pulse";
+import { icons, images } from "@/constants";
+import { useColorScheme } from "nativewind";
+import StyledPressable from "../StyledPressable";
+import { Image, ScrollView, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
+import { deleteIngredients } from "@/redux/actions/ingredientsAction";
+
 const Seasonings = () => {
+	const dispatch = useDispatch<AppDispatch>();
+	const { ingredients, pageLoading } = useSelector(
+		(state: RootState) => state.ingredients
+	);
+
+	const { colorScheme } = useColorScheme();
+
+	const handleDelete = async (ingredientsId: string) => {
+		dispatch(deleteIngredients(ingredientsId));
+	};
+
+	if (pageLoading) {
+		return (
+			<View className="w-full p-8 flex-col items-center justify-center bg-light dark:bg-dark">
+				<Pulse>
+					<Image
+						source={
+							colorScheme === "dark"
+								? images.loading_light
+								: images.loading_dark
+						}
+						resizeMode="contain"
+						className="w-20 h-20"
+					/>
+				</Pulse>
+			</View>
+		);
+	}
 	return (
-		<View>
-			<Text>Seasonings</Text>
-		</View>
+		<ScrollView className="flex-1 w-full h-full p-4 ">
+			{ingredients.length > 0 ? (
+				ingredients.map(
+					(item, i) =>
+						item.type === "seasoning" && (
+							<View
+								key={i}
+								className="w-full p-4 my-2 bg-white border border-light-border dark:bg-dark-light dark:border-dark-border rounded-xl flex-row items-center justify-between">
+								<View className="flex-col items-start justify-center">
+									<StyledText type="label" className="text-xs">
+										{item.type}
+									</StyledText>
+									<StyledText key={i} className="font-chunk " type="heading-4">
+										{item.name}
+									</StyledText>
+									<StyledText type="label" className="text-xs">
+										{item.measurements}
+									</StyledText>
+								</View>
+								<View className="flex-row items-center justify-center">
+									<StyledPressable
+										size="icon"
+										onPress={() => handleDelete(item.id)}>
+										<Image
+											source={icons.closeLightDark}
+											resizeMode="contain"
+											className="w-7 h-7"
+										/>
+									</StyledPressable>
+								</View>
+							</View>
+						)
+				)
+			) : (
+				<StyledText>No Ingredients is added!</StyledText>
+			)}
+		</ScrollView>
 	);
 };
 export default Seasonings;
-const styles = StyleSheet.create({});

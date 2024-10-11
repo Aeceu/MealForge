@@ -4,7 +4,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../api/axios";
 import { Alert } from "react-native";
 import { router } from "expo-router";
-import { setUser } from "../slices/userSlice";
+import { setLogout, setUser } from "../slices/userSlice";
 
 export const handleLogin = createAsyncThunk(
 	"auth/handleLogin",
@@ -53,7 +53,7 @@ export const handleShowCookie = createAsyncThunk(
 
 export const handleLogout = createAsyncThunk(
 	"auth/handleLogout",
-	async (token: string | null, { rejectWithValue }) => {
+	async (token: string | null, { rejectWithValue, dispatch }) => {
 		try {
 			const res = await axios.get("/logout", {
 				headers: {
@@ -62,11 +62,12 @@ export const handleLogout = createAsyncThunk(
 				},
 			});
 			console.log(res.data);
-
+			dispatch(setLogout());
 			return res.data;
 		} catch (error) {
 			const resError = handleError(error);
 			console.log(resError);
+			dispatch(setLogout());
 			return rejectWithValue(resError);
 		}
 	}

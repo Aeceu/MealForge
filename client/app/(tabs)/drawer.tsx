@@ -9,15 +9,19 @@ import { icons } from "@/constants";
 import { handleRefresh } from "@/redux/actions/authActions";
 import { getIngredients } from "@/redux/actions/ingredientsAction";
 import { AppDispatch, RootState } from "@/redux/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image, RefreshControl, ScrollView, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 const drawer = () => {
 	const dispatch = useDispatch<AppDispatch>();
-	const [selectedTab, setSelectedTab] = useState("ingredients");
-	const { pageLoading, user } = useSelector((state: RootState) => state.user);
-	const { accessToken } = useSelector((state: RootState) => state.auth);
+	const [selectedTab, setSelectedTab] = useState<
+		"main ingredient" | "seasoning"
+	>("main ingredient");
+	const { user } = useSelector((state: RootState) => state.user);
+	const { pageLoading, accessToken } = useSelector(
+		(state: RootState) => state.auth
+	);
 	const [showTestModal, setShowTestModal] = useState<boolean>(false);
 
 	const onClose = () => {
@@ -26,13 +30,21 @@ const drawer = () => {
 	const onRefresh = async () => {
 		dispatch(handleRefresh(accessToken)).then((res) => {
 			if (res.meta.requestStatus === "fulfilled") {
-				if (!user?.id) return;
+				if (!user?.id) {
+					return;
+				}
 				dispatch(getIngredients(user.id));
 			}
 		});
 	};
 
+	useEffect(() => {
+		if (!user?.id) return console.log("no userid");
+		dispatch(getIngredients(user.id));
+	}, []);
+
 	if (pageLoading) return <Loading />;
+
 	return (
 		<ScrollView
 			contentContainerStyle={{ flex: 1 }}
@@ -46,24 +58,25 @@ const drawer = () => {
 				{/* Tabs */}
 				<View className="flex-row mt-1">
 					<StyledPressable
-						onPress={() => setSelectedTab("ingredients")}
+						onPress={() => setSelectedTab("main ingredient")}
 						className={`basis-1/2 ${
-							selectedTab === "ingredients" &&
-							"border-b dark:border-dark-light "
+							selectedTab === "main ingredient" &&
+							"border-b border-dark dark:border-main-50 "
 						}`}>
 						<StyledText>My Ingredients</StyledText>
 					</StyledPressable>
 					<StyledPressable
-						onPress={() => setSelectedTab("seasonings")}
+						onPress={() => setSelectedTab("seasoning")}
 						className={`basis-1/2 ${
-							selectedTab === "seasonings" && "border-b dark:border-dark-light "
+							selectedTab === "seasoning" &&
+							"border-b border-dark dark:border-main-50 "
 						}`}>
 						<StyledText>My Seasonings</StyledText>
 					</StyledPressable>
 				</View>
 
-				{selectedTab === "ingredients" && <Ingredients />}
-				{selectedTab === "seasonings" && <Seasonings />}
+				{selectedTab === "main ingredient" && <Ingredients />}
+				{selectedTab === "seasoning" && <Seasonings />}
 
 				{/* ADD button */}
 				<StyledPressable
@@ -77,7 +90,11 @@ const drawer = () => {
 					/>
 				</StyledPressable>
 
-				<AddIngredients isVisible={showTestModal} onClose={onClose} />
+				<AddIngredients
+					type={selectedTab}
+					isVisible={showTestModal}
+					onClose={onClose}
+				/>
 			</View>
 		</ScrollView>
 	);

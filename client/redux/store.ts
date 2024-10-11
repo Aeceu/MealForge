@@ -3,6 +3,7 @@ import userSlice from "./slices/userSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { persistReducer, persistStore } from "redux-persist";
 import authSlice from "./slices/authSlice";
+import ingredientSlice from "./slices/ingredientsSlice";
 
 const persistConfig = {
 	key: "root",
@@ -13,8 +14,9 @@ const persistedAuthReducer = persistReducer(persistConfig, authSlice);
 
 export const store = configureStore({
 	reducer: {
-		user: userSlice,
 		auth: persistedAuthReducer,
+		user: userSlice,
+		ingredients: ingredientSlice,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({
