@@ -5,7 +5,7 @@ import axios from "../api/axios";
 type addIngredientsProps = {
 	userId: string;
 	name: string;
-	type: string;
+	type: "main ingredient" | "seasoning";
 	measurements: string;
 	expirationDate: Date;
 };
@@ -20,7 +20,6 @@ export const addIngredients = createAsyncThunk(
 				measurements: props.measurements,
 				expirationDate: props.expirationDate,
 			});
-			console.log(res.data);
 			return res.data;
 		} catch (error) {
 			const resError = handleError(error);
@@ -42,6 +41,26 @@ export const getIngredients = createAsyncThunk(
 			console.log("resError");
 			console.log(resError);
 			return rejectWithValue(error);
+		}
+	}
+);
+
+export const deleteIngredients = createAsyncThunk(
+	"user/deleteIngredients",
+	async (ingredientId: string, { rejectWithValue }) => {
+		try {
+			const res = await axios.delete(
+				`/user/delete_ingredients/${ingredientId}`
+			);
+			return {
+				message: res.data.message,
+				id: ingredientId,
+			};
+		} catch (error) {
+			const resError = handleError(error);
+			console.log("resError");
+			console.log(resError);
+			return rejectWithValue(resError);
 		}
 	}
 );

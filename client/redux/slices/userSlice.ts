@@ -7,11 +7,9 @@ import {
 } from "../actions/userActions";
 import { TUser } from "@/utils/types/user";
 import { TIngredients } from "@/utils/types/ingredients";
-import { addIngredients, getIngredients } from "../actions/ingredientsAction";
 
 type TInitialState = {
 	user: TUser | null;
-	ingredients: TIngredients[];
 	status: "idle" | "pending" | "completed" | "failed";
 	pageLoading: boolean;
 	error: any | null;
@@ -19,7 +17,6 @@ type TInitialState = {
 
 const initialState: TInitialState = {
 	user: null,
-	ingredients: [],
 	status: "idle",
 	pageLoading: false,
 	error: null,
@@ -31,6 +28,10 @@ const userSlice = createSlice({
 	reducers: {
 		setUser: (state, action) => {
 			state.user = action.payload;
+		},
+		setLogout: (state) => {
+			state.user = null;
+			state.status = "idle";
 		},
 	},
 	extraReducers: (builder) => {
@@ -76,31 +77,9 @@ const userSlice = createSlice({
 			.addCase(deleteAccount.rejected, (state, action) => {
 				state.status = "failed";
 				state.error = action.error.message;
-			})
-			.addCase(getIngredients.pending, (state, action) => {
-				state.status = "pending";
-			})
-			.addCase(getIngredients.fulfilled, (state, action) => {
-				state.status = "completed";
-				state.ingredients = action.payload.ingredients;
-			})
-			.addCase(getIngredients.rejected, (state, action) => {
-				state.status = "failed";
-				state.error = action.error.message;
-			})
-			.addCase(addIngredients.pending, (state, action) => {
-				state.status = "pending";
-			})
-			.addCase(addIngredients.fulfilled, (state, action) => {
-				state.status = "completed";
-				state.ingredients.push(action.payload.ingredient);
-			})
-			.addCase(addIngredients.rejected, (state, action) => {
-				state.status = "failed";
-				state.error = action.error.message;
 			});
 	},
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser, setLogout } = userSlice.actions;
 export default userSlice.reducer;

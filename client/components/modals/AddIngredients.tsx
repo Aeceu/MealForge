@@ -15,11 +15,12 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { addIngredients } from "@/redux/actions/ingredientsAction";
 
 type Props = {
+	type: "main ingredient" | "seasoning";
 	isVisible: boolean;
 	onClose: () => void;
 };
 
-const AddIngredients: React.FC<Props> = ({ isVisible, onClose }) => {
+const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 	const { textColor } = useThemeColors();
 	const [showDate, setShowDate] = useState(false);
 
@@ -38,14 +39,14 @@ const AddIngredients: React.FC<Props> = ({ isVisible, onClose }) => {
 		resolver: zodResolver(IngredientSchema),
 	});
 
-	const { user, status } = useSelector((state: RootState) => state.user);
+	const { user } = useSelector((state: RootState) => state.user);
 	const dispatch = useDispatch<AppDispatch>();
 	const onSubmit = async (data: TNewIngredients) => {
 		if (!user?.id) return;
 		dispatch(
 			addIngredients({
 				name: data.name,
-				type: data.type,
+				type: type,
 				expirationDate: data.expirationDate,
 				measurements: data.measurements,
 				userId: user.id,
@@ -65,75 +66,21 @@ const AddIngredients: React.FC<Props> = ({ isVisible, onClose }) => {
 			transparent={true}
 			animationType="slide"
 			className="bg-red-500">
-			<View className="absolute bottom-0 w-full h-3/4 rounded-t-3xl border border-light-dark dark:border-dark-light p-4 bg-light dark:bg-dark-light">
-				{/* header */}
-				<View className="flex-row items-center justify-between">
-					<StyledText className="">Add new ingredient</StyledText>
-					<StyledPressable
-						onPress={handleClose}
-						size="sm"
-						className="bg-main rounded-md">
-						<StyledText type="label">Close</StyledText>
-					</StyledPressable>
-				</View>
-
-				{/* body */}
-				<View className="mt-4">
-					<View className="w-1/2 ">
-						<StyledText type="label" className="mb-2">
-							Type of ingredient
-						</StyledText>
-						<Controller
-							control={control}
-							name="type"
-							render={({ field: { onChange } }) => (
-								<SelectList
-									data={[
-										{ key: "1", value: "main ingredient" },
-										{ key: "1", value: "seasoning" },
-									]}
-									save="value"
-									setSelected={onChange}
-									inputStyles={{
-										color: textColor,
-									}}
-									boxStyles={{
-										borderColor: textColor,
-									}}
-									dropdownStyles={{
-										borderColor: textColor,
-									}}
-									dropdownTextStyles={{
-										color: textColor,
-									}}
-									searchicon={
-										<Image
-											source={icons.searchLightDark}
-											resizeMode="contain"
-											className="w-4 h-4"
-										/>
-									}
-									closeicon={
-										<Image
-											source={icons.closeLightDark}
-											resizeMode="contain"
-											className="w-5 h-5"
-										/>
-									}
-									searchPlaceholder=""
-								/>
-							)}
-						/>
-						{errors.type && (
-							<StyledText
-								fontStyle="default"
-								className="px-1 text-sm text-red-500">
-								{errors.type.message}
-							</StyledText>
-						)}
+			<View className="flex-1">
+				<View className="absolute bottom-0 w-full h-3/4 rounded-t-3xl border border-light-dark dark:border-dark-light p-4 bg-light dark:bg-dark-light">
+					{/* header */}
+					<View className="flex-row items-center justify-between">
+						<StyledText className="">Add new ingredient</StyledText>
+						<StyledPressable
+							onPress={handleClose}
+							size="sm"
+							className="bg-main rounded-md">
+							<StyledText type="label">Close</StyledText>
+						</StyledPressable>
 					</View>
 
-					{watch("type") && (
+					{/* body */}
+					<View className="mt-4">
 						<View className="mt-2">
 							<View>
 								<StyledText type="label" className="mb-2">
@@ -145,7 +92,7 @@ const AddIngredients: React.FC<Props> = ({ isVisible, onClose }) => {
 									render={({ field: { onChange } }) => (
 										<SelectList
 											data={
-												watch().type === "main ingredient"
+												type === "main ingredient"
 													? mainIngredients
 													: seasonings
 											}
@@ -256,20 +203,20 @@ const AddIngredients: React.FC<Props> = ({ isVisible, onClose }) => {
 								)}
 							</View>
 						</View>
-					)}
-					<View>
-						<StyledPressable
-							size="xl"
-							className={`mt-4 bg-main flex-row items-center`}
-							onPress={handleSubmit(onSubmit)}>
-							<StyledText
-								className="ml-2"
-								selectable={false}
-								fontStyle="Chunk"
-								type="button">
-								Save
-							</StyledText>
-						</StyledPressable>
+						<View>
+							<StyledPressable
+								size="xl"
+								className={`mt-4 bg-main flex-row items-center`}
+								onPress={handleSubmit(onSubmit)}>
+								<StyledText
+									className="ml-2"
+									selectable={false}
+									fontStyle="Chunk"
+									type="button">
+									Save
+								</StyledText>
+							</StyledPressable>
+						</View>
 					</View>
 				</View>
 			</View>
