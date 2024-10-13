@@ -31,9 +31,13 @@ const user = () => {
 				<View className="flex-row items-start mt-6 mb-4">
 					<View className="my-auto border rounded-xl border-light-border dark:border-dark-border">
 						<Image
-							source={images.loading_light}
+							source={
+								user?.profile_picture_url
+									? { uri: user.profile_picture_url }
+									: images.loading_light
+							}
 							resizeMode="cover"
-							className="w-[150px] h-[150px]"
+							className="w-[150px] h-[150px] rounded-xl"
 						/>
 					</View>
 

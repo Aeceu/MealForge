@@ -79,14 +79,14 @@ def handleLogin():
             user_exists = result.fetchone()
             if user_exists is None:
                 return jsonify({"error": "Email is not registered!"}), 400
-
             user = {
                 "id": user_exists.id,
                 "userName":user_exists.userName,
                 "firstName": user_exists.firstName,
                 "lastName": user_exists.lastName,
                 "email": user_exists.email,
-                "password": user_exists.password
+                "password": user_exists.password,
+                "profile_picture_url":user_exists.profile_picture_url
             }
 
             valid_password = bcrypt.check_password_hash(user["password"], password)
@@ -115,6 +115,7 @@ def handleLogin():
                     "firstName": user["firstName"],
                     "lastName": user["lastName"],
                     "email": user["email"],
+                    "profile_picture_url":user["profile_picture_url"]
                 },
                 "accessToken": accessToken,
                 "refreshToken": refreshToken,
@@ -124,6 +125,7 @@ def handleLogin():
             return response, 200
 
     except Exception as e:
+        print(e)
         return jsonify({"error": str(e)}), 500
 
 # TODO: Show's the cookies set
@@ -163,6 +165,7 @@ def refresh():
               "firstName": user_exists.firstName,
               "lastName": user_exists.lastName,
               "email": user_exists.email,
+              "profile_picture_url":user_exists.profile_picture_url
           }
 
             # Generate new access token and refresh token

@@ -48,6 +48,7 @@ export type TUser = {
 	lastName: string;
 	userName: string;
 	email: string;
+	profile_picture_url: string | null;
 
 	ingredients: {
 		id: string;
