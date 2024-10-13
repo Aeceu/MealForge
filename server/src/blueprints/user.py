@@ -1,14 +1,25 @@
+import os
+import jwt
+import uuid
+import boto3
+from sqlalchemy import text
+from flask_bcrypt import Bcrypt
+from utils.database import engine
+from sqlalchemy.exc import IntegrityError
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import (  jwt_required, get_jwt_identity,)
-from sqlalchemy.exc import IntegrityError
-from flask_bcrypt import Bcrypt
-from sqlalchemy import text
-import uuid
-from utils.database import engine
-import jwt
 
 user_bp = Blueprint("user", __name__)
 bcrypt = Bcrypt()
+
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id = os.getenv("AWS_ACCESS_KEY_ID"),
+    aws_secret_access_key = os.getenv("AWS_SECRET_ACCESS_KEY"),
+    region_name = "ap-southeast-2"
+);
+
+BUCKET_NAME = "mealforgebucket"
 
 
 # TODO: GET the specific user
@@ -158,6 +169,67 @@ def changePassword(id):
     except Exception as e:
         return jsonify({"error":str(e)}),500
 
+# TODO: Add/Change Profile Picture
+@user_bp.route("/user/profile-picture", methods=["POST"])
+@jwt_required()
+def upload_profile_picture():
+    current_user_id = get_jwt_identity()
+    file = request.files.get('profile_picture')
+
+    if not file:
+        return jsonify({"error": "No file provided"}), 400
+
+    # Generate a unique filename for the new image
+    file_extension = file.filename.split('.')[-1]
+    file_name = f"{current_user_id}_{uuid.uuid4()}.{file_extension}"
+
+    try:
+        # Start a transaction
+        with engine.connect() as conn:
+            # First, fetch the current profile picture URL
+            result = conn.execute(text(
+                """
+                SELECT profile_picture_url FROM users WHERE id = :userId
+                """), {"userId": current_user_id})
+            user_data = result.fetchone()
+
+            # If there's an old profile picture, delete it from S3
+            if user_data and user_data.profile_picture_url:
+                old_file_name = user_data.profile_picture_url.split("/")[-1]
+                try:
+                    s3.delete_object(Bucket=BUCKET_NAME, Key=old_file_name)
+                except Exception as delete_error:
+                    return jsonify({"error": f"Could not delete old profile picture: {str(delete_error)}"}), 500
+
+            # Upload the new file to S3
+            s3.upload_fileobj(
+                file,
+                BUCKET_NAME,
+                file_name,
+                ExtraArgs={"ContentType": file.content_type}
+            )
+
+            # Create the S3 file URL
+            file_url = f"https://{BUCKET_NAME}.s3.amazonaws.com/{file_name}"
+
+            # Update the user's profile picture in the database
+            conn.execute(text(
+                """
+                UPDATE users SET profile_picture_url = :profile_picture_url WHERE id = :userId
+                """
+            ), {
+                "profile_picture_url": file_url,
+                "userId": current_user_id
+            })
+
+            # Commit the transaction
+            conn.commit()
+
+        return jsonify({"message": "Profile picture updated!", "profile_picture_url": file_url}), 200
+
+    except Exception as e:
+        # Rollback if there was an error
+        return jsonify({"error": str(e)}), 500
 
 # TODO: Search user via username / email / firstname / lastName
 
@@ -165,7 +237,6 @@ def changePassword(id):
 
 # TODO: Get all the follower
 
-# TODO: add profile picture
 
 # TODO: change profile picture
 

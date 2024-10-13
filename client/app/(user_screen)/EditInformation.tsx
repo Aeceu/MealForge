@@ -12,12 +12,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { Alert, Image, RefreshControl, ScrollView, View } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
+import * as ImagePicker from "expo-image-picker";
+import axios from "@/redux/api/axios";
+import { useState } from "react";
+
+interface UploadResponse {
+	message: string;
+	profile_picture_url: string;
+}
 
 const EditInformation = () => {
 	const { user, status } = useSelector((state: RootState) => state.user);
 	const { pageLoading, accessToken } = useSelector(
 		(state: RootState) => state.auth
 	);
+	const [profilePic, setProfilePic] = useState(user?.profile_picture_url);
 	const dispatch = useDispatch<AppDispatch>();
 
 	const onRefresh = async () => {
@@ -65,6 +74,66 @@ const EditInformation = () => {
 		});
 	};
 
+	// Function to pick and upload profile picture
+	const handleProfilePicUpload = async () => {
+		const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+		if (status !== "granted") {
+			Alert.alert(
+				"Permission denied",
+				"Permission to access photos is required."
+			);
+			return;
+		}
+
+		const result = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			allowsEditing: true,
+			aspect: [1, 1],
+			quality: 1,
+		});
+
+		if (!result.canceled && result.assets[0].uri) {
+			await uploadProfilePicture(result.assets[0].uri);
+		}
+	};
+
+	// Function to upload the selected image using axios
+	const uploadProfilePicture = async (uri: string): Promise<void> => {
+		const formData = new FormData();
+		formData.append("profile_picture", {
+			uri,
+			name: "profile.jpg",
+			type: "image/jpeg",
+		} as any);
+
+		try {
+			const response = await axios.post<UploadResponse>(
+				"/user/profile-picture",
+				formData,
+				{
+					headers: {
+						"Content-Type": "multipart/form-data",
+						Authorization: `Bearer ${accessToken}`,
+					},
+				}
+			);
+
+			const result = response.data;
+			if (response.status === 200) {
+				setProfilePic(result.profile_picture_url);
+				Alert.alert("Success", "Profile picture updated!");
+			} else {
+				Alert.alert(
+					"Error",
+					result.message || "Failed to upload profile picture."
+				);
+			}
+		} catch (error) {
+			console.error(error);
+			Alert.alert("Error", "An error occurred while uploading the picture.");
+		}
+	};
+
 	if (pageLoading) return <Loading />;
 
 	return (
@@ -72,20 +141,22 @@ const EditInformation = () => {
 			className="w-full h-full bg-light dark:bg-dark"
 			refreshControl={
 				<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
-			}
-		>
+			}>
 			<View className="flex-col items-center w-full h-full p-4">
 				<Image
-					source={images.loading_light}
+					source={profilePic ? { uri: profilePic } : images.loading_light}
 					resizeMode="contain"
-					className="w-[80px] h-[80px] rounded"
+					className="w-[100px] h-[100px] rounded-xl"
 				/>
 
 				<View className="flex-1 w-full space-y-8">
 					<View className="flex-row items-center justify-center w-full mt-2">
 						<StyledPressable
+							onPress={handleProfilePicUpload}
 							className="border rounded border-main">
-							<StyledText type="label" className="text-main">Change Profile</StyledText>
+							<StyledText type="label" className="text-main">
+								Change Profile
+							</StyledText>
 						</StyledPressable>
 					</View>
 
@@ -159,12 +230,13 @@ const EditInformation = () => {
 							disabled={status === "pending"}
 							onPress={handleSubmit(onSubmit)}
 							className="w-full py-4 rounded-md bg-main">
-							<StyledText type="subheading" className="text-white dark:text-main-light">
+							<StyledText
+								type="subheading"
+								className="text-white dark:text-main-light">
 								{status === "pending" ? "Updating..." : "Save changes"}
 							</StyledText>
 						</StyledPressable>
 					</View>
-
 				</View>
 			</View>
 		</ScrollView>

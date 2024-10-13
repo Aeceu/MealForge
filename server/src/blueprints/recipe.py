@@ -99,7 +99,6 @@ def get_user_recipes(user_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
 @recipes_bp.route("/test", methods=["GET"])
 def test():
   model = genai.GenerativeModel("gemini-1.5-flash")

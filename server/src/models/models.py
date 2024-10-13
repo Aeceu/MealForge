@@ -23,6 +23,7 @@ class User(Base):
     email = Column(String(120), unique=True, nullable=False)
     password = Column(String(250), nullable=False)
     refreshToken = Column(Text, nullable=True)
+    profile_picture_url = Column(String(500), nullable=True)
 
     recipes = relationship('Recipe', back_populates='user', cascade="all, delete-orphan")
     recipe_posts = relationship('RecipePost', back_populates='user', cascade="all, delete-orphan")
