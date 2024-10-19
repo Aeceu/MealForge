@@ -63,9 +63,8 @@ const Settings = () => {
 
 				<StyledPressable
 					onPress={logout}
-					className={`flex-row items-center justify-start w-full px-6 py-4 mt-16 rounded-lg h-max ${
-						status === "pending" ? "bg-red-600/50" : "bg-red-600"
-					}`}>
+					className={`flex-row items-center justify-start w-full px-6 py-4 mt-16 rounded-lg h-max ${status === "pending" ? "bg-red-600/50" : "bg-red-600"
+						}`}>
 					{status === "pending" ? (
 						<Spin loading={status === "pending"} size="md" />
 					) : (
@@ -75,7 +74,7 @@ const Settings = () => {
 							className="w-6 h-6"
 						/>
 					)}
-					<StyledText className="ml-3 text-white dark:text-main-light">
+					<StyledText className="ml-3 text-white">
 						{status === "pending" ? "Logging Out..." : "Log Out"}
 					</StyledText>
 				</StyledPressable>

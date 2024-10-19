@@ -13,7 +13,7 @@ app = Flask(__name__)
 jwt = JWTManager(app)
 
 # CORS Configuration
-CORS(app, supports_credentials=True,origin="exp://192.168.0.101:8081")
+CORS(app, supports_credentials=True,origin="exp://192.168.1.5:8081")
 
 # Configuration
 app.config['CORS_HEADERS'] = 'Content-Type'

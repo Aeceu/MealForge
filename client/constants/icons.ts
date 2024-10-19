@@ -12,6 +12,7 @@ import settingslightDark from "@/assets/icons/settings-light-dark.png";
 import settingsDarkLight from "@/assets/icons/settings-dark-light.png";
 import moon from "@/assets/icons/moon.png";
 import sun from "@/assets/icons/sun.png";
+import chevronRightLight from "@/assets/icons/chevron-right-light.png";
 import chevronRightLightDark from "@/assets/icons/chevron-right-light-dark.png";
 import chevronRightDarkLight from "@/assets/icons/chevron-right-dark-light.png";
 import logout from "@/assets/icons/logout.png";
@@ -23,6 +24,8 @@ import moonLightDark from "@/assets/icons/moon-light-dark.png";
 import moonDarkLight from "@/assets/icons/moon-dark-light.png";
 import sunLightDark from "@/assets/icons/sun-light-dark.png";
 import sunDarkLight from "@/assets/icons/sun-dark-light.png";
+import userLight from "@/assets/icons/user-light.png";
+import userDark from "@/assets/icons/user-dark.png";
 import userLightDark from "@/assets/icons/user-light-dark.png";
 import userDarkLight from "@/assets/icons/user-dark-light.png";
 import userDelete from "@/assets/icons/user-delete.png";
@@ -45,6 +48,9 @@ import searchLightDark from "@/assets/icons/search-light-dark.png";
 import closeDarkLight from "@/assets/icons/close-dark-light.png";
 import closeLightDark from "@/assets/icons/close-light-dark.png";
 import plus from "@/assets/icons/plus.png";
+import plusWhite from "@/assets/icons/plus-white.png";
+import arrowDownDark from "@/assets/icons/arrow-down-dark.png";
+import arrowDownLight from "@/assets/icons/arrow-down-light.png";
 
 export default {
 	logo_dark,
@@ -61,6 +67,7 @@ export default {
 	settingsDarkLight,
 	moon,
 	sun,
+	chevronRightLight,
 	chevronRightLightDark,
 	chevronRightDarkLight,
 	logout,
@@ -70,6 +77,8 @@ export default {
 	lockLightDark,
 	moonLightDark,
 	moonDarkLight,
+	userLight,
+	userDark,
 	userLightDark,
 	userDarkLight,
 	sunDarkLight,
@@ -94,4 +103,7 @@ export default {
 	closeDarkLight,
 	closeLightDark,
 	plus,
+	plusWhite,
+	arrowDownDark,
+	arrowDownLight,
 };

@@ -87,32 +87,32 @@ const user = () => {
 
 				{/* user info */}
 				<View className="flex-row items-center flex-1 p-4 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
-					<View className="flex-col items-center flex-grow basis-1/3">
+					<StyledPressable className="flex-col items-center flex-grow basis-1/3">
 						<StyledText type="paragraph" className="font-chunk">
 							22
 						</StyledText>
 						<StyledText type="label" fontStyle="light">
 							Ingredients
 						</StyledText>
-					</View>
+					</StyledPressable>
 
-					<View className="flex-col items-center flex-grow basis-1/3">
+					<StyledPressable className="flex-col items-center flex-grow basis-1/3">
 						<StyledText type="paragraph" className="font-chunk">
 							8
 						</StyledText>
 						<StyledText type="label" fontStyle="light">
 							Recipes
 						</StyledText>
-					</View>
+					</StyledPressable>
 
-					<View className="flex-col items-center flex-grow basis-1/3">
+					<StyledPressable className="flex-col items-center flex-grow basis-1/3">
 						<StyledText type="paragraph" className="font-chunk">
 							1.2 k
 						</StyledText>
 						<StyledText type="label" fontStyle="light">
 							Likes
 						</StyledText>
-					</View>
+					</StyledPressable>
 				</View>
 
 				<View className="flex-row mt-2">
@@ -120,7 +120,7 @@ const user = () => {
 						<StyledText>My Posts</StyledText>
 					</StyledPressable>
 					<StyledPressable className="basis-1/2">
-						<StyledText>My Nigga</StyledText>
+						<StyledText>My Info</StyledText>
 					</StyledPressable>
 				</View>
 			</View>
