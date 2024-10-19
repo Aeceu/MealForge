@@ -146,9 +146,8 @@ const Login = () => {
 
 						<StyledPressable
 							size="xl"
-							className={`mt-4 bg-main flex-row items-center ${
-								user.status === "pending" && "bg-main/20"
-							}`}
+							className={`mt-4 bg-main flex-row items-center ${user.status === "pending" && "bg-main/20"
+								}`}
 							disabled={user.status === "pending"}
 							onPress={handleSubmit(onSubmit)}>
 							{user.status === "pending" && (

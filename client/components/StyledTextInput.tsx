@@ -43,18 +43,24 @@ const StyledTextInput = ({
 				{title}
 			</StyledText>
 
-			<View className={`flex-row items-center w-full border rounded-lg shadow-sm h-14 
+			<View className={`flex-row items-center w-full border rounded-lg shadow-sm h-14
 				${colorScheme === "light"
 					? "border-light-border focus:border-gray"
 					: "border-dark-border focus:border-main"}
 			${error && "border-red-600"}`}>
 				<TextInput
-					className={`flex-1 h-full px-4 text-base ${colorScheme === "light" ? "text-dark" : "text-main-light"
+					className={`flex-1 h-full px-4 text-base ${colorScheme === "light" ? "text-dark" : "text-main-50"
 						}`}
 					placeholder={title}
 					placeholderTextColor={placeholderColor}
 					value={value}
 					onChangeText={handleTextChange}
+					autoCapitalize={
+						title === "Username" ||
+							title === "Email" ||
+							title === "Password"
+							? "none" : title === "default" ? "sentences" : "words"
+					}
 					secureTextEntry={
 						(title === "Password" ||
 							title === "Current Password" ||

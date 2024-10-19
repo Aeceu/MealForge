@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Redirect, Tabs } from "expo-router";
 import { View, Image, Text, ImageProps } from "react-native";
 import { useSelector } from "react-redux";
@@ -43,6 +43,7 @@ const AppLayout = () => {
 	if (!accessToken && !refreshToken && !pageLoading) {
 		return <Redirect href={"/(auth)/login"} />;
 	}
+
 	return (
 		<Tabs
 			screenOptions={{

@@ -29,7 +29,7 @@ const Home = () => {
 
 	return (
 		<FlatList
-			className="bg-light dark:bg-dark p-4"
+			className="p-4 pt-0 bg-light dark:bg-dark"
 			data={dummyRecipePosts}
 			renderItem={({ item }) => <RecipePostCard recipe={item} />}
 			keyExtractor={(item) => item.id.toString()}
@@ -39,7 +39,7 @@ const Home = () => {
 			ListHeaderComponent={
 				<View>
 					{/* Header */}
-					<View className="mt-6 py-4 w-full flex-row items-center justify-between">
+					<View className="flex-row items-center justify-between w-full py-4 mt-6">
 						<Image
 							source={
 								colorScheme === "dark"
@@ -65,14 +65,18 @@ const Home = () => {
 					</View>
 
 					{/* Search Box */}
-					<View className="w-full h-[50px] flex-row items-center justify-between bg-light-dark dark:bg-dark-light rounded-lg pr-3 border border-dark/10 dark:border-light/10">
+					<View className="w-full h-[50px] flex-row items-center justify-between bg-white dark:bg-dark-light rounded-lg pr-3 border border-light-border dark:border-dark-border focus:border-gray dark:focus:border-main">
 						<TextInput
 							value={search}
 							onChangeText={(e) => setSearch(e)}
 							placeholder="Search recipes"
-							className="w-full h-full px-3 flex-1 text-dark-light dark:text-light-dark"
+							className="flex-1 w-full h-full px-3 text-dark-light dark:text-light-dark"
 							placeholderTextColor={placeholderColor}
 						/>
+						<View
+							className={`absolute w-full h-full rounded-lg -z-10
+          ${colorScheme === "light" ? "bg-white" : "bg-dark-light"}
+        `}></View>
 						<StyledPressable size="icon">
 							<Image
 								source={
@@ -81,13 +85,13 @@ const Home = () => {
 										: icons.searchDarkLight
 								}
 								resizeMode="contain"
-								className="w-6 h-6 flex-1"
+								className="flex-1 w-6 h-6"
 							/>
 						</StyledPressable>
 					</View>
 
 					{/* Separator */}
-					<View className="w-full h-[30px] border-b border-dark/10 dark:border-light/10"></View>
+					<View className="w-full h-4 border-b border-dark/10 dark:border-light/10"></View>
 				</View>
 			}
 			ListFooterComponent={<View style={{ height: 50 }} />}

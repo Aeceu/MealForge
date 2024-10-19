@@ -59,7 +59,7 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 							<StyledText
 								key={i}
 								type="label"
-								className="w-max bg-light-dark dark:bg-dark px-3 py-1.5 rounded-full mx-0.5 ">
+								className="px-3 bg-light-dark dark:bg-dark py-1.5 mx-0.5 rounded-full w-max ">
 								{item}
 							</StyledText>
 						))}
@@ -84,20 +84,24 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 			</View>
 
 			{/* Footer */}
-			<View className="flex-row items-center justify-between w-full p-2 pt-4">
-				<View className="flex-row items-center">
-					<StyledText className="font-psemibold">{recipe.likes.length}</StyledText>
-					<StyledText className="ml-1" type="label" fontStyle="light">
+			<View className="flex-row items-center justify-between w-full px-2 pt-4 pb-0 ">
+				<StyledPressable size="text" className="flex-row items-center">
+
+					<StyledText className="flex font-psemibold">{recipe.likes.length}</StyledText>
+					<StyledText className="flex ml-1" type="label" fontStyle="light">
 						{recipe.likes.length === 1 ? "Like" : "Likes"}
 					</StyledText>
+
 					<StyledText className="mx-2 text-2xl ">•</StyledText>
+
 					<StyledText className="font-psemibold">0</StyledText>
 					<StyledText className="ml-1" type="label" fontStyle="light">
 						{recipe.likes.length === 1 ? "Dislike" : "Dislikes"}
 					</StyledText>
-				</View>
 
-				<View className="flex-row items-center">
+				</StyledPressable>
+
+				<View className="flex-row items-center space-x-2">
 					<StyledPressable size="icon">
 						<Image
 							source={
@@ -106,7 +110,7 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 									: icons.likesDarkLight
 							}
 							resizeMode="contain"
-							className="w-6 h-6 mx-1"
+							className="w-6 h-6"
 						/>
 					</StyledPressable>
 					<StyledPressable size="icon">
@@ -117,7 +121,7 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 									: icons.unlikesDarkLight
 							}
 							resizeMode="contain"
-							className="w-6 h-6 mx-1"
+							className="w-6 h-6"
 						/>
 					</StyledPressable>
 				</View>

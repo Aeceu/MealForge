@@ -44,7 +44,7 @@ const Preference = () => {
 					<Image
 						source={
 							colorScheme === "dark"
-								? icons.chevronRightLightDark
+								? icons.chevronRightLight
 								: icons.chevronRightDarkLight
 						}
 						resizeMode="cover"

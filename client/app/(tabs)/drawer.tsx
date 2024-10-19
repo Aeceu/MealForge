@@ -9,6 +9,7 @@ import { icons } from "@/constants";
 import { handleRefresh } from "@/redux/actions/authActions";
 import { getIngredients } from "@/redux/actions/ingredientsAction";
 import { AppDispatch, RootState } from "@/redux/store";
+import { useColorScheme } from "nativewind";
 import { useEffect, useState } from "react";
 import { Image, RefreshControl, ScrollView, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,10 +24,19 @@ const drawer = () => {
 		(state: RootState) => state.auth
 	);
 	const [showTestModal, setShowTestModal] = useState<boolean>(false);
+	const [darkbg, setdarkbg] = useState<boolean>(false);
+	const { colorScheme } = useColorScheme();
 
 	const onClose = () => {
 		setShowTestModal(false);
+		setdarkbg(false);
 	};
+
+	const handleAddBtn = () => {
+		setShowTestModal(true);
+		setdarkbg(true);
+	}
+
 	const onRefresh = async () => {
 		dispatch(handleRefresh(accessToken)).then((res) => {
 			if (res.meta.requestStatus === "fulfilled") {
@@ -56,21 +66,19 @@ const drawer = () => {
 				<Header />
 
 				{/* Tabs */}
-				<View className="flex-row mt-1">
+				<View className="flex-row px-6 space-x-4">
 					<StyledPressable
 						onPress={() => setSelectedTab("main ingredient")}
-						className={`basis-1/2 ${
-							selectedTab === "main ingredient" &&
-							"border-b border-dark dark:border-main-50 "
-						}`}>
+						className={`rounded-none opacity-60 ${selectedTab === "main ingredient" &&
+							"border-b-2 border-main dark:border-main-50 opacity-100"
+							}`}>
 						<StyledText>My Ingredients</StyledText>
 					</StyledPressable>
 					<StyledPressable
 						onPress={() => setSelectedTab("seasoning")}
-						className={`basis-1/2 ${
-							selectedTab === "seasoning" &&
-							"border-b border-dark dark:border-main-50 "
-						}`}>
+						className={`rounded-none opacity-60 ${selectedTab === "seasoning" &&
+							"border-b-2 border-main dark:border-main-50 opacity-100"
+							}`}>
 						<StyledText>My Seasonings</StyledText>
 					</StyledPressable>
 				</View>
@@ -81,14 +89,16 @@ const drawer = () => {
 				{/* ADD button */}
 				<StyledPressable
 					size="icon"
-					className="absolute bottom-5 right-5 rounded-full bg-main"
-					onPress={() => setShowTestModal(true)}>
+					className="absolute rounded-full bottom-5 right-5 bg-main"
+					onPress={handleAddBtn}>
 					<Image
-						source={icons.plus}
+						source={colorScheme === "light" ? (icons.plusWhite) : (icons.plus)}
 						resizeMode="contain"
 						className="w-12 h-12 rounded-full"
 					/>
 				</StyledPressable>
+
+				{darkbg && (<View className="absolute w-full h-full bg-black/50 z-[9]"></View>)}
 
 				<AddIngredients
 					type={selectedTab}

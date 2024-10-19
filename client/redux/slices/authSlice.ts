@@ -6,7 +6,7 @@ import {
 	handleLogout,
 } from "../actions/authActions";
 
-type TInitialState = {
+export type TInitialState = {
 	accessToken: string | null;
 	refreshToken: string | null;
 
@@ -34,6 +34,9 @@ const authSlice = createSlice({
 		clearToken: (state) => {
 			state.accessToken = null;
 			state.refreshToken = null;
+			state.pageLoading = false;
+			state.status = "idle";
+			state.error = null;
 		},
 	},
 	extraReducers: (builder) => {

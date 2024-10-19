@@ -10,10 +10,10 @@ export const useThemeColors = () => {
 		// light: "#BBA78D",
 
 		main: "#B25A1C", //orange
-		main50: "#FFEDD5", // light yellowish
+		main50: "#FFEDD5", // light yellowish, text/icon color in dark mode
 		mainLight: "#BBA78D", // more yellowish
 
-		dark: "#151210", // eto main dark color natin, main bg
+		dark: "#151210", // eto main dark color natin, main bg, text/icon color in light mode
 		darkLight: "#201D1C", // used in gradient, main content bg
 		darkBorder: "#272626",
 
@@ -34,8 +34,10 @@ export const useThemeColors = () => {
 	const logoImage = colorScheme === "dark" ? icons.logo_light : icons.logo_dark;
 	const textColor = colorScheme === "light" ? colors.dark : colors.main50;
 	const tabColor = colorScheme === "light" ? colors.white : colors.darkLight;
-	const inActiveColor = colorScheme === "light" ? colors.dark : colors.main50;
+	const inActiveColor = colorScheme === "light" ? colors.darkLight : colors.mainLight;
 	const statusColor = colorScheme === "light" ? colors.dark : colors.light;
+	const borderColor = colorScheme === "light" ? colors.lightBorder : colors.darkBorder;
+	const inputBgColor = colorScheme === "light" ? colors.white : colors.darkLight;
 	const placeholderColor =
 		colorScheme === "light" ? colors.grayLight : colors.gray;
 
@@ -47,5 +49,7 @@ export const useThemeColors = () => {
 		statusColor,
 		tabColor,
 		placeholderColor,
+		borderColor,
+		inputBgColor,
 	};
 };
