@@ -1,18 +1,14 @@
-import Header from "@/components/DrawerUI/Header";
 import Loading from "@/components/Loading";
 import StyledPressable from "@/components/StyledPressable";
-import StyledText from "@/components/StyledText";
-import ThemeButton from "@/components/ThemeButton";
 import { useThemeColors } from "@/constants/colors";
 import { handleRefresh } from "@/redux/actions/authActions";
 import { AppDispatch, RootState } from "@/redux/store";
 import { icons, images } from "@/constants";
 import { useColorScheme } from "nativewind";
 import { useState } from "react";
-import { FlatList, Image, RefreshControl, ScrollView, Text, TextInput, View } from "react-native";
+import { FlatList, Image, RefreshControl, TextInput, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { router } from "expo-router";
-import RecipePostCard from "@/components/RecipePostCard";
 import { dummyRecipePosts } from "@/constants/dummy_data";
 import BookmarkedRecipeCard from "@/components/BookmarkedRecipeCard";
 
@@ -94,9 +90,6 @@ const bookmark = () => {
 
 					{/* Separator */}
 					<View className="w-full h-4 px-4 border-b border-dark/10 dark:border-light/10"></View>
-
-
-
 				</View>
 			}
 			ListFooterComponent={<View style={{ height: 50 }} />}
