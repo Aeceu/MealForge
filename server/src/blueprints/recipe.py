@@ -5,9 +5,7 @@ from utils.database import engine
 import google.generativeai as genai
 import os
 
-
 genai.configure(api_key=os.getenv("AI_API_KEY"))
-
 
 recipes_bp = Blueprint("recipes", __name__)
 

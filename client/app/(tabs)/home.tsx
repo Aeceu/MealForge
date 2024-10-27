@@ -1,4 +1,11 @@
-import { View, RefreshControl, Image, TextInput, FlatList } from "react-native";
+import {
+	View,
+	RefreshControl,
+	Image,
+	TextInput,
+	FlatList,
+	ScrollView,
+} from "react-native";
 import React, { useState } from "react";
 import Loading from "@/components/Loading";
 import { useSelector, useDispatch } from "react-redux";
@@ -9,20 +16,31 @@ import StyledPressable from "@/components/StyledPressable";
 import { useColorScheme } from "nativewind";
 import { dummyRecipePosts } from "@/constants/dummy_data";
 import RecipePostCard from "@/components/RecipePostCard";
-import { useThemeColors } from "@/constants/colors";
 import { router } from "expo-router";
+import StyledText from "@/components/StyledText";
+import { useThemeColors } from "@/constants/colors";
 
 const Home = () => {
-	const [search, setSearch] = useState("");
 	const { colorScheme } = useColorScheme();
+	const [filter, setFilter] = useState("");
+	const [search, setSearch] = useState("");
+	const dispatch = useDispatch<AppDispatch>();
 	const { placeholderColor } = useThemeColors();
+	const { user } = useSelector((state: RootState) => state.user);
 	const { accessToken, pageLoading } = useSelector(
 		(state: RootState) => state.auth
 	);
-	const dispatch = useDispatch<AppDispatch>();
 
 	const onRefresh = async () => {
 		await dispatch(handleRefresh(accessToken));
+	};
+
+	const handleSelectFilter = (filtername: string) => {
+		if (filter === filtername) {
+			setFilter("");
+		} else {
+			setFilter(filtername);
+		}
 	};
 
 	if (pageLoading) return <Loading />;
@@ -54,18 +72,18 @@ const Home = () => {
 							onPress={() => router.push("/(user_screen)/Settings")}>
 							<Image
 								source={
-									colorScheme === "dark"
-										? icons.settingslightDark
-										: icons.settingsDarkLight
+									user?.profile_picture_url
+										? { uri: user.profile_picture_url }
+										: images.loading_light
 								}
 								resizeMode="contain"
-								className="w-6 h-6"
+								className="w-10 h-10 rounded-full"
 							/>
 						</StyledPressable>
 					</View>
 
 					{/* Search Box */}
-					<View className="w-full h-[50px] flex-row items-center justify-between bg-white dark:bg-dark-light rounded-lg pr-3 border border-light-border dark:border-dark-border focus:border-gray dark:focus:border-main">
+					<View className="w-full h-[50px] flex-row items-center justify-between bg-light-dark dark:bg-dark-light rounded-xl pr-3 border border-light-border dark:border-dark-border focus:border-gray dark:focus:border-main">
 						<TextInput
 							value={search}
 							onChangeText={(e) => setSearch(e)}
@@ -74,8 +92,8 @@ const Home = () => {
 							placeholderTextColor={placeholderColor}
 						/>
 						<View
-							className={`absolute w-full h-full rounded-lg -z-10
-          ${colorScheme === "light" ? "bg-white" : "bg-dark-light"}
+							className={`absolute w-full h-full rounded-xl -z-10
+          ${colorScheme === "light" ? "bg-light-dark" : "bg-dark-light"}
         `}></View>
 						<StyledPressable size="icon">
 							<Image
@@ -92,6 +110,30 @@ const Home = () => {
 
 					{/* Separator */}
 					<View className="w-full h-4 border-b border-dark/10 dark:border-light/10"></View>
+
+					{/* Filter tab */}
+					<ScrollView horizontal>
+						<View className="flex-1 w-full flex-row items-center justify-between mt-4">
+							<StyledText className="mr-2">Filter by:</StyledText>
+
+							<StyledPressable
+								onPress={() => handleSelectFilter("Popular")}
+								size="sm"
+								className={`flex-1 px-3 py-1.5 rounded-full mx-0.5 border border-light-border dark:border-dark-border ${
+									filter === "Popular" && "bg-light-dark dark:bg-dark-light"
+								}`}>
+								<StyledText type="label">Popular</StyledText>
+							</StyledPressable>
+							<StyledPressable
+								onPress={() => handleSelectFilter("Latest")}
+								size="sm"
+								className={`flex-1 px-3 py-1.5 rounded-full mx-0.5 border border-light-border dark:border-dark-border ${
+									filter === "Latest" && "bg-light-dark dark:bg-dark-light"
+								}`}>
+								<StyledText type="label">Latest</StyledText>
+							</StyledPressable>
+						</View>
+					</ScrollView>
 				</View>
 			}
 			ListFooterComponent={<View style={{ height: 50 }} />}

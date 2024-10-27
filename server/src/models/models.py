@@ -48,7 +48,6 @@ class Ingredient(Base):
     def __repr__(self):
         return f"<Ingredient(name={self.name}, measurements={self.measurements})>"
 
-
 class Recipe(Base):
     __tablename__ = 'recipes'
 
