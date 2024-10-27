@@ -1,4 +1,5 @@
 import Loading from "@/components/Loading";
+import GenerateRecipe from "@/components/modals/GenerateRecipe";
 import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
 import { icons, images } from "@/constants";
@@ -6,125 +7,174 @@ import { handleRefresh } from "@/redux/actions/authActions";
 import { RootState, AppDispatch } from "@/redux/store";
 import { router } from "expo-router";
 import { useColorScheme } from "nativewind";
+import { useState } from "react";
 import { Image, RefreshControl, ScrollView, View } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 const user = () => {
-	const { user } = useSelector((state: RootState) => state.user);
 	const { colorScheme } = useColorScheme();
+	const dispatch = useDispatch<AppDispatch>();
+	const [darkbg, setDarkbg] = useState<boolean>(false);
+	const [showModal, setShowModal] = useState<boolean>(false);
+	const { user } = useSelector((state: RootState) => state.user);
 	const { pageLoading, accessToken } = useSelector(
 		(state: RootState) => state.auth
 	);
-	const dispatch = useDispatch<AppDispatch>();
 	const onRefresh = async () => {
 		await dispatch(handleRefresh(accessToken));
+	};
+
+	const onOpen = () => {
+		setShowModal(true);
+		setDarkbg(true);
+	};
+	const onClose = () => {
+		setShowModal(false);
+		setDarkbg(false);
 	};
 
 	if (pageLoading) return <Loading />;
 	return (
 		<ScrollView
+			contentContainerStyle={{ flex: 1 }}
 			className="w-full h-full bg-light dark:bg-dark"
 			refreshControl={
 				<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
 			}>
 			<View className="flex-col items-center w-full h-full p-4">
-				<View className="flex-row items-start mt-6 mb-4">
-					<View className="my-auto border rounded-xl border-light-border dark:border-dark-border">
-						<Image
-							source={
-								user?.profile_picture_url
-									? { uri: user.profile_picture_url }
-									: images.loading_light
-							}
-							resizeMode="cover"
-							className="w-[150px] h-[150px] rounded-xl"
-						/>
-					</View>
+				<UserHeader />
+				<UserInfo />
+				<UserTabs />
 
-					<View className="flex-1 ml-4">
-						<StyledText className="font-chunk" type="heading-3">
-							{user?.firstName}
-						</StyledText>
-						<StyledText className="font-chunk" type="heading-3">
-							{user?.lastName}
-						</StyledText>
-						<StyledText type="label" className="text-main">
-							@{user?.userName}
-						</StyledText>
-
-						<View className="flex-row justify-between flex-1 mt-4">
-							<StyledPressable
-								size="text"
-								onPress={() => router.push("/(user_screen)/EditInformation")}
-								className="flex-row items-end">
-								<Image
-									source={
-										colorScheme === "dark"
-											? icons.editLightDark
-											: icons.editDarkLight
-									}
-									resizeMode="contain"
-									className="w-6 h-6 mr-1"
-								/>
-							</StyledPressable>
-							<StyledPressable
-								size="text"
-								onPress={() => router.push("/(user_screen)/Settings")}
-								className="justify-end">
-								<Image
-									source={
-										colorScheme === "light"
-											? icons.settingsDarkLight
-											: icons.settingslightDark
-									}
-									resizeMode="contain"
-									className="w-6 h-6"
-								/>
-							</StyledPressable>
-						</View>
-					</View>
-				</View>
-
-				{/* user info */}
-				<View className="flex-row items-center flex-1 p-4 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
-					<StyledPressable className="flex-col items-center flex-grow basis-1/3">
-						<StyledText type="paragraph" className="font-chunk">
-							22
-						</StyledText>
-						<StyledText type="label" fontStyle="light">
-							Ingredients
-						</StyledText>
-					</StyledPressable>
-
-					<StyledPressable className="flex-col items-center flex-grow basis-1/3">
-						<StyledText type="paragraph" className="font-chunk">
-							8
-						</StyledText>
-						<StyledText type="label" fontStyle="light">
-							Recipes
-						</StyledText>
-					</StyledPressable>
-
-					<StyledPressable className="flex-col items-center flex-grow basis-1/3">
-						<StyledText type="paragraph" className="font-chunk">
-							1.2 k
-						</StyledText>
-						<StyledText type="label" fontStyle="light">
-							Likes
-						</StyledText>
-					</StyledPressable>
-				</View>
-
-				<View className="flex-row mt-2">
-					<StyledPressable className="basis-1/2">
-						<StyledText>My Posts</StyledText>
-					</StyledPressable>
-					<StyledPressable className="basis-1/2">
-						<StyledText>My Info</StyledText>
-					</StyledPressable>
-				</View>
+				{/* Generate Recipe Button */}
+				<StyledPressable
+					size="icon"
+					onPress={onOpen}
+					className="absolute rounded-full bottom-5 right-5 bg-main">
+					<Image
+						source={colorScheme === "light" ? icons.plusWhite : icons.plus}
+						resizeMode="contain"
+						className="w-12 h-12 rounded-full"
+					/>
+				</StyledPressable>
 			</View>
+			{/* Modal background overlay  */}
+			{darkbg && (
+				<View className="absolute w-full h-full top-0 left-0 bg-black/50 z-[9]" />
+			)}
+
+			{/* Modal */}
+			<GenerateRecipe isVisible={showModal} onClose={onClose} />
 		</ScrollView>
 	);
 };
 export default user;
+
+const UserHeader = () => {
+	const { colorScheme } = useColorScheme();
+	const { user } = useSelector((state: RootState) => state.user);
+	return (
+		<View className="flex-row items-start mt-6 mb-4">
+			<View className="my-auto border rounded-xl border-light-border dark:border-dark-border">
+				<Image
+					source={
+						user?.profile_picture_url
+							? { uri: user.profile_picture_url }
+							: images.loading_light
+					}
+					resizeMode="cover"
+					className="w-[150px] h-[150px] rounded-xl"
+				/>
+			</View>
+
+			<View className="flex-1 ml-4">
+				<StyledText className="font-chunk" type="heading-3">
+					{user?.firstName}
+				</StyledText>
+				<StyledText className="font-chunk" type="heading-3">
+					{user?.lastName}
+				</StyledText>
+				<StyledText type="label" className="text-main">
+					@{user?.userName}
+				</StyledText>
+
+				<View className="flex-row justify-between flex-1 mt-4">
+					<StyledPressable
+						size="text"
+						onPress={() => router.push("/(user_screen)/EditInformation")}
+						className="flex-row items-end">
+						<Image
+							source={
+								colorScheme === "dark"
+									? icons.editLightDark
+									: icons.editDarkLight
+							}
+							resizeMode="contain"
+							className="w-6 h-6 mr-1"
+						/>
+					</StyledPressable>
+					<StyledPressable
+						size="text"
+						onPress={() => router.push("/(user_screen)/Settings")}
+						className="justify-end">
+						<Image
+							source={
+								colorScheme === "light"
+									? icons.settingsDarkLight
+									: icons.settingslightDark
+							}
+							resizeMode="contain"
+							className="w-6 h-6"
+						/>
+					</StyledPressable>
+				</View>
+			</View>
+		</View>
+	);
+};
+
+const UserInfo = () => {
+	return (
+		<View className="flex-row items-center p-4 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
+			<StyledPressable className="flex-col items-center flex-grow basis-1/3">
+				<StyledText type="paragraph" className="font-chunk">
+					22
+				</StyledText>
+				<StyledText type="label" fontStyle="light">
+					Ingredients
+				</StyledText>
+			</StyledPressable>
+
+			<StyledPressable className="flex-col items-center flex-grow basis-1/3">
+				<StyledText type="paragraph" className="font-chunk">
+					8
+				</StyledText>
+				<StyledText type="label" fontStyle="light">
+					Recipes
+				</StyledText>
+			</StyledPressable>
+
+			<StyledPressable className="flex-col items-center flex-grow basis-1/3">
+				<StyledText type="paragraph" className="font-chunk">
+					1.2 k
+				</StyledText>
+				<StyledText type="label" fontStyle="light">
+					Likes
+				</StyledText>
+			</StyledPressable>
+		</View>
+	);
+};
+
+const UserTabs = () => {
+	return (
+		<View className="flex-row mt-2">
+			<StyledPressable className="basis-1/2">
+				<StyledText>My Posts</StyledText>
+			</StyledPressable>
+			<StyledPressable className="basis-1/2">
+				<StyledText>My Info</StyledText>
+			</StyledPressable>
+		</View>
+	);
+};

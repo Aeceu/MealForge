@@ -22,7 +22,8 @@ type Props = {
 };
 
 const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
-	const { textColor, borderColor, placeholderColor, inputBgColor } = useThemeColors();
+	const { textColor, borderColor, placeholderColor, inputBgColor } =
+		useThemeColors();
 	const { colorScheme } = useColorScheme();
 	const [showDate, setShowDate] = useState(false);
 
@@ -73,10 +74,14 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 					{/* header */}
 					<View className="flex-row items-center justify-between">
 						<StyledText type="heading-4">Add new ingredient</StyledText>
-						<StyledPressable
-							onPress={handleClose}
-							size="icon">
-							<Image source={colorScheme === "light" ? (icons.closeDarkLight) : (icons.closeLightDark)} className="w-8 h-8"></Image>
+						<StyledPressable onPress={handleClose} size="icon">
+							<Image
+								source={
+									colorScheme === "light"
+										? icons.closeDarkLight
+										: icons.closeLightDark
+								}
+								className="w-8 h-8"></Image>
 						</StyledPressable>
 					</View>
 
@@ -102,7 +107,7 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 											inputStyles={{
 												color: textColor,
 												fontSize: 14,
-												fontFamily: "Poppins-Regular"
+												fontFamily: "Poppins-Regular",
 											}}
 											boxStyles={{
 												backgroundColor: inputBgColor,
@@ -117,24 +122,37 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 											dropdownTextStyles={{
 												color: textColor,
 												fontSize: 14,
-												fontFamily: "Poppins-Regular"
+												fontFamily: "Poppins-Regular",
 											}}
 											searchicon={
 												<Image
-													source={colorScheme === "light" ? (icons.searchDarkLight) : (icons.searchLightDark)}
+													source={
+														colorScheme === "light"
+															? icons.searchDarkLight
+															: icons.searchLightDark
+													}
 													resizeMode="contain"
 													className="w-4 h-4 mr-2"
 												/>
 											}
 											closeicon={
 												<Image
-													source={colorScheme === "light" ? (icons.closeDarkLight) : (icons.closeLightDark)}
+													source={
+														colorScheme === "light"
+															? icons.closeDarkLight
+															: icons.closeLightDark
+													}
 													resizeMode="contain"
 													className="w-5 h-5 ml-2"
 												/>
 											}
 											arrowicon={
-												<Image source={colorScheme === "dark" ? (icons.arrowDownLight) : (icons.arrowDownDark)}
+												<Image
+													source={
+														colorScheme === "dark"
+															? icons.arrowDownLight
+															: icons.arrowDownDark
+													}
 													resizeMode="contain"
 													className="w-4 h-4"
 												/>
