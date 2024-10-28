@@ -13,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { addIngredients } from "@/redux/actions/ingredientsAction";
+import { useColorScheme } from "nativewind";
 
 type Props = {
 	type: "main ingredient" | "seasoning";
@@ -21,7 +22,9 @@ type Props = {
 };
 
 const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
-	const { textColor } = useThemeColors();
+	const { textColor, borderColor, placeholderColor, inputBgColor } =
+		useThemeColors();
+	const { colorScheme } = useColorScheme();
 	const [showDate, setShowDate] = useState(false);
 
 	const handleClose = () => {
@@ -65,24 +68,27 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 			visible={isVisible}
 			transparent={true}
 			animationType="slide"
-			className="bg-red-500">
-			<View className="flex-1">
-				<View className="absolute bottom-0 w-full h-3/4 rounded-t-3xl border border-light-dark dark:border-dark-light p-4 bg-light dark:bg-dark-light">
+			className="bg-black">
+			<View className="z-10 flex-1">
+				<View className="absolute bottom-0 w-full p-4 border bg-light h-3/4 rounded-t-3xl border-light-dark dark:border-dark-light dark:bg-dark">
 					{/* header */}
 					<View className="flex-row items-center justify-between">
-						<StyledText className="">Add new ingredient</StyledText>
-						<StyledPressable
-							onPress={handleClose}
-							size="sm"
-							className="bg-main rounded-md">
-							<StyledText type="label">Close</StyledText>
+						<StyledText type="heading-4">Add new ingredient</StyledText>
+						<StyledPressable onPress={handleClose} size="icon">
+							<Image
+								source={
+									colorScheme === "light"
+										? icons.closeDarkLight
+										: icons.closeLightDark
+								}
+								className="w-8 h-8"></Image>
 						</StyledPressable>
 					</View>
 
 					{/* body */}
-					<View className="mt-4">
+					<View className="mt-4 space-y-10">
 						<View className="mt-2">
-							<View>
+							<View className="">
 								<StyledText type="label" className="mb-2">
 									Select an ingredient
 								</StyledText>
@@ -100,31 +106,57 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 											setSelected={onChange}
 											inputStyles={{
 												color: textColor,
+												fontSize: 14,
+												fontFamily: "Poppins-Regular",
 											}}
 											boxStyles={{
-												borderColor: textColor,
+												backgroundColor: inputBgColor,
+												borderColor: borderColor,
+												borderRadius: 8,
 											}}
 											dropdownStyles={{
-												borderColor: textColor,
+												backgroundColor: inputBgColor,
+												borderColor: borderColor,
+												borderRadius: 8,
 											}}
 											dropdownTextStyles={{
 												color: textColor,
+												fontSize: 14,
+												fontFamily: "Poppins-Regular",
 											}}
 											searchicon={
 												<Image
-													source={icons.searchLightDark}
+													source={
+														colorScheme === "light"
+															? icons.searchDarkLight
+															: icons.searchLightDark
+													}
 													resizeMode="contain"
-													className="w-4 h-4"
+													className="w-4 h-4 mr-2"
 												/>
 											}
 											closeicon={
 												<Image
-													source={icons.closeLightDark}
+													source={
+														colorScheme === "light"
+															? icons.closeDarkLight
+															: icons.closeLightDark
+													}
 													resizeMode="contain"
-													className="w-5 h-5"
+													className="w-5 h-5 ml-2"
 												/>
 											}
-											searchPlaceholder=""
+											arrowicon={
+												<Image
+													source={
+														colorScheme === "dark"
+															? icons.arrowDownLight
+															: icons.arrowDownDark
+													}
+													resizeMode="contain"
+													className="w-4 h-4"
+												/>
+											}
 										/>
 									)}
 								/>
@@ -137,7 +169,7 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 								)}
 							</View>
 
-							<View className="mt-2">
+							<View className="mt-4">
 								<StyledText type="label" className="mb-2">
 									Measurements
 								</StyledText>
@@ -149,9 +181,9 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 											value={value}
 											onChangeText={onChange}
 											className={`
-                        border border-light-dark dark:border-main-50 text-dark dark:text-main-50 rounded-lg px-6 py-2.5 text-[15px]
+                        border border-light-border font-pregular dark:border-dark-border bg-white dark:bg-dark-light text-dark dark:text-main-50 rounded-lg px-6 py-2 text-sm
                         `}
-											placeholderTextColor={textColor}
+											placeholderTextColor={placeholderColor}
 											placeholder="ex. 1/2 kg, 1ml, 1tbsp"
 										/>
 									)}
@@ -165,9 +197,9 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 								)}
 							</View>
 
-							<View className="mt-2">
+							<View className="mt-4">
 								<StyledText type="label" className="mb-2">
-									Expiration Date?
+									Expiration Date
 								</StyledText>
 								<Controller
 									control={control}
@@ -175,9 +207,9 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 									render={({ field: { value, onChange } }) => (
 										<>
 											<StyledPressable
-												className="bg-main w-full"
+												className="w-full bg-white border rounded-lg dark:bg-dark-light border-light-border dark:border-dark-border"
 												onPress={() => setShowDate(true)}>
-												<StyledText>
+												<StyledText className="w-full px-6 text-sm font-pregular text-start">
 													{watch("expirationDate")
 														? String(value)
 														: "Select Date"}

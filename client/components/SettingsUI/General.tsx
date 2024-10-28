@@ -21,7 +21,7 @@ const General = () => {
 			href: "/(user_screen)/EditInformation" as Href,
 		},
 		{
-			icon: colorScheme === "dark" ? icons.userLightDark : icons.userDarkLight,
+			icon: colorScheme === "dark" ? icons.userLight : icons.userDark,
 			title: "User Preferences",
 			href: "/(user_screen)/UserPreferences" as Href,
 		},
@@ -49,7 +49,7 @@ const General = () => {
 					<Image
 						source={
 							colorScheme === "dark"
-								? icons.chevronRightLightDark
+								? icons.chevronRightLight
 								: icons.chevronRightDarkLight
 						}
 						resizeMode="cover"

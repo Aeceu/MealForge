@@ -22,7 +22,7 @@ const Ingredients = () => {
 
 	if (pageLoading) {
 		return (
-			<View className="w-full p-8 flex-col items-center justify-center bg-light dark:bg-dark">
+			<View className="flex-col items-center justify-center w-full p-8 bg-light dark:bg-dark">
 				<Pulse>
 					<Image
 						source={
@@ -46,15 +46,15 @@ const Ingredients = () => {
 						item.type === "main ingredient" && (
 							<View
 								key={i}
-								className="w-full p-4 my-2 bg-white border border-light-border dark:bg-dark-light dark:border-dark-border rounded-xl flex-row items-center justify-between">
+								className="flex-row items-center justify-between w-full p-4 my-2 bg-white border border-light-border dark:bg-dark-light dark:border-dark-border rounded-xl">
 								<View className="flex-col items-start justify-center">
-									<StyledText type="label" className="text-xs">
-										{item.type}
+									<StyledText type="label" className="mb-2 text-xs">
+										{item.type === "main ingredient" ? "Main Ingredient" : item.type}
 									</StyledText>
-									<StyledText key={i} className="font-chunk " type="heading-4">
+									<StyledText key={i} className="font-chunk " type="heading-2">
 										{item.name}
 									</StyledText>
-									<StyledText type="label" className="text-xs">
+									<StyledText type="label" className="text">
 										{item.measurements}
 									</StyledText>
 								</View>
@@ -63,7 +63,7 @@ const Ingredients = () => {
 										size="icon"
 										onPress={() => handleDelete(item.id)}>
 										<Image
-											source={icons.closeLightDark}
+											source={colorScheme === "light" ? (icons.closeDarkLight) : (icons.closeLightDark)}
 											resizeMode="contain"
 											className="w-7 h-7"
 										/>

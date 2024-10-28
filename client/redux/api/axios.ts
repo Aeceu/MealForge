@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const LocalUrl = "http://192.168.0.101:4200";
+const LocalUrl = process.env.EXPO_PUBLIC_IP_URL;
 
 export default axios.create({
 	baseURL: LocalUrl,
