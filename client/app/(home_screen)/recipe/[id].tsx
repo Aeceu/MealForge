@@ -9,11 +9,11 @@ const RecipePostPage = () => {
 	return (
 		<ScrollView
 			contentContainerStyle={{ flexGrow: 1 }}
-			className="flex-col w-full h-full p-4 bg-light dark:bg-dark">
+			className="flex-col w-full h-full p-6 bg-light dark:bg-dark">
 			<View className="flex-col items-start justify-start">
 				{/* Header */}
 				<View className="w-full flex-col items-start justify-start">
-					<StyledText type="heading-1" className="font-chunk">
+					<StyledText type="heading-2" className="font-chunk">
 						Spaghetti Bolognese
 					</StyledText>
 					<StyledText type="label" className="text-main">
