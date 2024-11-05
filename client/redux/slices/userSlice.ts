@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
+	addAllergy,
 	changePassword,
 	deleteAccount,
+	deleteAllergy,
 	editUser,
 	getUser,
 } from "../actions/userActions";
 import { TUser } from "@/utils/types/user";
-import { TIngredients } from "@/utils/types/ingredients";
 
 type TInitialState = {
 	user: TUser | null;
@@ -36,7 +37,7 @@ const userSlice = createSlice({
 	},
 	extraReducers: (builder) => {
 		builder
-			.addCase(getUser.pending, (state, action) => {
+			.addCase(getUser.pending, (state) => {
 				state.pageLoading = true;
 			})
 			.addCase(getUser.fulfilled, (state, action) => {
@@ -47,34 +48,65 @@ const userSlice = createSlice({
 				state.pageLoading = false;
 				state.error = action.error.message;
 			})
-			.addCase(editUser.pending, (state, action) => {
+			.addCase(editUser.pending, (state) => {
 				state.status = "pending";
 			})
-			.addCase(editUser.fulfilled, (state, action) => {
+			.addCase(editUser.fulfilled, (state) => {
 				state.status = "completed";
 			})
 			.addCase(editUser.rejected, (state, action) => {
 				state.status = "failed";
 				state.error = action.error.message;
 			})
-			.addCase(changePassword.pending, (state, action) => {
+			.addCase(changePassword.pending, (state) => {
 				state.status = "pending";
 			})
-			.addCase(changePassword.fulfilled, (state, action) => {
+			.addCase(changePassword.fulfilled, (state) => {
 				state.status = "completed";
 			})
 			.addCase(changePassword.rejected, (state, action) => {
 				state.status = "failed";
 				state.error = action.error.message;
 			})
-			.addCase(deleteAccount.pending, (state, action) => {
+			.addCase(deleteAccount.pending, (state) => {
 				state.status = "pending";
 			})
-			.addCase(deleteAccount.fulfilled, (state, action) => {
+			.addCase(deleteAccount.fulfilled, (state) => {
 				state.status = "completed";
 				state.user = null;
 			})
 			.addCase(deleteAccount.rejected, (state, action) => {
+				state.status = "failed";
+				state.error = action.error.message;
+			})
+			.addCase(addAllergy.pending, (state) => {
+				state.status = "pending";
+			})
+			.addCase(addAllergy.fulfilled, (state, action) => {
+				state.status = "completed";
+				if (state.user) {
+					state.user = {
+						...state.user,
+						allergies: action.payload.allergies,
+					};
+				}
+			})
+			.addCase(addAllergy.rejected, (state, action) => {
+				state.status = "failed";
+			})
+			.addCase(deleteAllergy.pending, (state) => {
+				state.status = "pending";
+			})
+			.addCase(deleteAllergy.fulfilled, (state, action) => {
+				state.status = "completed";
+				if (state.user) {
+					state.user = {
+						...state.user,
+						allergies: action.payload.allergies, // Update allergies after deletion
+					};
+				}
+			})
+			.addCase(deleteAllergy.rejected, (state, action) => {
 				state.status = "failed";
 				state.error = action.error.message;
 			});
