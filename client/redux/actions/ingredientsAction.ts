@@ -7,7 +7,7 @@ type addIngredientsProps = {
 	name: string;
 	type: "main ingredient" | "seasoning";
 	measurements: string;
-	expirationDate: Date;
+	expirationDate: Date | null | undefined;
 };
 
 export const addIngredients = createAsyncThunk(

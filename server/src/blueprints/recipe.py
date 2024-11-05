@@ -2,12 +2,6 @@ from flask import Blueprint, jsonify,request
 from sqlalchemy import text
 import uuid
 from utils.database import engine
-import google.generativeai as genai
-import os
-
-
-genai.configure(api_key=os.getenv("AI_API_KEY"))
-
 
 recipes_bp = Blueprint("recipes", __name__)
 
@@ -98,23 +92,3 @@ def get_user_recipes(user_id):
             return jsonify({"recipes": recipes}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-@recipes_bp.route("/test", methods=["GET"])
-def test():
-  model = genai.GenerativeModel("gemini-1.5-flash")
-  response = model.generate_content("""
-    Generate a recipe based only on these selected ingredients: (salt,tilapia, tomato,onions,vinegar,soy sauce) and can be serves for 2 person;child and a mother. Ensure the recipe includes all specified attributes:
-
-    Name: The title of the recipe, a string with a maximum length of 250 characters.
-    Instruction: Detailed cooking instructions, provided as a text field.
-    Type of Cuisine: The cuisine type (e.g., Italian, Mexican), also as a string of up to 250 characters.
-    Nutrient Counts: A textual representation of the nutritional content (e.g., calories, fats, proteins).
-    Serve Hot or Cold: Specify whether the recipe is best served hot or cold, as a string of up to 50 characters.
-    Cooking Time: An integer representing the time required to cook the recipe in minutes.
-    Benefits: Any health benefits associated with the recipe, provided as optional text.
-    Serve For: An integer indicating how many servings the recipe yields.
-
-    Provide a recipe with realistic values for each attribute.
-  """)
-  print(response.text)
-  return jsonify(response.text)

@@ -93,3 +93,59 @@ export const deleteAccount = createAsyncThunk(
 		}
 	}
 );
+
+export const addAllergy = createAsyncThunk(
+	"user/addAllergy",
+	async (
+		{ allergy, token }: { allergy: string; token: string | null },
+		{ rejectWithValue }
+	) => {
+		try {
+			const res = await axios.post(
+				"/user/add_allergy",
+				{ allergy },
+				{
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			console.log(res.data);
+			return res.data;
+		} catch (error) {
+			console.log(error);
+			const resError = handleError(error);
+			console.log("resError");
+			console.log(resError);
+			return rejectWithValue(resError);
+		}
+	}
+);
+
+export const deleteAllergy = createAsyncThunk(
+	"user/deleteAllergy",
+	async (
+		{ allergy, token }: { allergy: string; token: string | null },
+		{ rejectWithValue }
+	) => {
+		try {
+			const res = await axios.delete("/user/allergy", {
+				data: { allergy },
+
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			console.log(res.data);
+			return res.data;
+		} catch (error) {
+			console.log(error);
+			const resError = handleError(error);
+			console.log("resError");
+			console.log(resError);
+			return rejectWithValue(resError);
+		}
+	}
+);
