@@ -44,6 +44,7 @@ def getUser():
                 "firstName": userExists.firstName,
                 "lastName": userExists.lastName,
                 "email": userExists.email,
+                "allergies":userExists.allergies,
             }
 
           return jsonify(user), 200
@@ -70,6 +71,7 @@ def getUsers():
               "firstName":x["firstName"],
               "lastName":x["lastName"],
               "email":x["email"],
+              "allergies":x["allergies"],
           } for x in results.fetchall()]
       return jsonify(users),200
     except Exception as e:
@@ -231,17 +233,84 @@ def upload_profile_picture():
         # Rollback if there was an error
         return jsonify({"error": str(e)}), 500
 
-# TODO: Search user via username / email / firstname / lastName
+# TODO: Add a new allergy for the user
+@user_bp.route("/user/add_allergy", methods=["POST"])
+@jwt_required()
+def add_allergy():
+    current_user_id = get_jwt_identity()
+    data = request.get_json()
+    new_allergy = data.get("allergy")
+    if not new_allergy:
+        return jsonify({"error": "Allergy cannot be empty"}), 400
 
-# TODO: follow / unfollow a user
+    try:
+        with engine.connect() as conn:
+            # Fetch the current allergies
+            result = conn.execute(text("SELECT allergies FROM users WHERE id = :userId"), {"userId": current_user_id})
+            user_data = result.fetchone()
 
-# TODO: Get all the follower
+            if user_data is None:
+                return jsonify({"error": "User not found"}), 404
 
+            current_allergies = user_data.allergies or ""
+            allergies_list = current_allergies.split(",") if current_allergies else []
 
-# TODO: change profile picture
+            # Add the new allergy if it's not already in the list
+            if new_allergy.lower() not in (allergy.lower() for allergy in allergies_list):
+                allergies_list.append(new_allergy)
 
-# TODO: add / update user's prefrerence
+                # Update the user's allergies
+                updated_allergies = ",".join(allergies_list)
+                conn.execute(
+                    text("UPDATE users SET allergies = :allergies WHERE id = :userId"),
+                    {"allergies": updated_allergies, "userId": current_user_id}
+                )
+                conn.commit()
 
-# TODO: ewan na
+                return jsonify({"message": "Allergy added successfully!", "allergies": updated_allergies}), 200
+            else:
+                return jsonify({"message": "Allergy already exists in the user's preferences"}), 200
 
-# TODO: update yung user's model to the latest (add followers, preference and more)
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)}), 500
+
+# TODO: Delete a specific allergy from the user's preferences
+@user_bp.route("/user/allergy", methods=["DELETE"])
+@jwt_required()
+def delete_allergy():
+    current_user_id = get_jwt_identity()
+    data = request.get_json()
+    allergy_to_remove = data.get("allergy")
+
+    if not allergy_to_remove:
+        return jsonify({"error": "Allergy cannot be empty"}), 400
+
+    try:
+        with engine.connect() as conn:
+            # Fetch the current allergies
+            result = conn.execute(text("SELECT allergies FROM users WHERE id = :userId"), {"userId": current_user_id})
+            user_data = result.fetchone()
+
+            if user_data is None:
+                return jsonify({"error": "User not found"}), 404
+
+            current_allergies = user_data.allergies or ""
+            allergies_list = current_allergies.split(",") if current_allergies else []
+
+            # Remove the specified allergy if it exists in the list
+            allergies_list = [allergy for allergy in allergies_list if allergy.lower() != allergy_to_remove.lower()]
+
+            # Update the user's allergies in the database
+            updated_allergies = ",".join(allergies_list)
+            print(updated_allergies)
+            conn.execute(
+                text("UPDATE users SET allergies = :allergies WHERE id = :userId"),
+                {"allergies": updated_allergies, "userId": current_user_id}
+            )
+            conn.commit()
+
+            return jsonify({"message": "Allergy removed successfully!", "allergies": updated_allergies}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

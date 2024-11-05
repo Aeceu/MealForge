@@ -26,7 +26,7 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 		useThemeColors();
 	const { colorScheme } = useColorScheme();
 	const [showDate, setShowDate] = useState(false);
-
+	const [addExpirationDate, setAddExpirationDate] = useState(false);
 	const handleClose = () => {
 		onClose();
 		reset();
@@ -41,7 +41,6 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 	} = useForm<TNewIngredients>({
 		resolver: zodResolver(IngredientSchema),
 	});
-
 	const { user } = useSelector((state: RootState) => state.user);
 	const dispatch = useDispatch<AppDispatch>();
 	const onSubmit = async (data: TNewIngredients) => {
@@ -201,37 +200,51 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 								<StyledText type="label" className="mb-2">
 									Expiration Date
 								</StyledText>
-								<Controller
-									control={control}
-									name="expirationDate"
-									render={({ field: { value, onChange } }) => (
-										<>
-											<StyledPressable
-												className="w-full bg-white border rounded-lg dark:bg-dark-light border-light-border dark:border-dark-border"
-												onPress={() => setShowDate(true)}>
-												<StyledText className="w-full px-6 text-sm font-pregular text-start">
-													{watch("expirationDate")
-														? String(value)
-														: "Select Date"}
-												</StyledText>
-											</StyledPressable>
-											<DateTimePickerModal
-												isVisible={showDate}
-												mode="date"
-												onConfirm={onChange}
-												onCancel={() => {
-													setShowDate(false);
-												}}
+
+								{addExpirationDate ? (
+									<View className="w-full flex-row items-center  ">
+										<Controller
+											control={control}
+											name="expirationDate"
+											render={({ field: { value, onChange } }) => (
+												<View className=" flex-1 flex-row items-center w-full">
+													<StyledPressable
+														className="w-full bg-white border rounded-lg dark:bg-dark-light border-light-border dark:border-dark-border"
+														onPress={() => setShowDate(true)}>
+														<StyledText className="w-full px-6 text-sm font-pregular text-start">
+															{watch("expirationDate")
+																? String(value)
+																: "Select Date"}
+														</StyledText>
+													</StyledPressable>
+													<DateTimePickerModal
+														isVisible={showDate}
+														mode="date"
+														onConfirm={onChange}
+														onCancel={() => {
+															setShowDate(false);
+														}}
+													/>
+												</View>
+											)}
+										/>
+										<StyledPressable
+											size="icon"
+											className="mx-2 flex-1 w-full"
+											onPress={() => setAddExpirationDate(false)}>
+											<Image
+												source={icons.closeLightDark}
+												resizeMode="contain"
+												className="w-8 h-8"
 											/>
-										</>
-									)}
-								/>
-								{errors.expirationDate && (
-									<StyledText
-										fontStyle="default"
-										className="px-1 text-sm text-red-500">
-										{errors.expirationDate.message}
-									</StyledText>
+										</StyledPressable>
+									</View>
+								) : (
+									<StyledPressable
+										onPress={() => setAddExpirationDate(true)}
+										className="bg-main">
+										<StyledText>ADD</StyledText>
+									</StyledPressable>
 								)}
 							</View>
 						</View>

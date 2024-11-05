@@ -25,6 +25,8 @@ class User(Base):
     refreshToken = Column(Text, nullable=True)
     profile_picture_url = Column(String(500), nullable=True)
 
+    allergies = Column(Text, nullable=True)  # allergies as a comma-separated string
+
     recipes = relationship('Recipe', back_populates='user', cascade="all, delete-orphan")
     recipe_posts = relationship('RecipePost', back_populates='user', cascade="all, delete-orphan")
     likes = relationship('Like', back_populates='user', cascade="all, delete-orphan")
@@ -47,7 +49,6 @@ class Ingredient(Base):
 
     def __repr__(self):
         return f"<Ingredient(name={self.name}, measurements={self.measurements})>"
-
 
 class Recipe(Base):
     __tablename__ = 'recipes'

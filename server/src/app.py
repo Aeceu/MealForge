@@ -5,8 +5,9 @@ from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
 from blueprints.auth import auth_bp
 from blueprints.user import user_bp
-from blueprints.ingredients import ingredients_bp
 from blueprints.recipe import recipes_bp
+# from blueprints.generate import generate_bp
+from blueprints.ingredients import ingredients_bp
 
 load_dotenv()
 app = Flask(__name__)
@@ -27,6 +28,7 @@ app.config['JWT_COOKIE_CSRF_PROTECT'] = True
 app.register_blueprint(auth_bp)
 app.register_blueprint(user_bp)
 app.register_blueprint(recipes_bp)
+# app.register_blueprint(generate_bp)
 app.register_blueprint(ingredients_bp)
 
 if __name__ == "__main__":

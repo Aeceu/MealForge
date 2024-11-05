@@ -86,6 +86,7 @@ def handleLogin():
                 "lastName": user_exists.lastName,
                 "email": user_exists.email,
                 "password": user_exists.password,
+                "allergies": user_exists.allergies,
                 "profile_picture_url":user_exists.profile_picture_url
             }
 
@@ -115,6 +116,7 @@ def handleLogin():
                     "firstName": user["firstName"],
                     "lastName": user["lastName"],
                     "email": user["email"],
+                    "allergies": user["allergies"],
                     "profile_picture_url":user["profile_picture_url"]
                 },
                 "accessToken": accessToken,
@@ -165,6 +167,7 @@ def refresh():
               "firstName": user_exists.firstName,
               "lastName": user_exists.lastName,
               "email": user_exists.email,
+              "allergies": user_exists.allergies,
               "profile_picture_url":user_exists.profile_picture_url
           }
 
