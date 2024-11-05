@@ -16,6 +16,7 @@ const Home = () => {
 	const [search, setSearch] = useState("");
 	const { colorScheme } = useColorScheme();
 	const { placeholderColor } = useThemeColors();
+	const { user } = useSelector((state: RootState) => state.user);
 	const { accessToken, pageLoading } = useSelector(
 		(state: RootState) => state.auth
 	);
@@ -39,7 +40,7 @@ const Home = () => {
 			ListHeaderComponent={
 				<View>
 					{/* Header */}
-					<View className="flex-row items-center justify-between w-full py-4 mt-6">
+					<View className="flex-row items-center justify-between w-full py-4 mt-8">
 						<Image
 							source={
 								colorScheme === "dark"
@@ -54,12 +55,12 @@ const Home = () => {
 							onPress={() => router.push("/(user_screen)/Settings")}>
 							<Image
 								source={
-									colorScheme === "dark"
-										? icons.settingslightDark
-										: icons.settingsDarkLight
+									user?.profile_picture_url
+										? { uri: user.profile_picture_url }
+										: images.loading_light
 								}
 								resizeMode="contain"
-								className="w-6 h-6"
+								className="w-8 h-8 rounded-full"
 							/>
 						</StyledPressable>
 					</View>

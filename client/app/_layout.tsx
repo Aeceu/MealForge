@@ -52,6 +52,7 @@ function RootLayoutNav() {
 				<Stack screenOptions={{ headerShown: false }}>
 					<Stack.Screen name="index" options={{ headerShown: false }} />
 					<Stack.Screen name="(user_screen)" options={{ headerShown: false }} />
+					<Stack.Screen name="(home_screen)" options={{ headerShown: false }} />
 				</Stack>
 			</PersistGate>
 		</Provider>
