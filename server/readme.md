@@ -52,7 +52,7 @@ Before you begin, ensure you have the following installed:
 4. Activate the virtual environment
 
    ```bash
-   source .venv/bin/activate
+   source .venv/Scripts/activate
    ```
 
 5. Install Dependencies
