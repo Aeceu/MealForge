@@ -107,14 +107,13 @@ const AddPreference: React.FC<Props> = ({ isVisible, onClose }) => {
 							className={`mt-4 bg-main flex-row items-center`}
 							onPress={handleSubmit(onSubmit)}>
 							<StyledText
-								className="ml-2"
+								className="text-white dark:text-main-50"
 								selectable={false}
-								fontStyle="Chunk"
-								type="button">
+								type="subheading">
 								{status === "pending" && (
 									<Spin size="md" loading={status === "pending"} />
 								)}
-								{status !== "pending" && "save"}
+								{status !== "pending" && "Save"}
 							</StyledText>
 						</StyledPressable>
 					</View>

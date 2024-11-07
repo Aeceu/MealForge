@@ -207,7 +207,7 @@ const GenerateRecipe: React.FC<Props> = ({ isVisible, onClose }) => {
 									</StyledText>
 									<View>
 										{selectedIngredients.length <= 0 ? (
-											<StyledText className="text-center text-red-500 my-4 ">
+											<StyledText className="my-4 text-center text-red-500 ">
 												No ingredients selected.
 											</StyledText>
 										) : (
@@ -243,13 +243,17 @@ const GenerateRecipe: React.FC<Props> = ({ isVisible, onClose }) => {
 										)}
 									</View>
 								</View>
-								<View className="w-full flex-row items-center justify-end ">
-									<StyledPressable className="bg-main">
-										<StyledText className="text-light">
-											Generate Recipe
-										</StyledText>
-									</StyledPressable>
-								</View>
+
+								<StyledPressable size="xl"
+									className={`mt-8 bg-main flex-row items-center`}>
+									<StyledText
+										selectable={false}
+										fontStyle="Chunk"
+										type="button">
+										Generate Recipe
+									</StyledText>
+								</StyledPressable>
+
 							</View>
 						</View>
 					</ScrollView>

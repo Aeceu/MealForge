@@ -33,6 +33,11 @@ const AuthLayout = () => {
 						headerStyle: {
 							backgroundColor: tabColor,
 						},
+						headerTitleStyle: {
+							fontFamily: "Poppins-Regular",
+							fontSize: 16,
+						},
+						headerTitleAlign: "center",
 						headerTintColor: textColor,
 						headerShadowVisible: false,
 					}}
@@ -41,10 +46,15 @@ const AuthLayout = () => {
 					name="UserPreferences"
 					options={{
 						headerShown: true,
-						title: "Personal Preferences",
+						title: "User Preferences",
 						headerStyle: {
 							backgroundColor: tabColor,
 						},
+						headerTitleStyle: {
+							fontFamily: "Poppins-Regular",
+							fontSize: 16,
+						},
+						headerTitleAlign: "center",
 						headerTintColor: textColor,
 						headerShadowVisible: false,
 					}}
@@ -57,6 +67,11 @@ const AuthLayout = () => {
 						headerStyle: {
 							backgroundColor: tabColor,
 						},
+						headerTitleStyle: {
+							fontFamily: "Poppins-Regular",
+							fontSize: 16,
+						},
+						headerTitleAlign: "center",
 						headerTintColor: textColor,
 						headerShadowVisible: false,
 					}}
@@ -69,6 +84,11 @@ const AuthLayout = () => {
 						headerStyle: {
 							backgroundColor: tabColor,
 						},
+						headerTitleStyle: {
+							fontFamily: "Poppins-Regular",
+							fontSize: 16,
+						},
+						headerTitleAlign: "center",
 						headerTintColor: textColor,
 						headerShadowVisible: false,
 					}}
@@ -81,6 +101,11 @@ const AuthLayout = () => {
 						headerStyle: {
 							backgroundColor: tabColor,
 						},
+						headerTitleStyle: {
+							fontFamily: "Poppins-Regular",
+							fontSize: 16,
+						},
+						headerTitleAlign: "center",
 						headerTintColor: textColor,
 						headerShadowVisible: false,
 					}}
@@ -93,6 +118,11 @@ const AuthLayout = () => {
 						headerStyle: {
 							backgroundColor: tabColor,
 						},
+						headerTitleStyle: {
+							fontFamily: "Poppins-Regular",
+							fontSize: 16,
+						},
+						headerTitleAlign: "center",
 						headerTintColor: textColor,
 						headerShadowVisible: false,
 					}}
