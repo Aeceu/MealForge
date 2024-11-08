@@ -1,17 +1,10 @@
 import uuid
-from sqlalchemy import Column, String, Text, ForeignKey, Integer, Table, func
+from sqlalchemy import Column, String, Text, ForeignKey, Integer, func
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from utils.GUID import GUID
 
 Base = declarative_base()
-
-recipe_ingredients_table = Table(
-    'recipe_ingredients',
-    Base.metadata,
-    Column('recipe_id', GUID(), ForeignKey('recipes.id'), primary_key=True),
-    Column('ingredient_id', GUID(), ForeignKey('ingredients.id'), primary_key=True)
-)
 
 class User(Base):
     __tablename__ = 'users'
@@ -55,6 +48,7 @@ class Recipe(Base):
 
     id = Column(GUID(), primary_key=True, default=uuid.uuid4)
     name = Column(String(250), nullable=False)
+    ingredients = Column(Text, nullable=False)  # New ingredients column as Text
     instruction = Column(Text, nullable=False)
     type_of_cuisine = Column(String(250), nullable=False)
     nutrient_counts = Column(Text, nullable=False)
@@ -66,7 +60,6 @@ class Recipe(Base):
     user_id = Column(GUID(), ForeignKey('users.id'), nullable=False)
     user = relationship('User', back_populates='recipes')
 
-    ingredients = relationship('Ingredient', secondary=recipe_ingredients_table, backref='recipes')
     recipe_posts = relationship('RecipePost', back_populates='recipe', cascade="all, delete-orphan")
 
     def __repr__(self):
@@ -87,7 +80,6 @@ class Like(Base):
     def __repr__(self):
         return f"<Like(user_id={self.user_id}, post_id={self.post_id}, liked_at={self.liked_at})>"
 
-# RecipePost model that allows users to post recipes and track likes
 class RecipePost(Base):
     __tablename__ = 'recipe_posts'
 

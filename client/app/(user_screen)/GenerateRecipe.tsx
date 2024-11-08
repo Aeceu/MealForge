@@ -1,30 +1,49 @@
-import { Image, Modal, ScrollView, View } from "react-native";
-import StyledText from "../StyledText";
-import StyledPressable from "../StyledPressable";
-import { useColorScheme } from "nativewind";
+import Loading from "@/components/Loading"; 
+import DisplayRecipe from "@/components/modals/DisplayRecipe";
+import StyledPressable from "@/components/StyledPressable";
+import StyledText from "@/components/StyledText";
 import { icons } from "@/constants";
-import { SelectList } from "react-native-dropdown-select-list-expo";
 import { useThemeColors } from "@/constants/colors";
+import { handleRefresh } from "@/redux/actions/authActions";
+import { handleLGenerate } from "@/redux/actions/recipeAction"; 
+import axios from "@/redux/api/axios";
+import { RootState, AppDispatch } from "@/redux/store";
+import { useColorScheme } from "nativewind";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { Image, RefreshControl, ScrollView, View } from "react-native";
+import { SelectList } from "react-native-dropdown-select-list-expo";
+import { useSelector, useDispatch } from "react-redux";
 
-type Props = {
-	isVisible: boolean;
-	onClose: () => void;
-};
+type recipeProps = {
+	name:string;
+	ingredients:[
+		{
+			name:string;
+			measurement:string;
+		}
+	]
+	instructions:[string];
+	type_of_cuisine:string;
+	nutrient_counts:string;
+	serve_hot_or_cold:string;
+	cooking_time:string;
+	benefits:string;
+	serve_for:string;
+}
 
-const GenerateRecipe: React.FC<Props> = ({ isVisible, onClose }) => {
-	const { ingredients } = useSelector((state: RootState) => state.ingredients);
+const UserPreferences = () => {
+    const { ingredients } = useSelector((state: RootState) => state.ingredients);
 	const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
 	const { colorScheme } = useColorScheme();
 	const { textColor, borderColor, inputBgColor } = useThemeColors();
-
+	const [showRecipe, setShowRecipe] = useState<boolean>(false);
+	const [darkbg, setdarkbg] = useState<boolean>(false);
 	const handleRemove = (ingredient: string) => {
 		setSelectedIngredients(
 			selectedIngredients.filter((item) => item !== ingredient)
 		);
 	};
+	const [recipeResult,setRecipeResult] = useState<recipeProps|null>(null)
 
 	const handleAddIngredient = (ingredientName: string) => {
 		if (selectedIngredients.includes(ingredientName)) {
@@ -33,32 +52,51 @@ const GenerateRecipe: React.FC<Props> = ({ isVisible, onClose }) => {
 		setSelectedIngredients([...selectedIngredients, ingredientName]);
 	};
 
-	const handleClose = () => {
-		setSelectedIngredients([]);
-		onClose();
+
+	const dispatch = useDispatch<AppDispatch>()
+	const handleGenerate = async () => {
+		try {
+			const res = await axios.post("/test", {
+				ingredients:selectedIngredients,
+				user_preference:""
+			});
+			console.log(res.data)
+			setShowRecipe(true);
+			setRecipeResult(res.data);
+			setdarkbg(true);
+
+		} catch (error) {
+			console.log(error)
+		}
+	
+	}
+	const { pageLoading, accessToken } = useSelector(
+		(state: RootState) => state.auth
+	); 
+
+	const onRefresh = async () => {
+		await dispatch(handleRefresh(accessToken));
 	};
 
+	const onClose = () => {
+		setRecipeResult(null);
+		setdarkbg(false);
+		setShowRecipe(false)
+	}
+    
+	if (pageLoading) return <Loading />;
 	return (
-		<Modal
-			visible={isVisible}
-			transparent={true}
-			animationType="slide"
-			className="bg-black">
-			<View className="z-10 flex-1">
-				<View className="absolute bottom-0 w-full p-4 border bg-light h-[90%] rounded-t-3xl border-light-dark dark:border-dark-light dark:bg-dark">
-					{/* header */}
-					<View className="flex-row items-center justify-between">
-						<StyledText type="heading-4">Generate Recipe</StyledText>
-						<StyledPressable onPress={handleClose} size="icon">
-							<Image
-								source={
-									colorScheme === "light"
-										? icons.closeDarkLight
-										: icons.closeLightDark
-								}
-								className="w-8 h-8"
-							/>
-						</StyledPressable>
+		<ScrollView
+			contentContainerStyle={{ flexGrow: 1 }}
+			className="w-full h-screen bg-light dark:bg-dark"
+			refreshControl={
+				<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
+			}>
+			<View className="w-full h-full  flex-col">
+            <View className="z-10 flex-1 p-4">
+				{/* header */}
+				<View className="flex-row items-center justify-between">
+						<StyledText type="heading-4">Generate Recipe</StyledText>						 
 					</View>
 
 					{/* body */}
@@ -244,7 +282,7 @@ const GenerateRecipe: React.FC<Props> = ({ isVisible, onClose }) => {
 									</View>
 								</View>
 								<View className="w-full flex-row items-center justify-end ">
-									<StyledPressable className="bg-main">
+									<StyledPressable onPress={handleGenerate} className="bg-main">
 										<StyledText className="text-light">
 											Generate Recipe
 										</StyledText>
@@ -253,9 +291,17 @@ const GenerateRecipe: React.FC<Props> = ({ isVisible, onClose }) => {
 							</View>
 						</View>
 					</ScrollView>
-				</View>
 			</View>
-		</Modal>
+			</View>
+
+			{darkbg && (<View className="absolute w-full h-full bg-black/50 z-[9]"></View>)}
+
+			<DisplayRecipe 
+				isVisible={showRecipe}
+				onClose={onClose}
+				recipe={recipeResult}
+			/>
+		</ScrollView>
 	);
 };
-export default GenerateRecipe;
+export default UserPreferences;

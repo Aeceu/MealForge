@@ -1,0 +1,66 @@
+import { handleError } from "@/utils/errorHandler";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "../api/axios";
+import { Alert } from "react-native";
+
+type generateProps = {
+	ingredients:string[];
+	user_preference:string;
+}
+
+export const handleLGenerate = createAsyncThunk(
+	"recipe/handleLGenerate",
+	async (data:generateProps, { rejectWithValue, dispatch }) => {
+		try {
+			const res = await axios.post("/test", {
+				ingredients:data.ingredients,
+				user_preference:""
+			});
+			console.log(res.data)
+			return res.data;
+		} catch (error) {
+			const resError = handleError(error);
+			console.log("resError:", resError);
+			return rejectWithValue(resError);
+		}
+	}
+);
+
+type handleSaveRecipeProps = {
+	userId: string|undefined;
+	recipe: {
+		name: string;
+		ingredients: [
+			{
+				name: string;
+				measurement: string;
+			}
+		];
+		instructions: [string];
+		type_of_cuisine: string;
+		nutrient_counts: string;
+		serve_hot_or_cold: string;
+		cooking_time: string;
+		benefits: string;
+		serve_for: string;
+	};
+};
+
+export const handleSaveRecipe = createAsyncThunk(
+	"recipe/handleSaveRecipe",
+	async (data: handleSaveRecipeProps, { rejectWithValue }) => {
+		try { 
+			const { userId, recipe } = data;
+			const res = await axios.post(`/create_recipe/${userId}`, { recipe });
+
+			console.log("Recipe saved:", res.data);
+			Alert.alert(res.data.message)
+			return res.data;
+		} catch (error) {
+			// Handle and log the error
+			const resError = handleError(error);
+			console.log("resError:", resError);
+			return rejectWithValue(resError);
+		}
+	}
+);

@@ -1,5 +1,4 @@
 import Loading from "@/components/Loading";
-import GenerateRecipe from "@/components/modals/GenerateRecipe";
 import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
 import { icons, images } from "@/constants";
@@ -7,16 +6,13 @@ import { handleRefresh } from "@/redux/actions/authActions";
 import { RootState, AppDispatch } from "@/redux/store";
 import { router } from "expo-router";
 import { useColorScheme } from "nativewind";
-import { useState } from "react";
 import { Image, RefreshControl, ScrollView, View } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 const user = () => {
 	const { colorScheme } = useColorScheme();
 	const dispatch = useDispatch<AppDispatch>();
-	const [darkbg, setDarkbg] = useState<boolean>(false);
-	const [showModal, setShowModal] = useState<boolean>(false);
-	const { user } = useSelector((state: RootState) => state.user);
+	
 	const { pageLoading, accessToken } = useSelector(
 		(state: RootState) => state.auth
 	);
@@ -24,14 +20,7 @@ const user = () => {
 		await dispatch(handleRefresh(accessToken));
 	};
 
-	const onOpen = () => {
-		setShowModal(true);
-		setDarkbg(true);
-	};
-	const onClose = () => {
-		setShowModal(false);
-		setDarkbg(false);
-	};
+ 
 
 	if (pageLoading) return <Loading />;
 	return (
@@ -49,7 +38,7 @@ const user = () => {
 				{/* Generate Recipe Button */}
 				<StyledPressable
 					size="icon"
-					onPress={onOpen}
+					onPress={()=>router.push("/(user_screen)/GenerateRecipe")}
 					className="absolute rounded-full bottom-5 right-5 bg-main">
 					<Image
 						source={colorScheme === "light" ? icons.plusWhite : icons.plus}
@@ -57,14 +46,7 @@ const user = () => {
 						className="w-12 h-12 rounded-full"
 					/>
 				</StyledPressable>
-			</View>
-			{/* Modal background overlay  */}
-			{darkbg && (
-				<View className="absolute w-full h-full top-0 left-0 bg-black/50 z-[9]" />
-			)}
-
-			{/* Modal */}
-			<GenerateRecipe isVisible={showModal} onClose={onClose} />
+			</View> 
 		</ScrollView>
 	);
 };
