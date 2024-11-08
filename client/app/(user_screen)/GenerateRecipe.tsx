@@ -1,11 +1,11 @@
-import Loading from "@/components/Loading"; 
+import Loading from "@/components/Loading";
 import DisplayRecipe from "@/components/modals/DisplayRecipe";
 import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
 import { icons } from "@/constants";
 import { useThemeColors } from "@/constants/colors";
 import { handleRefresh } from "@/redux/actions/authActions";
-import { handleLGenerate } from "@/redux/actions/recipeAction"; 
+import { handleLGenerate } from "@/redux/actions/recipeAction";
 import axios from "@/redux/api/axios";
 import { RootState, AppDispatch } from "@/redux/store";
 import { useColorScheme } from "nativewind";
@@ -15,24 +15,24 @@ import { SelectList } from "react-native-dropdown-select-list-expo";
 import { useSelector, useDispatch } from "react-redux";
 
 type recipeProps = {
-	name:string;
-	ingredients:[
+	name: string;
+	ingredients: [
 		{
-			name:string;
-			measurement:string;
+			name: string;
+			measurement: string;
 		}
-	]
-	instructions:[string];
-	type_of_cuisine:string;
-	nutrient_counts:string;
-	serve_hot_or_cold:string;
-	cooking_time:string;
-	benefits:string;
-	serve_for:string;
-}
+	];
+	instructions: [string];
+	type_of_cuisine: string;
+	nutrient_counts: string;
+	serve_hot_or_cold: string;
+	cooking_time: string;
+	benefits: string;
+	serve_for: string;
+};
 
 const UserPreferences = () => {
-    const { ingredients } = useSelector((state: RootState) => state.ingredients);
+	const { ingredients } = useSelector((state: RootState) => state.ingredients);
 	const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
 	const { colorScheme } = useColorScheme();
 	const { textColor, borderColor, inputBgColor } = useThemeColors();
@@ -43,7 +43,7 @@ const UserPreferences = () => {
 			selectedIngredients.filter((item) => item !== ingredient)
 		);
 	};
-	const [recipeResult,setRecipeResult] = useState<recipeProps|null>(null)
+	const [recipeResult, setRecipeResult] = useState<recipeProps | null>(null);
 
 	const handleAddIngredient = (ingredientName: string) => {
 		if (selectedIngredients.includes(ingredientName)) {
@@ -52,27 +52,24 @@ const UserPreferences = () => {
 		setSelectedIngredients([...selectedIngredients, ingredientName]);
 	};
 
-
-	const dispatch = useDispatch<AppDispatch>()
+	const dispatch = useDispatch<AppDispatch>();
 	const handleGenerate = async () => {
 		try {
 			const res = await axios.post("/test", {
-				ingredients:selectedIngredients,
-				user_preference:""
+				ingredients: selectedIngredients,
+				user_preference: "",
 			});
-			console.log(res.data)
+			console.log(res.data);
 			setShowRecipe(true);
 			setRecipeResult(res.data);
 			setdarkbg(true);
-
 		} catch (error) {
-			console.log(error)
+			console.log(error);
 		}
-	
-	}
+	};
 	const { pageLoading, accessToken } = useSelector(
 		(state: RootState) => state.auth
-	); 
+	);
 
 	const onRefresh = async () => {
 		await dispatch(handleRefresh(accessToken));
@@ -81,9 +78,9 @@ const UserPreferences = () => {
 	const onClose = () => {
 		setRecipeResult(null);
 		setdarkbg(false);
-		setShowRecipe(false)
-	}
-    
+		setShowRecipe(false);
+	};
+
 	if (pageLoading) return <Loading />;
 	return (
 		<ScrollView
@@ -93,10 +90,10 @@ const UserPreferences = () => {
 				<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
 			}>
 			<View className="w-full h-full  flex-col">
-            <View className="z-10 flex-1 p-4">
-				{/* header */}
-				<View className="flex-row items-center justify-between">
-						<StyledText type="heading-4">Generate Recipe</StyledText>						 
+				<View className="z-10 flex-1 p-4">
+					{/* header */}
+					<View className="flex-row items-center justify-between">
+						<StyledText type="heading-4">Generate Recipe</StyledText>
 					</View>
 
 					{/* body */}
@@ -245,7 +242,7 @@ const UserPreferences = () => {
 									</StyledText>
 									<View>
 										{selectedIngredients.length <= 0 ? (
-											<StyledText className="text-center text-red-500 my-4 ">
+											<StyledText className="my-4 text-center text-red-500 ">
 												No ingredients selected.
 											</StyledText>
 										) : (
@@ -291,12 +288,14 @@ const UserPreferences = () => {
 							</View>
 						</View>
 					</ScrollView>
-			</View>
+				</View>
 			</View>
 
-			{darkbg && (<View className="absolute w-full h-full bg-black/50 z-[9]"></View>)}
+			{darkbg && (
+				<View className="absolute w-full h-full bg-black/50 z-[9]"></View>
+			)}
 
-			<DisplayRecipe 
+			<DisplayRecipe
 				isVisible={showRecipe}
 				onClose={onClose}
 				recipe={recipeResult}

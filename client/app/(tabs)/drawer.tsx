@@ -56,57 +56,57 @@ const drawer = () => {
 	if (pageLoading) return <Loading />;
 
 	return (
-		<ScrollView
-			contentContainerStyle={{ flex: 1 }}
-			className="w-full h-full bg-light dark:bg-dark"
-			refreshControl={
-				<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
-			}>
-			<View className="flex-col items-center w-full h-full">
-				<Header />
+		<>
+			<ScrollView
+				className="w-full bg-light dark:bg-dark"
+				refreshControl={
+					<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
+				}>
+				<View className="flex-col items-center w-full h-full">
+					<Header />
 
-				{/* Tabs */}
-				<View className="flex-row px-6 space-x-4">
-					<StyledPressable
-						onPress={() => setSelectedTab("main ingredient")}
-						className={`rounded-none opacity-60 ${selectedTab === "main ingredient" &&
-							"border-b-2 border-main dark:border-main-50 opacity-100"
-							}`}>
-						<StyledText>My Ingredients</StyledText>
-					</StyledPressable>
-					<StyledPressable
-						onPress={() => setSelectedTab("seasoning")}
-						className={`rounded-none opacity-60 ${selectedTab === "seasoning" &&
-							"border-b-2 border-main dark:border-main-50 opacity-100"
-							}`}>
-						<StyledText>My Seasonings</StyledText>
-					</StyledPressable>
-				</View>
+					{/* Tabs */}
+					<View className="flex-row px-6 space-x-4">
+						<StyledPressable
+							onPress={() => setSelectedTab("main ingredient")}
+							className={`rounded-none opacity-60 ${selectedTab === "main ingredient" &&
+								"border-b-2 border-main dark:border-main-50 opacity-100"
+								}`}>
+							<StyledText>My Ingredients</StyledText>
+						</StyledPressable>
+						<StyledPressable
+							onPress={() => setSelectedTab("seasoning")}
+							className={`rounded-none opacity-60 ${selectedTab === "seasoning" &&
+								"border-b-2 border-main dark:border-main-50 opacity-100"
+								}`}>
+							<StyledText>My Seasonings</StyledText>
+						</StyledPressable>
+					</View>
 
-				{selectedTab === "main ingredient" && <Ingredients />}
-				{selectedTab === "seasoning" && <Seasonings />}
+					{selectedTab === "main ingredient" && <Ingredients />}
+					{selectedTab === "seasoning" && <Seasonings />}
 
-				{/* ADD button */}
-				<StyledPressable
-					size="icon"
-					className="absolute rounded-full bottom-5 right-5 bg-main"
-					onPress={handleAddBtn}>
-					<Image
-						source={colorScheme === "light" ? (icons.plusWhite) : (icons.plus)}
-						resizeMode="contain"
-						className="w-12 h-12 rounded-full"
+
+					<AddIngredients
+						type={selectedTab}
+						isVisible={showTestModal}
+						onClose={onClose}
 					/>
-				</StyledPressable>
-
-				{darkbg && (<View className="absolute w-full h-full bg-black/50 z-[9]"></View>)}
-
-				<AddIngredients
-					type={selectedTab}
-					isVisible={showTestModal}
-					onClose={onClose}
+				</View>
+			</ScrollView>
+			{darkbg && (<View className="absolute w-full h-full bg-black/50 z-[9]"></View>)}
+			{/* ADD button */}
+			<StyledPressable
+				size="icon"
+				className="absolute rounded-full bottom-5 right-5 bg-main"
+				onPress={handleAddBtn}>
+				<Image
+					source={colorScheme === "light" ? (icons.plusWhite) : (icons.plus)}
+					resizeMode="contain"
+					className="w-12 h-12 rounded-full"
 				/>
-			</View>
-		</ScrollView>
+			</StyledPressable>
+		</>
 	);
 };
 export default drawer;

@@ -47,6 +47,7 @@ import searchDarkLight from "@/assets/icons/search-dark-ight.png";
 import searchLightDark from "@/assets/icons/search-light-dark.png";
 import closeDarkLight from "@/assets/icons/close-dark-light.png";
 import closeLightDark from "@/assets/icons/close-light-dark.png";
+import closeWhite from "@/assets/icons/close-white.png";
 import plus from "@/assets/icons/plus.png";
 import plusWhite from "@/assets/icons/plus-white.png";
 import arrowDownDark from "@/assets/icons/arrow-down-dark.png";
@@ -102,6 +103,7 @@ export default {
 	searchLightDark,
 	closeDarkLight,
 	closeLightDark,
+	closeWhite,
 	plus,
 	plusWhite,
 	arrowDownDark,

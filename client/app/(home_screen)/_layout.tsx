@@ -25,6 +25,11 @@ const HomeScreenLayout = () => {
 						headerStyle: {
 							backgroundColor: tabColor,
 						},
+						headerTitleStyle: {
+							fontFamily: "Poppins-Regular",
+							fontSize: 16,
+						},
+						headerTitleAlign: "center",
 						headerTintColor: textColor,
 						headerShadowVisible: false,
 					}}

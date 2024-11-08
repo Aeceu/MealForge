@@ -39,13 +39,14 @@ const Seasonings = () => {
 	}
 	return (
 		<ScrollView className="flex-1 w-full h-full p-4 ">
+
 			{ingredients.length > 0 ? (
 				ingredients.map(
 					(item, i) =>
 						item.type === "seasoning" && (
 							<View
 								key={i}
-								className="flex-row items-center justify-between w-full p-4 my-2 bg-white border border-light-border dark:bg-dark-light dark:border-dark-border rounded-xl">
+								className="flex-row items-center justify-between w-full p-4 my-1 bg-white border border-light-border dark:bg-dark-light dark:border-dark-border rounded-xl">
 								<View className="flex-col items-start justify-center">
 									<StyledText type="label" className="mb-2 text-xs">
 										{item.type === "seasoning" ? "Seasoning" : item.type}
@@ -62,7 +63,11 @@ const Seasonings = () => {
 										size="icon"
 										onPress={() => handleDelete(item.id)}>
 										<Image
-											source={icons.closeLightDark}
+											source={
+												colorScheme === "light"
+													? icons.closeDarkLight
+													: icons.closeLightDark
+											}
 											resizeMode="contain"
 											className="w-7 h-7"
 										/>

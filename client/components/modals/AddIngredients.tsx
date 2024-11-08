@@ -72,7 +72,7 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 				<View className="absolute bottom-0 w-full p-4 border bg-light h-3/4 rounded-t-3xl border-light-dark dark:border-dark-light dark:bg-dark">
 					{/* header */}
 					<View className="flex-row items-center justify-between">
-						<StyledText type="heading-4">Add new ingredient</StyledText>
+						<StyledText type="heading-4">Add new {type === "main ingredient" ? "ingredient" : "seasoning"}</StyledText>
 						<StyledPressable onPress={handleClose} size="icon">
 							<Image
 								source={
@@ -89,7 +89,7 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 						<View className="mt-2">
 							<View className="">
 								<StyledText type="label" className="mb-2">
-									Select an ingredient
+									Select {type === "main ingredient" ? "an ingredient" : "a seasoning"}
 								</StyledText>
 								<Controller
 									control={control}
@@ -142,7 +142,7 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 															: icons.closeLightDark
 													}
 													resizeMode="contain"
-													className="w-5 h-5 ml-2"
+													className="w-6 h-6 ml-2"
 												/>
 											}
 											arrowicon={
@@ -153,7 +153,7 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 															: icons.arrowDownDark
 													}
 													resizeMode="contain"
-													className="w-4 h-4"
+													className="w-6 h-6"
 												/>
 											}
 										/>
@@ -202,12 +202,12 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 								</StyledText>
 
 								{addExpirationDate ? (
-									<View className="w-full flex-row items-center  ">
+									<View className="flex-row items-center w-full">
 										<Controller
 											control={control}
 											name="expirationDate"
 											render={({ field: { value, onChange } }) => (
-												<View className=" flex-1 flex-row items-center w-full">
+												<View className="flex-1">
 													<StyledPressable
 														className="w-full bg-white border rounded-lg dark:bg-dark-light border-light-border dark:border-dark-border"
 														onPress={() => setShowDate(true)}>
@@ -230,10 +230,14 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 										/>
 										<StyledPressable
 											size="icon"
-											className="mx-2 flex-1 w-full"
+											className="ml-2"
 											onPress={() => setAddExpirationDate(false)}>
 											<Image
-												source={icons.closeLightDark}
+												source={
+													colorScheme === "light"
+														? icons.closeDarkLight
+														: icons.closeLightDark
+												}
 												resizeMode="contain"
 												className="w-8 h-8"
 											/>
@@ -242,8 +246,11 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 								) : (
 									<StyledPressable
 										onPress={() => setAddExpirationDate(true)}
-										className="bg-main">
-										<StyledText>ADD</StyledText>
+										className="w-full border border-main">
+										<StyledText
+											className="text-main"
+											type="subheading"
+										>Add</StyledText>
 									</StyledPressable>
 								)}
 							</View>
@@ -254,10 +261,9 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 								className={`mt-4 bg-main flex-row items-center`}
 								onPress={handleSubmit(onSubmit)}>
 								<StyledText
-									className="ml-2"
+									className="text-white dark:text-main-50"
 									selectable={false}
-									fontStyle="Chunk"
-									type="button">
+									type="subheading">
 									Save
 								</StyledText>
 							</StyledPressable>
