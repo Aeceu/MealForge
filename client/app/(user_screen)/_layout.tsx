@@ -127,6 +127,18 @@ const AuthLayout = () => {
 						headerShadowVisible: false,
 					}}
 				/>
+				<Stack.Screen
+					name="GenerateRecipe"
+					options={{
+						headerShown: true,
+						title: "Generate Recipe",
+						headerStyle: {
+							backgroundColor: tabColor,
+						},
+						headerTintColor: textColor,
+						headerShadowVisible: false,
+					}}
+				/>
 			</Stack>
 		</>
 	);

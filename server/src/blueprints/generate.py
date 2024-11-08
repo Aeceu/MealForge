@@ -33,7 +33,6 @@ def generate():
 
     # Get the first recommended recipe (Top 1)
     top_recipe = recommended_recipes.iloc[random.choice(range(5))]
-
     # Prepare the top recipe details to pass into the prompt
     top_recipe_str = f"Title: {top_recipe['title']}, Ingredients: {top_recipe['ingredients']}, Directions: {top_recipe['directions']}, NER: {top_recipe['NER']}"
     ingredients_input_str = ', '.join(ingredients)
