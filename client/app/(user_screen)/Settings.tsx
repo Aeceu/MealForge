@@ -7,6 +7,8 @@ import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
 import { icons } from "@/constants";
 import { handleLogout, handleRefresh } from "@/redux/actions/authActions";
+import { clearIngredients } from "@/redux/slices/ingredientsSlice";
+import { setRecipe } from "@/redux/slices/recipeSlice";
 import { AppDispatch, RootState } from "@/redux/store";
 import { router } from "expo-router";
 import { Alert, Image, RefreshControl, ScrollView, View } from "react-native";
@@ -21,6 +23,8 @@ const Settings = () => {
 	const logout = () => {
 		dispatch(handleLogout(accessToken)).then((res) => {
 			if (res.meta.requestStatus === "fulfilled") {
+				dispatch(clearIngredients());
+				dispatch(setRecipe([]));
 				Alert.alert(res.payload.message);
 				router.push("/(auth)/login");
 			} else {
@@ -63,8 +67,9 @@ const Settings = () => {
 
 				<StyledPressable
 					onPress={logout}
-					className={`flex-row items-center justify-start w-full px-6 py-4 mt-16 rounded-lg h-max ${status === "pending" ? "bg-red-600/50" : "bg-red-600"
-						}`}>
+					className={`flex-row items-center justify-start w-full px-6 py-4 mt-16 rounded-lg h-max ${
+						status === "pending" ? "bg-red-600/50" : "bg-red-600"
+					}`}>
 					{status === "pending" ? (
 						<Spin loading={status === "pending"} size="md" />
 					) : (

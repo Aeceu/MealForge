@@ -1,18 +1,24 @@
 import Loading from "@/components/Loading";
 import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
+import Recipes from "@/components/UserTabUI/Recipes";
 import { icons, images } from "@/constants";
 import { handleRefresh } from "@/redux/actions/authActions";
+import { handleGetUserRecipes } from "@/redux/actions/recipeAction";
 import { RootState, AppDispatch } from "@/redux/store";
 import { router } from "expo-router";
 import { useColorScheme } from "nativewind";
+import { Dispatch, useEffect, useState } from "react";
 import { Image, RefreshControl, ScrollView, View } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 const user = () => {
 	const { colorScheme } = useColorScheme();
 	const dispatch = useDispatch<AppDispatch>();
-	
+	const [selectedTab, setSelectedTab] = useState("recipes");
+	const { user } = useSelector((state: RootState) => state.user);
+	const { recipe } = useSelector((state: RootState) => state.recipe);
+
 	const { pageLoading, accessToken } = useSelector(
 		(state: RootState) => state.auth
 	);
@@ -20,7 +26,11 @@ const user = () => {
 		await dispatch(handleRefresh(accessToken));
 	};
 
- 
+	useEffect(() => {
+		if (recipe.length <= 0) {
+			dispatch(handleGetUserRecipes(user?.id));
+		}
+	}, []);
 
 	if (pageLoading) return <Loading />;
 	return (
@@ -33,12 +43,14 @@ const user = () => {
 			<View className="flex-col items-center w-full h-full p-4">
 				<UserHeader />
 				<UserInfo />
-				<UserTabs />
+				<UserTabs selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+
+				{selectedTab === "recipes" && <Recipes />}
 
 				{/* Generate Recipe Button */}
 				<StyledPressable
 					size="icon"
-					onPress={()=>router.push("/(user_screen)/GenerateRecipe")}
+					onPress={() => router.push("/(user_screen)/GenerateRecipe")}
 					className="absolute rounded-full bottom-5 right-5 bg-main">
 					<Image
 						source={colorScheme === "light" ? icons.plusWhite : icons.plus}
@@ -46,7 +58,7 @@ const user = () => {
 						className="w-12 h-12 rounded-full"
 					/>
 				</StyledPressable>
-			</View> 
+			</View>
 		</ScrollView>
 	);
 };
@@ -148,14 +160,26 @@ const UserInfo = () => {
 	);
 };
 
-const UserTabs = () => {
+type UserTabsProps = {
+	selectedTab: string;
+	setSelectedTab: Dispatch<string>;
+};
+const UserTabs: React.FC<UserTabsProps> = ({ selectedTab, setSelectedTab }) => {
 	return (
 		<View className="flex-row mt-2">
-			<StyledPressable className="basis-1/2">
-				<StyledText>My Posts</StyledText>
+			<StyledPressable
+				onPress={() => setSelectedTab("recipes")}
+				className={`basis-1/2 ${
+					selectedTab === "recipes" && "border-b  border-b-main"
+				}`}>
+				<StyledText>My Recipes</StyledText>
 			</StyledPressable>
-			<StyledPressable className="basis-1/2">
-				<StyledText>My Info</StyledText>
+			<StyledPressable
+				onPress={() => setSelectedTab("posts")}
+				className={`basis-1/2 ${
+					selectedTab === "posts" && "border-b  border-b-main"
+				}`}>
+				<StyledText>My Posts</StyledText>
 			</StyledPressable>
 		</View>
 	);

@@ -34,6 +34,23 @@ const HomeScreenLayout = () => {
 						headerShadowVisible: false,
 					}}
 				/>
+				<Stack.Screen
+					name="user_recipe/[id]"
+					options={{
+						headerShown: true,
+						title: "User Recipe Page",
+						headerStyle: {
+							backgroundColor: tabColor,
+						},
+						headerTitleStyle: {
+							fontFamily: "Poppins-Regular",
+							fontSize: 16,
+						},
+						headerTitleAlign: "center",
+						headerTintColor: textColor,
+						headerShadowVisible: false,
+					}}
+				/>
 			</Stack>
 		</>
 	);

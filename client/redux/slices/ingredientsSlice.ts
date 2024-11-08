@@ -27,7 +27,7 @@ const ingredientSlice = createSlice({
 		setIngredients: (state, action) => {
 			state.ingredients = action.payload;
 		},
-		clearIngredients: (state, action) => {
+		clearIngredients: (state) => {
 			state.ingredients = [];
 		},
 	},

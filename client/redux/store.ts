@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { persistReducer, persistStore, createTransform } from "redux-persist";
 import authSlice, { TInitialState } from "./slices/authSlice";
 import ingredientSlice from "./slices/ingredientsSlice";
-
+import recipeSlice from "./slices/recipeSlice";
 const authTransform = createTransform<TInitialState, TInitialState>(
 	(inboundState: TInitialState): TInitialState => {
 		return {
@@ -34,6 +34,7 @@ export const store = configureStore({
 		auth: persistedAuthReducer,
 		user: userSlice,
 		ingredients: ingredientSlice,
+		recipe: recipeSlice,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({

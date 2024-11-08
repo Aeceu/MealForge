@@ -8,7 +8,7 @@ recipes_bp = Blueprint("recipes", __name__)
 @recipes_bp.route("/create_recipe/<userId>", methods=["POST"])
 def create_recipe(userId):
     data = request.get_json()
-    
+
     recipe_data = data.get("recipe")
     recipe_name = recipe_data.get("name")
     ingredients = recipe_data.get("ingredients")
@@ -75,17 +75,58 @@ def get_user_recipes(user_id):
         with engine.connect() as conn:
             result = conn.execute(text(
                 """
-                SELECT r.*, GROUP_CONCAT(i.name SEPARATOR ', ') as ingredients
-                FROM recipes r
-                JOIN recipe_ingredients ri ON r.id = ri.recipe_id
-                JOIN ingredients i ON i.id = ri.ingredient_id
-                WHERE r.user_id = :user_id
-                GROUP BY r.id
+                SELECT * FROM recipes WHERE user_id = :user_id
                 """
             ), {"user_id": user_id})
 
-            recipes = [dict(row) for row in result]
+            # recipes = [dict(row) for row in result.fetchall]
+            recipes = result.fetchall()
+            all_recipes = []
+            for recipe in recipes:
+                all_recipes.append({
+                    "id":recipe.id,
+                    "name":recipe.name,
+                    "instruction":recipe.instruction,
+                    "type_of_cuisine":recipe.type_of_cuisine,
+                    "nutrient_counts":recipe.nutrient_counts,
+                    "serve_hot_or_cold":recipe.serve_hot_or_cold,
+                    "cooking_time":recipe.cooking_time,
+                    "benefits":recipe.benefits,
+                    "serve_for":recipe.serve_for,
+                    "ingredients":recipe.ingredients,
+                    "user_id":recipe.user_id,
+                })
 
-            return jsonify({"recipes": recipes}), 200
+            return jsonify({"recipes": all_recipes}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@recipes_bp.route("/user/recipe/<recipe_id>",methods=["GET"])
+def get_user_recipe(recipe_id):
+    try:
+      with engine.connect() as conn:
+          result = conn.execute(text(
+              """
+              SELECT * FROM recipes WHERE id = :recipe_id
+              """
+          ), {"recipe_id": recipe_id})
+
+          # recipes = [dict(row) for row in result.fetchall]
+          recipe = result.fetchone()
+          final_recipe = {
+            "id":recipe.id,
+            "name":recipe.name,
+            "instruction":recipe.instruction,
+            "type_of_cuisine":recipe.type_of_cuisine,
+            "nutrient_counts":recipe.nutrient_counts,
+            "serve_hot_or_cold":recipe.serve_hot_or_cold,
+            "cooking_time":recipe.cooking_time,
+            "benefits":recipe.benefits,
+            "serve_for":recipe.serve_for,
+            "ingredients":recipe.ingredients,
+            "user_id":recipe.user_id,
+          }
+
+          return jsonify({"recipe": final_recipe}), 200
+    except Exception as e:
+      return jsonify({"error": str(e)}), 500
