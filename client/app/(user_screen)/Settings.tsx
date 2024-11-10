@@ -8,6 +8,7 @@ import StyledText from "@/components/StyledText";
 import { icons } from "@/constants";
 import { handleLogout, handleRefresh } from "@/redux/actions/authActions";
 import { clearIngredients } from "@/redux/slices/ingredientsSlice";
+import { setPost, setUserPost } from "@/redux/slices/postSlice";
 import { setRecipe } from "@/redux/slices/recipeSlice";
 import { AppDispatch, RootState } from "@/redux/store";
 import { router } from "expo-router";
@@ -25,6 +26,8 @@ const Settings = () => {
 			if (res.meta.requestStatus === "fulfilled") {
 				dispatch(clearIngredients());
 				dispatch(setRecipe([]));
+				dispatch(setPost([]));
+				dispatch(setUserPost([]));
 				Alert.alert(res.payload.message);
 				router.push("/(auth)/login");
 			} else {

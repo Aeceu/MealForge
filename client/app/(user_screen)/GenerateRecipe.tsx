@@ -91,14 +91,9 @@ const UserPreferences = () => {
 			}>
 			<View className="w-full h-full  flex-col">
 				<View className="z-10 flex-1 p-4">
-					{/* header */}
-					<View className="flex-row items-center justify-between">
-						<StyledText type="heading-4">Generate Recipe</StyledText>
-					</View>
-
 					{/* body */}
 					<ScrollView>
-						<View className="mt-4 space-y-10">
+						<View className=" space-y-10">
 							<View className="mt-2">
 								<View>
 									<StyledText className="mb-2">

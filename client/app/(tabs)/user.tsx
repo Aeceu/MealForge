@@ -1,15 +1,17 @@
 import Loading from "@/components/Loading";
 import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
+import Posts from "@/components/UserTabUI/Posts";
 import Recipes from "@/components/UserTabUI/Recipes";
 import { icons, images } from "@/constants";
 import { handleRefresh } from "@/redux/actions/authActions";
+import { getUserPosts } from "@/redux/actions/postAction";
 import { handleGetUserRecipes } from "@/redux/actions/recipeAction";
 import { RootState, AppDispatch } from "@/redux/store";
 import { router } from "expo-router";
 import { useColorScheme } from "nativewind";
 import { Dispatch, useEffect, useState } from "react";
-import { Image, RefreshControl, ScrollView, View } from "react-native";
+import { Alert, Image, RefreshControl, ScrollView, View } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 const user = () => {
@@ -17,6 +19,7 @@ const user = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const [selectedTab, setSelectedTab] = useState("recipes");
 	const { user } = useSelector((state: RootState) => state.user);
+	const { userPost } = useSelector((state: RootState) => state.post);
 	const { recipe } = useSelector((state: RootState) => state.recipe);
 
 	const { pageLoading, accessToken } = useSelector(
@@ -25,41 +28,46 @@ const user = () => {
 	const onRefresh = async () => {
 		await dispatch(handleRefresh(accessToken));
 	};
-
 	useEffect(() => {
-		if (recipe.length <= 0) {
+		if (!user) return Alert.alert("user is not found!");
+
+		if (selectedTab === "recipes") {
 			dispatch(handleGetUserRecipes(user?.id));
+		} else {
+			dispatch(getUserPosts(user?.id));
 		}
-	}, []);
+	}, [selectedTab]);
 
 	if (pageLoading) return <Loading />;
 	return (
-		<ScrollView
-			contentContainerStyle={{ flex: 1 }}
-			className="w-full h-full bg-light dark:bg-dark"
-			refreshControl={
-				<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
-			}>
-			<View className="flex-col items-center w-full h-full p-4">
-				<UserHeader />
-				<UserInfo />
-				<UserTabs selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+		<>
+			<ScrollView
+				// contentContainerStyle={{ flex: 1 }}
+				className="w-full h-full bg-light dark:bg-dark"
+				refreshControl={
+					<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
+				}>
+				<View className="flex-col items-center w-full h-full p-2">
+					<UserHeader />
+					<UserInfo />
+					<UserTabs selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
 
-				{selectedTab === "recipes" && <Recipes />}
-
-				{/* Generate Recipe Button */}
-				<StyledPressable
-					size="icon"
-					onPress={() => router.push("/(user_screen)/GenerateRecipe")}
-					className="absolute rounded-full bottom-5 right-5 bg-main">
-					<Image
-						source={colorScheme === "light" ? icons.plusWhite : icons.plus}
-						resizeMode="contain"
-						className="w-12 h-12 rounded-full"
-					/>
-				</StyledPressable>
-			</View>
-		</ScrollView>
+					{selectedTab === "recipes" && <Recipes />}
+					{selectedTab === "posts" && <Posts />}
+				</View>
+			</ScrollView>
+			{/* Generate Recipe Button */}
+			<StyledPressable
+				size="icon"
+				onPress={() => router.push("/(user_screen)/GenerateRecipe")}
+				className="absolute rounded-full bottom-5 right-5 bg-main">
+				<Image
+					source={colorScheme === "light" ? icons.plusWhite : icons.plus}
+					resizeMode="contain"
+					className="w-12 h-12 rounded-full"
+				/>
+			</StyledPressable>
+		</>
 	);
 };
 export default user;

@@ -8,7 +8,7 @@ from blueprints.user import user_bp
 from blueprints.recipe import recipes_bp
 # from blueprints.generate import generate_bp
 from blueprints.ingredients import ingredients_bp
-
+from blueprints.post import posts_bp
 load_dotenv()
 app = Flask(__name__)
 jwt = JWTManager(app)
@@ -27,6 +27,7 @@ app.config['JWT_COOKIE_CSRF_PROTECT'] = True
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(user_bp)
+app.register_blueprint(posts_bp)
 app.register_blueprint(recipes_bp)
 # app.register_blueprint(generate_bp)
 app.register_blueprint(ingredients_bp)

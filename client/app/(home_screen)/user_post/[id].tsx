@@ -2,10 +2,10 @@ import Spin from "@/components/animations/Spin";
 import Loading from "@/components/Loading";
 import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
-import { icons, images } from "@/constants";
-import { getUserRecipe } from "@/redux/actions/recipeAction";
+import { icons } from "@/constants";
+import { getPostById } from "@/redux/actions/postAction";
 import { AppDispatch, RootState } from "@/redux/store";
-import { TRecipe } from "@/utils/types/recipe";
+import { RecipePost } from "@/utils/types/post";
 import { useLocalSearchParams } from "expo-router";
 import { useColorScheme } from "nativewind";
 import { useEffect, useState } from "react";
@@ -13,18 +13,19 @@ import { Image } from "react-native";
 import { ScrollView, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
-const RecipePostPage = () => {
+const UserRecipePost = () => {
 	const { id } = useLocalSearchParams();
 	const { colorScheme } = useColorScheme();
 	const [loading, setLoading] = useState(false);
-	const [recipe, setRecipe] = useState<TRecipe | null>(null);
+	const [post, setPost] = useState<RecipePost | null>(null);
 
 	const dispatch = useDispatch<AppDispatch>();
-	const { status } = useSelector((state: RootState) => state.recipe);
+	const { status } = useSelector((state: RootState) => state.post);
+
 	useEffect(() => {
-		dispatch(getUserRecipe(id)).then((res) => {
+		dispatch(getPostById(id)).then((res) => {
 			if (res.meta.requestStatus === "fulfilled") {
-				setRecipe(res.payload);
+				setPost(res.payload);
 			}
 		});
 	}, []);
@@ -35,19 +36,17 @@ const RecipePostPage = () => {
 		<ScrollView className="w-full p-4 bg-light dark:bg-dark">
 			<View className="mb-8">
 				{/* Header */}
-				<View className="w-full h-[150px] mb-4">
+				{/* <View className="w-full h-[150px] mb-4">
 					<Image
 						source={images.adobo}
 						resizeMode="cover"
 						className="object-center w-full h-full rounded-xl"
 					/>
-				</View>
+				</View> */}
 				<View className="mx-2 mb-4">
 					<View className="flex-row justify-between flex-1 w-full">
-						<StyledText
-							type="heading-4"
-							className="flex-1  font-chunk text-2xl">
-							{recipe?.name}
+						<StyledText type="heading-4" className="flex-1 font-chunk">
+							{post?.recipe.name}
 						</StyledText>
 						<StyledPressable
 							onPress={() => setLoading(!loading)}
@@ -68,6 +67,62 @@ const RecipePostPage = () => {
 							)}
 						</StyledPressable>
 					</View>
+
+					{/* <StyledText type="heading-3" className="font-chunk">
+						Spaghetti Bolognese
+					</StyledText> */}
+					<StyledText type="label" className="mt-px text-main">
+						@{post?.author}
+					</StyledText>
+
+					{/* save */}
+
+					{/* like/dislike */}
+					<View className="flex-row items-start justify-between w-full mt-4 ">
+						<StyledPressable size="text" className="flex-row items-center">
+							<StyledText className="flex font-psemibold">
+								69
+								{/* {recipe.likes.length} */}
+							</StyledText>
+							<StyledText className="flex ml-1" type="xs" fontStyle="light">
+								Likes
+								{/* {recipe.likes.length === 1 ? "Like" : "Likes"} */}
+							</StyledText>
+
+							<StyledText className="mx-2 text-2xl ">•</StyledText>
+
+							<StyledText className="font-psemibold">0</StyledText>
+							<StyledText className="ml-1" type="xs" fontStyle="light">
+								Dislikes
+								{/* {recipe.likes.length === 1 ? "Dislike" : "Dislikes"} */}
+							</StyledText>
+						</StyledPressable>
+
+						<View className="flex-row items-center space-x-2">
+							<StyledPressable size="icon">
+								<Image
+									source={
+										colorScheme === "dark"
+											? icons.likesLightDark
+											: icons.likesDarkLight
+									}
+									resizeMode="contain"
+									className="w-6 h-6"
+								/>
+							</StyledPressable>
+							<StyledPressable size="icon">
+								<Image
+									source={
+										colorScheme === "dark"
+											? icons.unlikesLightDark
+											: icons.unlikesDarkLight
+									}
+									resizeMode="contain"
+									className="w-6 h-6"
+								/>
+							</StyledPressable>
+						</View>
+					</View>
 				</View>
 
 				{/* Separator */}
@@ -82,25 +137,25 @@ const RecipePostPage = () => {
 						<View className="flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
 							<StyledText type="paragraph">• Serve for: </StyledText>
 							<StyledText type="paragraph">
-								{recipe?.serve_for} people{" "}
+								{post?.recipe.serve_for} people{" "}
 							</StyledText>
 						</View>
 						<View className="flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
 							<StyledText type="paragraph">• Serve in: </StyledText>
 							<StyledText type="paragraph">
-								{recipe?.serve_hot_or_cold}{" "}
+								{post?.recipe.serve_hot_or_cold}{" "}
 							</StyledText>
 						</View>
 						<View className="flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
 							<StyledText type="paragraph">• Cooking time: </StyledText>
 							<StyledText type="paragraph">
-								{recipe?.cooking_time} minutes{" "}
+								{post?.recipe.cooking_time} minutes{" "}
 							</StyledText>
 						</View>
 						<View className="flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
 							<StyledText type="paragraph">• Cuisine type: </StyledText>
 							<StyledText type="paragraph">
-								{recipe?.type_of_cuisine}{" "}
+								{post?.recipe.type_of_cuisine}{" "}
 							</StyledText>
 						</View>
 					</View>
@@ -112,7 +167,7 @@ const RecipePostPage = () => {
 						Ingredients:
 					</StyledText>
 					<View className="w-full px-6 py-4 space-y-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
-						{recipe?.ingredients.split(",").map((item, i) => (
+						{post?.recipe.ingredients.split(",").map((item, i) => (
 							<StyledText key={i} type="paragraph" className="">
 								• {item}
 							</StyledText>
@@ -126,8 +181,8 @@ const RecipePostPage = () => {
 						Instructions:
 					</StyledText>
 					<View className="w-full px-6 py-4 space-y-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
-						{recipe?.instruction.split("Step ").map(
-							(item, i) =>
+						{post?.recipe.instruction.split("Step ").map(
+							(item: string, i: number) =>
 								item && ( // Check to ignore any empty strings from the split
 									<StyledText key={i} type="paragraph">
 										• Step {item.trim()}
@@ -141,7 +196,7 @@ const RecipePostPage = () => {
 				{/* remove "mb-4" sa last */}
 
 				{/* Separator */}
-				<View className="flex-1 h-px mx-2 mt-2 mb-4 rounded-full bg-light-border dark:bg-dark-border"></View>
+				<View className="flex-1 h-px mx-2 mt-2 mb-4 rounded-full bg-light-border dark:bg-dark-border" />
 
 				{/* More Like This */}
 				<View className="">
@@ -168,4 +223,4 @@ const RecipePostPage = () => {
 	);
 };
 
-export default RecipePostPage;
+export default UserRecipePost;

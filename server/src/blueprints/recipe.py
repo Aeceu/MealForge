@@ -105,33 +105,34 @@ def get_user_recipes(user_id):
 # Get the user recipe
 @recipes_bp.route("/user/recipe/<recipe_id>",methods=["GET"])
 def get_user_recipe(recipe_id):
-    try:
-      with engine.connect() as conn:
-          result = conn.execute(text(
-              """
-              SELECT * FROM recipes WHERE id = :recipe_id
-              """
-          ), {"recipe_id": recipe_id})
+  print(recipe_id)
+  try:
+    with engine.connect() as conn:
+        result = conn.execute(text(
+            """
+            SELECT * FROM recipes WHERE id = :recipe_id
+            """
+        ), {"recipe_id": recipe_id})
 
-          # recipes = [dict(row) for row in result.fetchall]
-          recipe = result.fetchone()
-          final_recipe = {
-            "id":recipe.id,
-            "name":recipe.name,
-            "instruction":recipe.instruction,
-            "type_of_cuisine":recipe.type_of_cuisine,
-            "nutrient_counts":recipe.nutrient_counts,
-            "serve_hot_or_cold":recipe.serve_hot_or_cold,
-            "cooking_time":recipe.cooking_time,
-            "benefits":recipe.benefits,
-            "serve_for":recipe.serve_for,
-            "ingredients":recipe.ingredients,
-            "user_id":recipe.user_id,
-          }
+        # recipes = [dict(row) for row in result.fetchall]
+        recipe = result.fetchone()
+        final_recipe = {
+          "id":recipe.id,
+          "name":recipe.name,
+          "instruction":recipe.instruction,
+          "type_of_cuisine":recipe.type_of_cuisine,
+          "nutrient_counts":recipe.nutrient_counts,
+          "serve_hot_or_cold":recipe.serve_hot_or_cold,
+          "cooking_time":recipe.cooking_time,
+          "benefits":recipe.benefits,
+          "serve_for":recipe.serve_for,
+          "ingredients":recipe.ingredients,
+          "user_id":recipe.user_id,
+        }
 
-          return jsonify({"recipe": final_recipe}), 200
-    except Exception as e:
-      return jsonify({"error": str(e)}), 500
+        return jsonify({"recipe": final_recipe}), 200
+  except Exception as e:
+    return jsonify({"error": str(e)}), 500
 
 # TODO: Remove the recipe
 @recipes_bp.route("/user/recipe/<recipe_id>", methods=["DELETE"])

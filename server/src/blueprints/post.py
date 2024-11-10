@@ -1,30 +1,33 @@
+import uuid
+
 from flask import Blueprint, jsonify, request
 from sqlalchemy import text
-import uuid
 from utils.database import engine
 
 posts_bp = Blueprint("posts", __name__)
 
 # Create a new post for a recipe
-@posts_bp.route("/user/<user_id>/recipe/<recipe_id>/create_post", methods=["POST"])
-def create_post(user_id, recipe_id):
+@posts_bp.route("/user/<user_id>/recipe/<recipe_name>/create_post", methods=["POST"])
+def create_post(user_id, recipe_name):
     try:
         with engine.connect() as conn:
             # Check if user and recipe exist
             user = conn.execute(text("SELECT id FROM users WHERE id = :user_id"), {"user_id": user_id}).fetchone()
-            recipe = conn.execute(text("SELECT id FROM recipes WHERE id = :recipe_id"), {"recipe_id": recipe_id}).fetchone()
+            recipe = conn.execute(text("SELECT id FROM recipes WHERE name = :recipe_name"), {"recipe_name": recipe_name}).fetchone()
 
-            if not user or not recipe:
-                return jsonify({"error": "User or Recipe not found"}), 404
+            if not user:
+                return jsonify({"error": "User not found"}), 404
+            if not recipe:
+                return jsonify({"error": "Recipe not found"}), 404
 
-            # Create a new post
+            # Create a unique ID for the post
             post_id = str(uuid.uuid4())
             conn.execute(text(
                 """
                 INSERT INTO recipe_posts (id, user_id, recipe_id, posted_at)
                 VALUES (:id, :user_id, :recipe_id, CURRENT_DATE)
                 """
-            ), {"id": post_id, "user_id": user_id, "recipe_id": recipe_id})
+            ), {"id": post_id, "user_id": user_id, "recipe_id": recipe.id})
 
             conn.commit()
             return jsonify({"message": "Post created successfully!", "post_id": post_id}), 201
@@ -122,14 +125,19 @@ def like_unlike_post(post_id):
 # TODO: ====================|
 
 
-# Get a specific post by post ID, including all recipe details
+# Get a specific post by post ID, including all recipe details and bookmark info
 @posts_bp.route("/post/<post_id>", methods=["GET"])
 def get_post(post_id):
     try:
         with engine.connect() as conn:
             result = conn.execute(text(
                 """
-                SELECT rp.*, r.*, u.userName AS author
+                SELECT rp.id AS post_id, rp.user_id AS post_user_id, rp.posted_at AS post_date,
+                r.id AS recipe_id, r.name AS recipe_name, r.ingredients AS recipe_ingredients,
+                r.instruction AS recipe_instruction, r.type_of_cuisine AS recipe_cuisine,
+                r.nutrient_counts AS recipe_nutrients, r.serve_hot_or_cold AS recipe_serving_temp,
+                r.cooking_time AS recipe_cooking_time, r.benefits AS recipe_benefits,
+                r.serve_for AS recipe_servings, u.userName AS author_name
                 FROM recipe_posts rp
                 JOIN recipes r ON rp.recipe_id = r.id
                 JOIN users u ON rp.user_id = u.id
@@ -140,37 +148,51 @@ def get_post(post_id):
             if not result:
                 return jsonify({"error": "Post not found"}), 404
 
+            # Get bookmarks for the post
+            bookmarks = conn.execute(text(
+                "SELECT user_id FROM bookmarks WHERE post_id = :post_id"
+            ), {"post_id": post_id}).fetchall()
+
+            bookmark_list = [row.user_id for row in bookmarks]
+
+            # Construct the post response with separate post_id and recipe_id
             post = {
-                "id": result.id,
-                "user_id": result.user_id,
-                "posted_at": result.posted_at,
+                "id": result.post_id,
+                "user_id": result.post_user_id,
+                "posted_at": result.post_date,
                 "recipe": {
                     "id": result.recipe_id,
-                    "name": result.name,
-                    "ingredients": result.ingredients,
-                    "instruction": result.instruction,
-                    "type_of_cuisine": result.type_of_cuisine,
-                    "nutrient_counts": result.nutrient_counts,
-                    "serve_hot_or_cold": result.serve_hot_or_cold,
-                    "cooking_time": result.cooking_time,
-                    "benefits": result.benefits,
-                    "serve_for": result.serve_for,
+                    "name": result.recipe_name,
+                    "ingredients": result.recipe_ingredients,
+                    "instruction": result.recipe_instruction,
+                    "type_of_cuisine": result.recipe_cuisine,
+                    "nutrient_counts": result.recipe_nutrients,
+                    "serve_hot_or_cold": result.recipe_serving_temp,
+                    "cooking_time": result.recipe_cooking_time,
+                    "benefits": result.recipe_benefits,
+                    "serve_for": result.recipe_servings,
                 },
-                "author": result.author,
+                "author": result.author_name,
+                "bookmarks": bookmark_list,
             }
             return jsonify({"post": post}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Get all posts for the home page feed, including all recipe details
+# Get all posts for the home page feed, including all recipe details and bookmark info
 @posts_bp.route("/posts", methods=["GET"])
 def get_all_posts():
     try:
         with engine.connect() as conn:
             result = conn.execute(text(
                 """
-                SELECT rp.*, r.*, u.userName AS author
+                SELECT rp.id AS post_id, rp.user_id AS post_user_id, rp.posted_at AS post_date,
+                r.id AS recipe_id, r.name AS recipe_name, r.ingredients AS recipe_ingredients,
+                r.instruction AS recipe_instruction, r.type_of_cuisine AS recipe_cuisine,
+                r.nutrient_counts AS recipe_nutrients, r.serve_hot_or_cold AS recipe_serving_temp,
+                r.cooking_time AS recipe_cooking_time, r.benefits AS recipe_benefits,
+                r.serve_for AS recipe_servings, u.userName AS author_name
                 FROM recipe_posts rp
                 JOIN recipes r ON rp.recipe_id = r.id
                 JOIN users u ON rp.user_id = u.id
@@ -178,38 +200,51 @@ def get_all_posts():
                 """
             ))
 
-            posts = [{
-                "id": row.id,
-                "user_id": row.user_id,
-                "posted_at": row.posted_at,
-                "recipe": {
-                    "id": row.recipe_id,
-                    "name": row.name,
-                    "ingredients": row.ingredients,
-                    "instruction": row.instruction,
-                    "type_of_cuisine": row.type_of_cuisine,
-                    "nutrient_counts": row.nutrient_counts,
-                    "serve_hot_or_cold": row.serve_hot_or_cold,
-                    "cooking_time": row.cooking_time,
-                    "benefits": row.benefits,
-                    "serve_for": row.serve_for,
-                },
-                "author": row.author,
-            } for row in result]
+            posts = []
+            for row in result:
+                bookmarks = conn.execute(text(
+                    "SELECT user_id FROM bookmarks WHERE post_id = :post_id"
+                ), {"post_id": row.post_id}).fetchall()
+                bookmark_list = [bookmark.user_id for bookmark in bookmarks]
+
+                post = {
+                    "id": row.post_id,
+                    "user_id": row.post_user_id,
+                    "posted_at": row.post_date,
+                    "recipe": {
+                        "id": row.recipe_id,
+                        "name": row.recipe_name,
+                        "ingredients": row.recipe_ingredients,
+                        "instruction": row.recipe_instruction,
+                        "type_of_cuisine": row.recipe_cuisine,
+                        "nutrient_counts": row.recipe_nutrients,
+                        "serve_hot_or_cold": row.recipe_serving_temp,
+                        "cooking_time": row.recipe_cooking_time,
+                        "benefits": row.recipe_benefits,
+                        "serve_for": row.recipe_servings,
+                    },
+                    "author": row.author_name,
+                    "bookmarks": bookmark_list,
+                }
+                posts.append(post)
 
             return jsonify({"posts": posts}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Get all posts by a specific user for profile feed, including all recipe details
+# Get all posts by a specific user for profile feed, including all recipe details and bookmark info
 @posts_bp.route("/user/<user_id>/posts", methods=["GET"])
 def get_all_user_posts(user_id):
     try:
         with engine.connect() as conn:
             result = conn.execute(text(
                 """
-                SELECT rp.*, r.*, u.userName AS author
+                SELECT rp.id AS post_id, rp.user_id, rp.posted_at,
+                r.id AS recipe_id, r.name, r.ingredients, r.instruction,
+                r.type_of_cuisine, r.nutrient_counts, r.serve_hot_or_cold,
+                r.cooking_time, r.benefits, r.serve_for,
+                u.userName AS author
                 FROM recipe_posts rp
                 JOIN recipes r ON rp.recipe_id = r.id
                 JOIN users u ON rp.user_id = u.id
@@ -218,24 +253,33 @@ def get_all_user_posts(user_id):
                 """
             ), {"user_id": user_id})
 
-            user_posts = [{
-                "id": row.id,
-                "user_id": row.user_id,
-                "posted_at": row.posted_at,
-                "recipe": {
-                    "id": row.recipe_id,
-                    "name": row.name,
-                    "ingredients": row.ingredients,
-                    "instruction": row.instruction,
-                    "type_of_cuisine": row.type_of_cuisine,
-                    "nutrient_counts": row.nutrient_counts,
-                    "serve_hot_or_cold": row.serve_hot_or_cold,
-                    "cooking_time": row.cooking_time,
-                    "benefits": row.benefits,
-                    "serve_for": row.serve_for,
-                },
-                "author": row.author,
-            } for row in result]
+            user_posts = []
+            for row in result:
+                bookmarks = conn.execute(text(
+                    "SELECT user_id FROM bookmarks WHERE post_id = :post_id"
+                ), {"post_id": row.post_id}).fetchall()
+                bookmark_list = [bookmark.user_id for bookmark in bookmarks]
+
+                post = {
+                    "id": row.post_id,
+                    "user_id": row.user_id,
+                    "posted_at": row.posted_at,
+                    "recipe": {
+                        "id": row.recipe_id,
+                        "name": row.name,
+                        "ingredients": row.ingredients,
+                        "instruction": row.instruction,
+                        "type_of_cuisine": row.type_of_cuisine,
+                        "nutrient_counts": row.nutrient_counts,
+                        "serve_hot_or_cold": row.serve_hot_or_cold,
+                        "cooking_time": row.cooking_time,
+                        "benefits": row.benefits,
+                        "serve_for": row.serve_for,
+                    },
+                    "author": row.author,
+                    "bookmarks": bookmark_list,
+                }
+                user_posts.append(post)
 
             return jsonify({"user_posts": user_posts}), 200
 
@@ -269,6 +313,44 @@ def search_posts():
             } for row in result]
 
             return jsonify({"searched_posts": searched_posts}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Bookmark or unbookmark a post
+@posts_bp.route("/post/<post_id>/bookmark", methods=["POST"])
+def bookmark_unbookmark_post(post_id):
+    data = request.get_json()
+    user_id = data.get("user_id")
+
+    try:
+        with engine.connect() as conn:
+            # Check if post and user exist
+            post = conn.execute(text("SELECT id FROM recipe_posts WHERE id = :post_id"), {"post_id": post_id}).fetchone()
+            user = conn.execute(text("SELECT id FROM users WHERE id = :user_id"), {"user_id": user_id}).fetchone()
+
+            if not post or not user:
+                return jsonify({"error": "User or Post not found"}), 404
+
+            # Check if the user has already bookmarked the post
+            bookmark = conn.execute(text(
+                "SELECT id FROM bookmarks WHERE user_id = :user_id AND post_id = :post_id"
+            ), {"user_id": user_id, "post_id": post_id}).fetchone()
+
+            if bookmark:
+                # Unbookmark the post
+                conn.execute(text("DELETE FROM bookmarks WHERE user_id = :user_id AND post_id = :post_id"), {"user_id": user_id, "post_id": post_id})
+                message = "Post unbookmarked successfully!"
+            else:
+                # Bookmark the post
+                bookmark_id = str(uuid.uuid4())
+                conn.execute(text(
+                    "INSERT INTO bookmarks (id, user_id, post_id, bookmarked_at) VALUES (:id, :user_id, :post_id, CURRENT_DATE)"
+                ), {"id": bookmark_id, "user_id": user_id, "post_id": post_id})
+                message = "Post bookmarked successfully!"
+
+            conn.commit()
+            return jsonify({"message": message}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

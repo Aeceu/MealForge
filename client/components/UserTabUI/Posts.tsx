@@ -5,8 +5,9 @@ import Spin from "../animations/Spin";
 import StyledText from "../StyledText";
 import StyledPressable from "../StyledPressable";
 import { router } from "expo-router";
-const Recipes = () => {
-	const { recipe, status } = useSelector((state: RootState) => state.recipe);
+
+const Posts = () => {
+	const { userPost, status } = useSelector((state: RootState) => state.post);
 
 	if (status === "pending")
 		return (
@@ -14,20 +15,21 @@ const Recipes = () => {
 				<Spin loading={status === "pending"} size="md" />
 			</View>
 		);
+
 	return (
 		<View className="w-full h-full p-2 flex-col">
-			{!recipe || recipe.length <= 0 ? (
+			{!userPost || userPost.length <= 0 ? (
 				<StyledText>No Recipe is added!</StyledText>
 			) : (
-				recipe.map((item, i) => (
+				userPost.map((item, i) => (
 					<View key={i} className="w-full bg-dark-light rounded-lg p-4 my-1">
 						<StyledPressable
 							size="link"
 							onPress={() =>
-								router.push(`/(home_screen)/user_recipe/${item.id}`)
+								router.push(`/(home_screen)/user_post/${item.id}`)
 							}>
 							<StyledText className="font-chunk text-lg">
-								{item.name}
+								{item.recipe.name}
 							</StyledText>
 						</StyledPressable>
 						<ScrollView
@@ -35,7 +37,7 @@ const Recipes = () => {
 							showsHorizontalScrollIndicator={false}
 							className="w-full">
 							<View className="mt-2 flex-row items-start justify-center w-full">
-								{item.ingredients.split(",").map((item, i) => (
+								{item.recipe.ingredients.split(",").map((item, i) => (
 									<StyledText
 										key={i}
 										className="px-3 bg-light-dark dark:bg-dark py-1 text-xs mr-0.5 rounded-full w-max ">
@@ -44,10 +46,29 @@ const Recipes = () => {
 								))}
 							</View>
 						</ScrollView>
+						<View className="flex-row items-center justify-between w-full px-2 pt-4 pb-0 ">
+							<StyledPressable size="text" className="flex-row items-center">
+								<StyledText className="flex font-psemibold">
+									{/* {recipe.likes.length} */}0
+								</StyledText>
+								<StyledText className="flex ml-1" type="xs" fontStyle="light">
+									{/* {recipe.likes.length === 1 ? "Like" : "Likes"} */}
+									Likes
+								</StyledText>
+
+								<StyledText className="mx-2 text-2xl ">•</StyledText>
+
+								<StyledText className="font-psemibold">0</StyledText>
+								<StyledText className="ml-1" type="xs" fontStyle="light">
+									{/* {recipe.likes.length === 1 ? "Dislike" : "Dislikes"} */}
+									Dislike
+								</StyledText>
+							</StyledPressable>
+						</View>
 					</View>
 				))
 			)}
 		</View>
 	);
 };
-export default Recipes;
+export default Posts;

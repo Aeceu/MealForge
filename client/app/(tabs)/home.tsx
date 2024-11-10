@@ -1,4 +1,4 @@
-import { View, RefreshControl, Image, FlatList } from "react-native";
+import { View, RefreshControl, Image, ScrollView } from "react-native";
 import React, { useState } from "react";
 import Loading from "@/components/Loading";
 import { useSelector, useDispatch } from "react-redux";
@@ -7,14 +7,17 @@ import { handleRefresh } from "@/redux/actions/authActions";
 import { icons, images } from "@/constants";
 import StyledPressable from "@/components/StyledPressable";
 import { useColorScheme } from "nativewind";
-import { dummyRecipePosts } from "@/constants/dummy_data";
-import RecipePostCard from "@/components/RecipePostCard";
-import { router } from "expo-router";
 import StyledText from "@/components/StyledText";
+import CreatePost from "@/components/modals/CreatePost";
+import PostFeed from "@/components/HomeUI/PostFeed";
 
 const Home = () => {
 	const { colorScheme } = useColorScheme();
 	const [filter, setFilter] = useState("");
+
+	const [darkbg, setDarkBg] = useState(false);
+	const [showModal, setShowModal] = useState(false);
+
 	const dispatch = useDispatch<AppDispatch>();
 	const { user } = useSelector((state: RootState) => state.user);
 	const { accessToken, pageLoading } = useSelector(
@@ -33,20 +36,27 @@ const Home = () => {
 		}
 	};
 
+	const onOpenModal = () => {
+		setShowModal(true);
+		setDarkBg(true);
+	};
+
+	const onClose = () => {
+		setShowModal(false);
+		setDarkBg(false);
+	};
+
 	if (pageLoading) return <Loading />;
 
 	return (
-		<FlatList
-			className="p-4 pt-0 bg-light dark:bg-dark"
-			data={dummyRecipePosts}
-			renderItem={({ item }) => <RecipePostCard recipe={item} />}
-			keyExtractor={(item) => item.id.toString()}
-			refreshControl={
-				<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
-			}
-			ListHeaderComponent={
-				<View>
-					{/* Header */}
+		<>
+			<ScrollView
+				className="w-full bg-light dark:bg-dark "
+				refreshControl={
+					<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
+				}>
+				<View className="p-4">
+					{/* Navbar */}
 					<View className="flex-row items-center justify-between w-full py-4 mt-6">
 						<Image
 							source={
@@ -60,7 +70,7 @@ const Home = () => {
 
 						<StyledPressable
 							size="icon"
-						// onPress={() => router.push("/(user_screen)/Settings")}
+							// onPress={() => router.push("/(user_screen)/Settings")}
 						>
 							<Image
 								source={
@@ -74,6 +84,7 @@ const Home = () => {
 						</StyledPressable>
 					</View>
 
+					{/* Header */}
 					<View className="flex-row items-center justify-between px-2">
 						<View className="flex-col flex-1">
 							<StyledText type="xs">Welcome,</StyledText>
@@ -81,7 +92,10 @@ const Home = () => {
 								{user?.lastName}, {user?.firstName}!
 							</StyledText>
 						</View>
-						<StyledPressable size="icon" className="bg-main rounded-xl">
+						<StyledPressable
+							onPress={onOpenModal}
+							size="icon"
+							className="bg-main rounded-xl">
 							<Image
 								source={icons.plusWhite}
 								resizeMode="contain"
@@ -95,14 +109,21 @@ const Home = () => {
 
 					{/* filter */}
 					<View className="flex-row items-center flex-1 pl-4 my-1">
-						<StyledText type="xs" className="">Filter by:</StyledText>
+						<StyledText type="xs" className="">
+							Filter by:
+						</StyledText>
 						<View className="flex-row flex-1 justify-evenly">
 							<StyledPressable
 								onPress={() => handleFilter("Popular")}
-								className={`mx-2 px-2 py-1.5 rounded-md flex-row items-center justify-between ${filter === "Popular" && "bg-main "
-									}`}
+								className={`mx-2 px-2 py-1.5 rounded-md flex-row items-center justify-between ${
+									filter === "Popular" && "bg-main "
+								}`}
 								size="icon">
-								<StyledText type="xs" className={`mr-1 ${filter === "Popular" && "text-white"}`}>Popular</StyledText>
+								<StyledText
+									type="xs"
+									className={`mr-1 ${filter === "Popular" && "text-white"}`}>
+									Popular
+								</StyledText>
 								{filter === "Popular" && (
 									<Image
 										source={icons.closeWhite}
@@ -113,10 +134,15 @@ const Home = () => {
 							</StyledPressable>
 							<StyledPressable
 								onPress={() => handleFilter("Latest")}
-								className={`mx-2 px-2 py-1.5 rounded-md flex-row items-center justify-between ${filter === "Latest" && "bg-main "
-									}`}
+								className={`mx-2 px-2 py-1.5 rounded-md flex-row items-center justify-between ${
+									filter === "Latest" && "bg-main "
+								}`}
 								size="icon">
-								<StyledText type="xs" className={`mr-1 ${filter === "Latest" && "text-white"}`}>Latest</StyledText>
+								<StyledText
+									type="xs"
+									className={`mr-1 ${filter === "Latest" && "text-white"}`}>
+									Latest
+								</StyledText>
 								{filter === "Latest" && (
 									<Image
 										source={icons.closeWhite}
@@ -129,11 +155,27 @@ const Home = () => {
 					</View>
 
 					{/* Separator */}
-					<View className="flex-1 h-px mx-2 mb-3 rounded-full bg-light-border dark:bg-dark-border"></View>
+					<View className="flex-1 h-px mx-2 mb-3 rounded-full bg-light-border dark:bg-dark-border" />
+					<PostFeed />
 				</View>
-			}
-			ListFooterComponent={<View style={{ height: 16 }} />}
-		/>
+			</ScrollView>
+			{darkbg && <View className="absolute w-full h-full bg-black/50 z-[9]" />}
+			<CreatePost isVisible={showModal} onClose={onClose} />
+		</>
+
+		// <FlatList
+		// 	className="p-4 pt-0 bg-light dark:bg-dark"
+		// 	data={dummyRecipePosts}
+		// 	renderItem={({ item }) => <RecipePostCard recipe={item} />}
+		// 	keyExtractor={(item) => item.id.toString()}
+		// 	refreshControl={
+		// 		<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
+		// 	}
+		// 	ListHeaderComponent={
+
+		// 	}
+		// 	ListFooterComponent={<View style={{ height: 16 }} />}
+		// />
 	);
 };
 

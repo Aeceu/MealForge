@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, String, Text, ForeignKey, Integer, func
+from sqlalchemy import Column, String, Text, ForeignKey, Integer, func, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from utils.GUID import GUID
@@ -17,38 +17,22 @@ class User(Base):
     password = Column(String(250), nullable=False)
     refreshToken = Column(Text, nullable=True)
     profile_picture_url = Column(String(500), nullable=True)
-
-    allergies = Column(Text, nullable=True)  # allergies as a comma-separated string
+    allergies = Column(Text, nullable=True)
 
     recipes = relationship('Recipe', back_populates='user', cascade="all, delete-orphan")
     recipe_posts = relationship('RecipePost', back_populates='user', cascade="all, delete-orphan")
     likes = relationship('Like', back_populates='user', cascade="all, delete-orphan")
+    bookmarks = relationship('Bookmark', back_populates='user', cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<User(firstName={self.firstName}, lastName={self.lastName}, email={self.email})>"
-
-class Ingredient(Base):
-    __tablename__ = 'ingredients'
-
-    id = Column(GUID(), primary_key=True, default=uuid.uuid4)
-    name = Column(String(250), nullable=False)
-    type = Column(String(250), nullable=False)
-    measurements = Column(String(100), nullable=False)
-    expirationDate = Column(String(250), nullable=True)
-    date_added = Column(String(250), nullable=False, default=func.current_date())
-
-    user_id = Column(GUID(), ForeignKey('users.id'), nullable=False)
-    user = relationship("User", backref="ingredients")
-
-    def __repr__(self):
-        return f"<Ingredient(name={self.name}, measurements={self.measurements})>"
 
 class Recipe(Base):
     __tablename__ = 'recipes'
 
     id = Column(GUID(), primary_key=True, default=uuid.uuid4)
     name = Column(String(250), nullable=False)
-    ingredients = Column(Text, nullable=False)  # New ingredients column as Text
+    ingredients = Column(Text, nullable=False)
     instruction = Column(Text, nullable=False)
     type_of_cuisine = Column(String(250), nullable=False)
     nutrient_counts = Column(Text, nullable=False)
@@ -65,6 +49,23 @@ class Recipe(Base):
     def __repr__(self):
         return f"<Recipe(name={self.name}, type_of_cuisine={self.type_of_cuisine}, serve_for={self.serve_for})>"
 
+class RecipePost(Base):
+    __tablename__ = 'recipe_posts'
+
+    id = Column(GUID(), primary_key=True, default=uuid.uuid4)
+    user_id = Column(GUID(), ForeignKey('users.id'), nullable=False)
+    recipe_id = Column(GUID(), ForeignKey('recipes.id'), nullable=False)
+    posted_at = Column(String(20), nullable=False, default=func.current_date())
+
+    # Relationships
+    user = relationship("User", back_populates="recipe_posts")
+    recipe = relationship("Recipe", back_populates="recipe_posts")
+    likes = relationship("Like", back_populates="recipe_post", cascade="all, delete-orphan")
+    bookmarks = relationship("Bookmark", back_populates="recipe_post", cascade="all, delete-orphan")
+
+    def __repr__(self):
+        return f"<RecipePost(user_id={self.user_id}, recipe_id={self.recipe_id}, posted_at={self.posted_at})>"
+
 class Like(Base):
     __tablename__ = 'likes'
 
@@ -80,18 +81,17 @@ class Like(Base):
     def __repr__(self):
         return f"<Like(user_id={self.user_id}, post_id={self.post_id}, liked_at={self.liked_at})>"
 
-class RecipePost(Base):
-    __tablename__ = 'recipe_posts'
+class Bookmark(Base):
+    __tablename__ = 'bookmarks'
 
     id = Column(GUID(), primary_key=True, default=uuid.uuid4)
     user_id = Column(GUID(), ForeignKey('users.id'), nullable=False)
-    recipe_id = Column(GUID(), ForeignKey('recipes.id'), nullable=False)
-    posted_at = Column(String(20), nullable=False, default=func.current_date())
+    post_id = Column(GUID(), ForeignKey('recipe_posts.id'), nullable=False)
+    bookmarked_at = Column(String(20), nullable=False, default=func.current_date())
 
     # Relationships
-    user = relationship("User", back_populates="recipe_posts")
-    recipe = relationship("Recipe", back_populates="recipe_posts")
-    likes = relationship("Like", back_populates="recipe_post", cascade="all, delete-orphan")
+    user = relationship("User", back_populates="bookmarks")
+    recipe_post = relationship("RecipePost", back_populates="bookmarks")
 
     def __repr__(self):
-        return f"<RecipePost(user_id={self.user_id}, recipe_id={self.recipe_id}, posted_at={self.posted_at})>"
+        return f"<Bookmark(user_id={self.user_id}, post_id={self.post_id}, bookmarked_at={self.bookmarked_at})>"

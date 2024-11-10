@@ -5,8 +5,6 @@ import axios from "../api/axios";
 import { Alert } from "react-native";
 import { router } from "expo-router";
 import { setLogout, setUser } from "../slices/userSlice";
-import { setRecipe } from "../slices/recipeSlice";
-import { clearIngredients } from "../slices/ingredientsSlice";
 
 export const handleLogin = createAsyncThunk(
 	"auth/handleLogin",

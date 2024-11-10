@@ -1,39 +1,69 @@
 import Spin from "@/components/animations/Spin";
+import Loading from "@/components/Loading";
 import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
-import { icons, images } from "@/constants";
+import { icons } from "@/constants";
+import { getPostById } from "@/redux/actions/postAction";
+import { AppDispatch, RootState } from "@/redux/store";
+import { RecipePost } from "@/utils/types/post";
 import { useLocalSearchParams } from "expo-router";
 import { useColorScheme } from "nativewind";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image } from "react-native";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 
 const RecipePostPage = () => {
 	const { id } = useLocalSearchParams();
 	const { colorScheme } = useColorScheme();
 	const [loading, setLoading] = useState(false);
+	const [post, setPost] = useState<RecipePost | null>(null);
+
+	const dispatch = useDispatch<AppDispatch>();
+	const { status } = useSelector((state: RootState) => state.post);
+
+	useEffect(() => {
+		dispatch(getPostById(id)).then((res) => {
+			if (res.meta.requestStatus === "fulfilled") {
+				setPost(res.payload);
+			}
+		});
+	}, []);
+
+	if (status === "pending") return <Loading />;
+
+	if (!post) {
+		return (
+			<ScrollView className="w-full p-4 bg-light dark:bg-dark">
+				<View className="flex-col items-center">
+					<StyledText className="text-red-500">No Post is found!</StyledText>
+				</View>
+			</ScrollView>
+		);
+	}
+
 	return (
 		<ScrollView
 			// contentContainerStyle={{ flexGrow: 1 }}
 			className="w-full p-4 bg-light dark:bg-dark">
-
 			<View className="mb-8">
-
 				{/* Header */}
-				<View className="w-full h-[150px] mb-4">
+				{/* <View className="w-full h-[150px] mb-4">
 					<Image
 						source={images.adobo}
 						resizeMode="cover"
 						className="object-center w-full h-full rounded-xl"
 					/>
-				</View>
+				</View> */}
 				<View className="mx-2 mb-4">
 					<View className="flex-row justify-between flex-1 w-full">
 						<StyledText type="heading-4" className="flex-1 font-chunk">
-							Spaghetti Bolognese
-							{/* {recipe.recipe.name} */}
+							{post?.recipe.name}
 						</StyledText>
-						<StyledPressable onPress={() => setLoading(!loading)} size="icon" className="">
+						<StyledPressable
+							onPress={() => setLoading(!loading)}
+							size="icon"
+							className="">
 							{loading ? (
 								<Spin size="md" loading={loading} />
 							) : (
@@ -54,7 +84,7 @@ const RecipePostPage = () => {
 						Spaghetti Bolognese
 					</StyledText> */}
 					<StyledText type="label" className="mt-px text-main">
-						@johndoe
+						@{post?.author}
 					</StyledText>
 
 					{/* save */}
@@ -73,9 +103,7 @@ const RecipePostPage = () => {
 
 							<StyledText className="mx-2 text-2xl ">•</StyledText>
 
-							<StyledText className="font-psemibold">
-								0
-							</StyledText>
+							<StyledText className="font-psemibold">0</StyledText>
 							<StyledText className="ml-1" type="xs" fontStyle="light">
 								Dislikes
 								{/* {recipe.likes.length === 1 ? "Dislike" : "Dislikes"} */}
@@ -112,48 +140,67 @@ const RecipePostPage = () => {
 				{/* Separator */}
 				<View className="flex-1 h-px mx-2 mb-4 rounded-full bg-light-border dark:bg-dark-border"></View>
 
+				{/* Infos */}
+				<View className="mb-4">
+					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
+						Recipe Information:
+					</StyledText>
+					<View className="w-full px-6 py-4 space-y-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
+						<View className="flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
+							<StyledText type="paragraph">• Serve for: </StyledText>
+							<StyledText type="paragraph">
+								{post?.recipe.serve_for} people{" "}
+							</StyledText>
+						</View>
+						<View className="flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
+							<StyledText type="paragraph">• Serve in: </StyledText>
+							<StyledText type="paragraph">
+								{post?.recipe.serve_hot_or_cold}{" "}
+							</StyledText>
+						</View>
+						<View className="flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
+							<StyledText type="paragraph">• Cooking time: </StyledText>
+							<StyledText type="paragraph">
+								{post?.recipe.cooking_time} minutes{" "}
+							</StyledText>
+						</View>
+						<View className="flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
+							<StyledText type="paragraph">• Cuisine type: </StyledText>
+							<StyledText type="paragraph">
+								{post?.recipe.type_of_cuisine}{" "}
+							</StyledText>
+						</View>
+					</View>
+				</View>
+
 				{/* Ingredients */}
 				<View className="mb-4">
-					<StyledText type="subheading" className="px-2 mb-2">
+					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
 						Ingredients:
 					</StyledText>
 					<View className="w-full px-6 py-4 space-y-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
-						<StyledText type="paragraph" className="">
-							• 1/2 Chicken
-						</StyledText>
-						<StyledText type="paragraph" className="">
-							• 2 Bayleaf
-						</StyledText>
-						<StyledText type="paragraph" className="">
-							• Vinegar
-						</StyledText>
-						<StyledText type="paragraph" className="">
-							• Soy Sauce
-						</StyledText>
+						{post?.recipe.ingredients.split(",").map((item, i) => (
+							<StyledText key={i} type="paragraph" className="">
+								• {item}
+							</StyledText>
+						))}
 					</View>
 				</View>
 
 				{/* Instructions */}
 				<View className="mb-4">
-					<StyledText type="subheading" className="px-2 mb-2">
+					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
 						Instructions:
 					</StyledText>
 					<View className="w-full px-6 py-4 space-y-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
-						<StyledText type="paragraph" className="">
-							• Clean that chick
-						</StyledText>
-						<StyledText type="paragraph" className="">
-							• Slice this shits
-						</StyledText>
-						<StyledText type="paragraph" className="">
-							• Fry those fuckers
-						</StyledText>
-						<StyledText type="paragraph" className="">
-							• Pour those vinegar and soy sauce
-						</StyledText>
-						<StyledText type="paragraph" className="">
-							• Pour those vinegar and soy sauce
-						</StyledText>
+						{post?.recipe.instruction.split("Step ").map(
+							(item: string, i: number) =>
+								item && ( // Check to ignore any empty strings from the split
+									<StyledText key={i} type="paragraph">
+										• Step {item.trim()}
+									</StyledText>
+								)
+						)}
 					</View>
 				</View>
 
@@ -161,7 +208,7 @@ const RecipePostPage = () => {
 				{/* remove "mb-4" sa last */}
 
 				{/* Separator */}
-				<View className="flex-1 h-px mx-2 mt-2 mb-4 rounded-full bg-light-border dark:bg-dark-border"></View>
+				<View className="flex-1 h-px mx-2 mt-2 mb-4 rounded-full bg-light-border dark:bg-dark-border" />
 
 				{/* More Like This */}
 				<View className="">
@@ -183,7 +230,6 @@ const RecipePostPage = () => {
 						</StyledText>
 					</View>
 				</View>
-
 			</View>
 		</ScrollView>
 	);
