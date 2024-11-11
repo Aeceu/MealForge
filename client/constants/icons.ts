@@ -52,6 +52,9 @@ import plus from "@/assets/icons/plus.png";
 import plusWhite from "@/assets/icons/plus-white.png";
 import arrowDownDark from "@/assets/icons/arrow-down-dark.png";
 import arrowDownLight from "@/assets/icons/arrow-down-light.png";
+import bookmarkOrange from "@/assets/icons/bookmark-orange.png";
+import likeOrange from "@/assets/icons/like-orange.png";
+import unlikeOrange from "@/assets/icons/unliked-orange.png";
 
 export default {
 	logo_dark,
@@ -108,4 +111,7 @@ export default {
 	plusWhite,
 	arrowDownDark,
 	arrowDownLight,
+	bookmarkOrange,
+	likeOrange,
+	unlikeOrange,
 };

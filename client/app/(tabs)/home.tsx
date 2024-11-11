@@ -1,5 +1,5 @@
 import { View, RefreshControl, Image, ScrollView } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Loading from "@/components/Loading";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
@@ -10,6 +10,7 @@ import { useColorScheme } from "nativewind";
 import StyledText from "@/components/StyledText";
 import CreatePost from "@/components/modals/CreatePost";
 import PostFeed from "@/components/HomeUI/PostFeed";
+import { RecipePost } from "@/utils/types/post";
 
 const Home = () => {
 	const { colorScheme } = useColorScheme();
@@ -20,6 +21,7 @@ const Home = () => {
 
 	const dispatch = useDispatch<AppDispatch>();
 	const { user } = useSelector((state: RootState) => state.user);
+	const { post } = useSelector((state: RootState) => state.post);
 	const { accessToken, pageLoading } = useSelector(
 		(state: RootState) => state.auth
 	);
@@ -156,7 +158,7 @@ const Home = () => {
 
 					{/* Separator */}
 					<View className="flex-1 h-px mx-2 mb-3 rounded-full bg-light-border dark:bg-dark-border" />
-					<PostFeed />
+					<PostFeed post={post} />
 				</View>
 			</ScrollView>
 			{darkbg && <View className="absolute w-full h-full bg-black/50 z-[9]" />}

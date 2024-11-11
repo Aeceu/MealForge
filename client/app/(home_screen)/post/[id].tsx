@@ -1,4 +1,6 @@
 import Spin from "@/components/animations/Spin";
+import BookmarkButton from "@/components/BookmarkButton";
+import LikeButton from "@/components/LikeButton";
 import Loading from "@/components/Loading";
 import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
@@ -6,24 +8,28 @@ import { icons } from "@/constants";
 import { getPostById } from "@/redux/actions/postAction";
 import { AppDispatch, RootState } from "@/redux/store";
 import { RecipePost } from "@/utils/types/post";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useColorScheme } from "nativewind";
 import { useEffect, useState } from "react";
-import { Image } from "react-native";
+import { Alert, Image } from "react-native";
 import { ScrollView, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 const RecipePostPage = () => {
 	const { id } = useLocalSearchParams();
 	const { colorScheme } = useColorScheme();
-	const [loading, setLoading] = useState(false);
 	const [post, setPost] = useState<RecipePost | null>(null);
 
 	const dispatch = useDispatch<AppDispatch>();
 	const { status } = useSelector((state: RootState) => state.post);
+	const { user } = useSelector((state: RootState) => state.user);
 
 	useEffect(() => {
-		dispatch(getPostById(id)).then((res) => {
+		if (!user) {
+			Alert.alert("No user is found!");
+			return router.back();
+		}
+		dispatch(getPostById({ postId: id, user_id: user.id })).then((res) => {
 			if (res.meta.requestStatus === "fulfilled") {
 				setPost(res.payload);
 			}
@@ -41,7 +47,6 @@ const RecipePostPage = () => {
 			</ScrollView>
 		);
 	}
-
 	return (
 		<ScrollView
 			// contentContainerStyle={{ flexGrow: 1 }}
@@ -60,24 +65,10 @@ const RecipePostPage = () => {
 						<StyledText type="heading-4" className="flex-1 font-chunk">
 							{post?.recipe.name}
 						</StyledText>
-						<StyledPressable
-							onPress={() => setLoading(!loading)}
-							size="icon"
-							className="">
-							{loading ? (
-								<Spin size="md" loading={loading} />
-							) : (
-								<Image
-									source={
-										colorScheme === "dark"
-											? icons.bookmarkLightDark
-											: icons.bookmarkDarkLight
-									}
-									resizeMode="contain"
-									className="w-6 h-6"
-								/>
-							)}
-						</StyledPressable>
+						<BookmarkButton
+							post_id={post.id}
+							is_bookmarked={post.is_bookmarked}
+						/>
 					</View>
 
 					{/* <StyledText type="heading-3" className="font-chunk">
@@ -90,51 +81,7 @@ const RecipePostPage = () => {
 					{/* save */}
 
 					{/* like/dislike */}
-					<View className="flex-row items-start justify-between w-full mt-4 ">
-						<StyledPressable size="text" className="flex-row items-center">
-							<StyledText className="flex font-psemibold">
-								69
-								{/* {recipe.likes.length} */}
-							</StyledText>
-							<StyledText className="flex ml-1" type="xs" fontStyle="light">
-								Likes
-								{/* {recipe.likes.length === 1 ? "Like" : "Likes"} */}
-							</StyledText>
-
-							<StyledText className="mx-2 text-2xl ">•</StyledText>
-
-							<StyledText className="font-psemibold">0</StyledText>
-							<StyledText className="ml-1" type="xs" fontStyle="light">
-								Dislikes
-								{/* {recipe.likes.length === 1 ? "Dislike" : "Dislikes"} */}
-							</StyledText>
-						</StyledPressable>
-
-						<View className="flex-row items-center space-x-2">
-							<StyledPressable size="icon">
-								<Image
-									source={
-										colorScheme === "dark"
-											? icons.likesLightDark
-											: icons.likesDarkLight
-									}
-									resizeMode="contain"
-									className="w-6 h-6"
-								/>
-							</StyledPressable>
-							<StyledPressable size="icon">
-								<Image
-									source={
-										colorScheme === "dark"
-											? icons.unlikesLightDark
-											: icons.unlikesDarkLight
-									}
-									resizeMode="contain"
-									className="w-6 h-6"
-								/>
-							</StyledPressable>
-						</View>
-					</View>
+					<LikeButton recipe={post} />
 				</View>
 
 				{/* Separator */}

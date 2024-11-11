@@ -13,6 +13,7 @@ type TInitialState = {
 	status: "idle" | "pending" | "completed" | "failed";
 	error: any | null;
 	pageLoading: boolean;
+	bookmarkLoading: boolean;
 };
 
 const initialState: TInitialState = {
@@ -21,6 +22,7 @@ const initialState: TInitialState = {
 	status: "idle",
 	error: null,
 	pageLoading: false,
+	bookmarkLoading: false,
 };
 
 const postSlice = createSlice({

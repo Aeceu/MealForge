@@ -1,4 +1,4 @@
-import { getPosts } from "@/redux/actions/postAction";
+import { getBookmarks, getPosts } from "@/redux/actions/postAction";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useEffect } from "react";
 import { Alert, View } from "react-native";
@@ -6,37 +6,30 @@ import { useDispatch, useSelector } from "react-redux";
 import RecipePostCard from "../RecipePostCard";
 import StyledText from "../StyledText";
 import Spin from "../animations/Spin";
-import { RecipePost } from "@/utils/types/post";
+import { setBookmark } from "@/redux/slices/postSlice";
 
-type Props = {
-	post: RecipePost[];
-};
-
-const PostFeed: React.FC<Props> = ({ post }) => {
+const BookmarkFeed = () => {
 	const dispatch = useDispatch<AppDispatch>();
-	const { status } = useSelector((state: RootState) => state.post);
-	const { user } = useSelector((state: RootState) => state.user);
+	const { post, pageLoading } = useSelector((state: RootState) => state.post);
 
-	useEffect(() => {
-		if (!user) return Alert.alert("No user is found!");
-		dispatch(getPosts(user.id));
-	}, [user?.id]);
-
-	if (status === "pending")
+	if (pageLoading)
 		return (
 			<View className="w-full h-full flex-1 flex-col items-center">
-				<Spin size={"md"} loading={status === "pending"} />
+				<Spin size={"md"} loading={pageLoading} />
 			</View>
 		);
 
 	return (
 		<View className="w-full h-full flex-1 flex-col">
 			{post.length > 0 ? (
-				post.map((item, i) => <RecipePostCard recipe={item} key={i} />)
+				post.map(
+					(item, i) =>
+						item.is_bookmarked && <RecipePostCard recipe={item} key={i} />
+				)
 			) : (
 				<StyledText>There is no Post available.</StyledText>
 			)}
 		</View>
 	);
 };
-export default PostFeed;
+export default BookmarkFeed;

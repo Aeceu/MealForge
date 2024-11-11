@@ -19,8 +19,6 @@ const user = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const [selectedTab, setSelectedTab] = useState("recipes");
 	const { user } = useSelector((state: RootState) => state.user);
-	const { userPost } = useSelector((state: RootState) => state.post);
-	const { recipe } = useSelector((state: RootState) => state.recipe);
 
 	const { pageLoading, accessToken } = useSelector(
 		(state: RootState) => state.auth
@@ -33,8 +31,6 @@ const user = () => {
 
 		if (selectedTab === "recipes") {
 			dispatch(handleGetUserRecipes(user?.id));
-		} else {
-			dispatch(getUserPosts(user?.id));
 		}
 	}, [selectedTab]);
 
@@ -136,11 +132,13 @@ const UserHeader = () => {
 };
 
 const UserInfo = () => {
+	const { ingredients } = useSelector((state: RootState) => state.ingredients);
+	const { recipe } = useSelector((state: RootState) => state.recipe);
 	return (
 		<View className="flex-row items-center p-4 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
 			<StyledPressable className="flex-col items-center flex-grow basis-1/3">
 				<StyledText type="paragraph" className="font-chunk">
-					22
+					{ingredients && ingredients.length}
 				</StyledText>
 				<StyledText type="label" fontStyle="light">
 					Ingredients
@@ -149,7 +147,7 @@ const UserInfo = () => {
 
 			<StyledPressable className="flex-col items-center flex-grow basis-1/3">
 				<StyledText type="paragraph" className="font-chunk">
-					8
+					{recipe && recipe.length}
 				</StyledText>
 				<StyledText type="label" fontStyle="light">
 					Recipes
@@ -172,6 +170,7 @@ type UserTabsProps = {
 	selectedTab: string;
 	setSelectedTab: Dispatch<string>;
 };
+
 const UserTabs: React.FC<UserTabsProps> = ({ selectedTab, setSelectedTab }) => {
 	return (
 		<View className="flex-row mt-2">

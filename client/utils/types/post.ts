@@ -15,5 +15,7 @@ export type RecipePost = {
 		serve_for: string;
 	};
 	author: string;
-	bookmarks: [string];
+	is_bookmarked: boolean;
+	is_liked: boolean;
+	total_likes: number;
 };

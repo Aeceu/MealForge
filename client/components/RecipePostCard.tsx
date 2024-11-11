@@ -1,20 +1,16 @@
-import { icons, images } from "@/constants";
 import { useColorScheme } from "nativewind";
-import { useState } from "react";
-import { View, ScrollView, Image, TouchableOpacity, Text } from "react-native";
-import Spin from "./animations/Spin";
-import StyledPressable from "./StyledPressable";
+import { View, ScrollView, TouchableOpacity } from "react-native";
 import StyledText from "./StyledText";
 import { Link } from "expo-router";
 import { RecipePost } from "@/utils/types/post";
+import BookmarkButton from "./BookmarkButton";
+import LikeButton from "./LikeButton";
 
 type TRecipePostCard = {
 	recipe: RecipePost;
 };
-
 const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 	const { colorScheme } = useColorScheme();
-	const [loading, setLoading] = useState(false);
 	return (
 		<View className="flex-1 w-full mt-2 bg-white border border-light-border dark:bg-dark-light dark:border-dark-border rounded-xl">
 			{/* Header */}
@@ -25,24 +21,10 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 							<StyledText type="heading-4" className="flex-1 font-chunk">
 								{recipe.recipe.name}
 							</StyledText>
-							<StyledPressable
-								onPress={() => setLoading(!loading)}
-								size="icon"
-								className="">
-								{loading ? (
-									<Spin size="md" loading={loading} />
-								) : (
-									<Image
-										source={
-											colorScheme === "dark"
-												? icons.bookmarkLightDark
-												: icons.bookmarkDarkLight
-										}
-										resizeMode="contain"
-										className="w-6 h-6"
-									/>
-								)}
-							</StyledPressable>
+							<BookmarkButton
+								is_bookmarked={recipe.is_bookmarked}
+								post_id={recipe.id}
+							/>
 						</View>
 
 						<StyledText type="label" className="text-main">
@@ -99,54 +81,7 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 				{/* </View> */}
 
 				{/* Footer */}
-				<Link href={`/(home_screen)/post/${recipe.id}`} asChild>
-					<TouchableOpacity>
-						<View className="flex-row items-center justify-between w-full px-2 pt-4 pb-0 ">
-							<StyledPressable size="text" className="flex-row items-center">
-								<StyledText className="flex font-psemibold">
-									{/* {recipe.likes.length} */}0
-								</StyledText>
-								<StyledText className="flex ml-1" type="xs" fontStyle="light">
-									{/* {recipe.likes.length === 1 ? "Like" : "Likes"} */}
-									Likes
-								</StyledText>
-
-								<StyledText className="mx-2 text-2xl ">•</StyledText>
-
-								<StyledText className="font-psemibold">0</StyledText>
-								<StyledText className="ml-1" type="xs" fontStyle="light">
-									{/* {recipe.likes.length === 1 ? "Dislike" : "Dislikes"} */}
-									Dislike
-								</StyledText>
-							</StyledPressable>
-
-							<View className="flex-row items-center space-x-2">
-								<StyledPressable size="icon">
-									<Image
-										source={
-											colorScheme === "dark"
-												? icons.likesLightDark
-												: icons.likesDarkLight
-										}
-										resizeMode="contain"
-										className="w-6 h-6"
-									/>
-								</StyledPressable>
-								<StyledPressable size="icon">
-									<Image
-										source={
-											colorScheme === "dark"
-												? icons.unlikesLightDark
-												: icons.unlikesDarkLight
-										}
-										resizeMode="contain"
-										className="w-6 h-6"
-									/>
-								</StyledPressable>
-							</View>
-						</View>
-					</TouchableOpacity>
-				</Link>
+				<LikeButton recipe={recipe} />
 			</View>
 		</View>
 	);

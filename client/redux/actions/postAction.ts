@@ -28,9 +28,12 @@ export const createPost = createAsyncThunk(
 
 export const getPostById = createAsyncThunk(
 	"post/getPostById",
-	async (postId: string | string[], { rejectWithValue }) => {
+	async (
+		{ postId, user_id }: { postId: string | string[]; user_id: string },
+		{ rejectWithValue }
+	) => {
 		try {
-			const res = await axios.get(`/post/${postId}`);
+			const res = await axios.get(`/post/${postId}?user_id=${user_id}`);
 			return res.data.post;
 		} catch (error) {
 			const resError = handleError(error);
@@ -42,9 +45,9 @@ export const getPostById = createAsyncThunk(
 
 export const getPosts = createAsyncThunk(
 	"post/getPosts",
-	async (_, { rejectWithValue }) => {
+	async (userId: string, { rejectWithValue }) => {
 		try {
-			const res = await axios.get("/posts");
+			const res = await axios.get(`/posts?user_id=${userId}`);
 			return res.data.posts;
 		} catch (error) {
 			const resError = handleError(error);
@@ -60,6 +63,56 @@ export const getUserPosts = createAsyncThunk(
 		try {
 			const res = await axios.get(`/user/${userId}/posts`);
 			return res.data.user_posts;
+		} catch (error) {
+			const resError = handleError(error);
+			console.log("resError:", resError);
+			return rejectWithValue(resError);
+		}
+	}
+);
+
+export const getBookmarks = createAsyncThunk(
+	"post/getBookmarks",
+	async (userId: string, { rejectWithValue }) => {
+		try {
+			const res = await axios.get(`/user/${userId}/bookmarked_posts`);
+			return res.data.bookmarked_posts;
+		} catch (error) {
+			const resError = handleError(error);
+			console.log("resError:", resError);
+			return rejectWithValue(resError);
+		}
+	}
+);
+
+export const BookmarkPost = createAsyncThunk(
+	"post/BookmarkPost",
+	async (
+		{ post_id, user_id }: { user_id: string; post_id: string },
+		{ rejectWithValue }
+	) => {
+		try {
+			const res = await axios.post(`/post/${post_id}/bookmark`, { user_id });
+			return res.data;
+		} catch (error) {
+			const resError = handleError(error);
+			console.log("resError:", resError);
+			return rejectWithValue(resError);
+		}
+	}
+);
+
+export const likeorunlikePost = createAsyncThunk(
+	"post/likeorunlikePost",
+	async (
+		{ post_id, user_id }: { post_id: string; user_id: string },
+		{ rejectWithValue }
+	) => {
+		try {
+			const res = await axios.post(`/post/${post_id}/like`, {
+				user_id,
+			});
+			return res.data;
 		} catch (error) {
 			const resError = handleError(error);
 			console.log("resError:", resError);
