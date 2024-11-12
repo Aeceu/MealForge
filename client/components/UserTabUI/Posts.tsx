@@ -24,6 +24,7 @@ const Posts = () => {
 				post.map(
 					(item, i) =>
 						item.user_id === user.id && (
+							// Fix this
 							<View
 								key={i}
 								className="w-full bg-light  dark:bg-dark-light rounded-lg p-4 border border-light-border dark:border-dark-border my-1 overflow-hidden">
@@ -32,14 +33,14 @@ const Posts = () => {
 										<Image
 											source={{ uri: item.recipe_post_image }}
 											resizeMode="cover"
-											className="absolute w-full  h-[150px]"
+											className="absolute w-full aspect-square"
 											style={{ opacity: colorScheme === "dark" ? 0.2 : 0.4 }}
 										/>
 										<LinearGradient
 											start={{ x: 1, y: 0 }}
 											end={{ x: 0, y: 0 }}
 											colors={NewGradientColor}
-											className="absolute top-0 left-0 w-full  h-[150px]"
+											className="absolute top-0 left-0 w-full  aspect-square"
 										/>
 									</View>
 								)}

@@ -1,14 +1,17 @@
 import os
-from flask import Flask
-from flask_cors import CORS
-from flask_jwt_extended import JWTManager
-from dotenv import load_dotenv
+
 from blueprints.auth import auth_bp
-from blueprints.user import user_bp
-from blueprints.recipe import recipes_bp
+
 # from blueprints.generate import generate_bp
 from blueprints.ingredients import ingredients_bp
 from blueprints.post import posts_bp
+from blueprints.recipe import recipes_bp
+from blueprints.user import user_bp
+from dotenv import load_dotenv
+from flask import Flask
+from flask_cors import CORS
+from flask_jwt_extended import JWTManager
+
 load_dotenv()
 app = Flask(__name__)
 jwt = JWTManager(app)

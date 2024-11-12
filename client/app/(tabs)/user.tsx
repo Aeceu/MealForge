@@ -46,7 +46,7 @@ const user = () => {
 				refreshControl={
 					<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
 				}>
-				<View className="flex-col items-center w-full h-full p-2">
+				<View className="flex-col w-full h-full p-2">
 					<UserHeader />
 					<UserInfo />
 					<UserTabs selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
@@ -75,7 +75,7 @@ const UserHeader = () => {
 	const { colorScheme } = useColorScheme();
 	const { user } = useSelector((state: RootState) => state.user);
 	return (
-		<View className="flex-row items-start mt-6 mb-4">
+		<View className="flex-row items-start mt-6 mb-4 p-2">
 			<View className="my-auto border rounded-xl border-light-border dark:border-dark-border">
 				<Image
 					source={

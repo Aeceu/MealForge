@@ -22,7 +22,7 @@ const CreatePost: React.FC<Props> = ({ isVisible, onClose }) => {
 	const { textColor, borderColor, inputBgColor } = useThemeColors();
 
 	const [selectedRecipe, setSelectedRecipe] = useState<string>("");
-	const [selectedPhoto, setSelectedPhoto] = useState<string>("");
+	const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
 
 	const dispatch = useDispatch<AppDispatch>();
 	const { recipe } = useSelector((state: RootState) => state.recipe);
@@ -33,7 +33,7 @@ const CreatePost: React.FC<Props> = ({ isVisible, onClose }) => {
 	const handleClose = () => {
 		onClose();
 		setSelectedRecipe("");
-		setSelectedPhoto("");
+		setSelectedPhoto(null);
 	};
 
 	const handleSelectedRecipe = (recipeName: string) => {
@@ -104,14 +104,13 @@ const CreatePost: React.FC<Props> = ({ isVisible, onClose }) => {
 				</View>
 
 				<View className="mt-4">
-					{/* Display selected image if available */}
-					{selectedPhoto ? (
+					{selectedPhoto && (
 						<Image
 							source={{ uri: selectedPhoto }}
 							style={{ width: 100, height: 100, borderRadius: 10 }}
 							className="self-center mb-4"
 						/>
-					) : null}
+					)}
 
 					<View>
 						<StyledPressable

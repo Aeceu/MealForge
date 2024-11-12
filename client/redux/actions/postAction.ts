@@ -22,11 +22,13 @@ export const createPost = createAsyncThunk(
 			formData.append("recipe_name", recipe_name);
 			formData.append("user_id", user_id);
 
-			formData.append("recipe_image", {
-				uri: file,
-				name: "post_image.jpg",
-				type: "image/jpeg",
-			} as any);
+			if (file) {
+				formData.append("recipe_image", {
+					uri: file,
+					name: "post_image.jpg",
+					type: "image/jpeg",
+				} as any);
+			}
 
 			const res = await axios.post(
 				`/user/${user_id}/recipe/${recipe_name}/create_post`,

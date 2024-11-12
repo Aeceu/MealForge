@@ -1,7 +1,5 @@
-import pickle
-import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
-import ast
+
 
 # Function to get the top 5 similar recipes based on user input
 def get_similar_top5(vectorizer, tfidf_matrix, user_input):

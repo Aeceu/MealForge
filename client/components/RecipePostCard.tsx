@@ -22,7 +22,7 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 						source={{ uri: recipe.recipe_post_image }}
 						resizeMode="cover"
 						className="absolute w-full h-full"
-						style={{ opacity: colorScheme === "dark" ? 0.2 : 0.4 }}
+						style={{ opacity: colorScheme === "dark" ? 0.4 : 0.4 }}
 					/>
 					<LinearGradient
 						start={{ x: 0.3, y: 1 }}

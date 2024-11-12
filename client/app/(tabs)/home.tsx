@@ -57,12 +57,11 @@ const Home = () => {
 	};
 
 	useEffect(() => {
-		if (!user) return Alert.alert("No user is found!");
-
+		if (!user) return;
 		if (pageLoading || post.length <= 0) {
 			dispatch(getPosts(user.id));
 		}
-	}, [pageLoading]);
+	}, [user?.id, pageLoading]);
 
 	if (pageLoading) return <Loading />;
 
@@ -98,7 +97,7 @@ const Home = () => {
 					</View>
 
 					{/* Separator */}
-					<View className="flex-1 h-px mx-2 mt-3 rounded-full bg-light-border dark:bg-dark-border"></View>
+					<View className="flex-1 h-px mx-2 mt-3 rounded-full bg-light-border dark:bg-dark-border" />
 
 					{/* filter */}
 					<View className="flex-row items-center flex-1 pl-4 my-1">
