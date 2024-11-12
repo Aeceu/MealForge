@@ -21,8 +21,7 @@ const BookmarkButton: React.FC<Props> = ({ post_id, is_bookmarked }) => {
 	const [isBookmarked, setIsBookmarked] = useState(is_bookmarked);
 
 	const handleBookmarkPost = () => {
-		if (!user) return Alert.alert("No user is found!");
-		if (!post_id) return Alert.alert("No post id is found!");
+		if (!user || !post_id) return;
 		setLoading(true);
 		dispatch(
 			BookmarkPost({
@@ -32,12 +31,10 @@ const BookmarkButton: React.FC<Props> = ({ post_id, is_bookmarked }) => {
 		).then((res) => {
 			if (res.meta.requestStatus === "fulfilled") {
 				setLoading(false);
-				Alert.alert(res.payload.message);
 				setIsBookmarked((prev) => !prev);
 			}
 			if (res.meta.requestStatus === "rejected") {
 				setLoading(false);
-				Alert.alert(res.payload.message);
 			}
 		});
 	};

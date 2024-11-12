@@ -1,4 +1,4 @@
-import { View, RefreshControl, Image, ScrollView } from "react-native";
+import { View, RefreshControl, Image, ScrollView, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import Loading from "@/components/Loading";
 import { useSelector, useDispatch } from "react-redux";
@@ -10,10 +10,10 @@ import { useColorScheme } from "nativewind";
 import StyledText from "@/components/StyledText";
 import CreatePost from "@/components/modals/CreatePost";
 import PostFeed from "@/components/HomeUI/PostFeed";
-import { RecipePost } from "@/utils/types/post";
+import { getFilteredPosts, getPosts } from "@/redux/actions/postAction";
+import SearchRecipe from "@/components/modals/SearchRecipe";
 
 const Home = () => {
-	const { colorScheme } = useColorScheme();
 	const [filter, setFilter] = useState("");
 
 	const [darkbg, setDarkBg] = useState(false);
@@ -31,10 +31,18 @@ const Home = () => {
 	};
 
 	const handleFilter = (newFilter: string) => {
+		if (!user) return;
 		if (filter === newFilter) {
 			setFilter("");
+			dispatch(getPosts(user?.id));
 		} else {
 			setFilter(newFilter);
+			dispatch(
+				getFilteredPosts({
+					userId: user.id,
+					filter: newFilter,
+				})
+			);
 		}
 	};
 
@@ -48,6 +56,14 @@ const Home = () => {
 		setDarkBg(false);
 	};
 
+	useEffect(() => {
+		if (!user) return Alert.alert("No user is found!");
+
+		if (pageLoading || post.length <= 0) {
+			dispatch(getPosts(user.id));
+		}
+	}, [pageLoading]);
+
 	if (pageLoading) return <Loading />;
 
 	return (
@@ -59,32 +75,7 @@ const Home = () => {
 				}>
 				<View className="p-4">
 					{/* Navbar */}
-					<View className="flex-row items-center justify-between w-full py-4 mt-6">
-						<Image
-							source={
-								colorScheme === "dark"
-									? images.headerLogoLight
-									: images.headerLogoDark
-							}
-							resizeMode="contain"
-							className="w-[150px] h-[30px]"
-						/>
-
-						<StyledPressable
-							size="icon"
-							// onPress={() => router.push("/(user_screen)/Settings")}
-						>
-							<Image
-								source={
-									colorScheme === "dark"
-										? icons.searchLightDark
-										: icons.searchDarkLight
-								}
-								resizeMode="contain"
-								className="w-6 h-6 rounded-full"
-							/>
-						</StyledPressable>
-					</View>
+					<HomeNav />
 
 					{/* Header */}
 					<View className="flex-row items-center justify-between px-2">
@@ -158,27 +149,54 @@ const Home = () => {
 
 					{/* Separator */}
 					<View className="flex-1 h-px mx-2 mb-3 rounded-full bg-light-border dark:bg-dark-border" />
-					<PostFeed post={post} />
+					<PostFeed />
 				</View>
 			</ScrollView>
 			{darkbg && <View className="absolute w-full h-full bg-black/50 z-[9]" />}
 			<CreatePost isVisible={showModal} onClose={onClose} />
 		</>
-
-		// <FlatList
-		// 	className="p-4 pt-0 bg-light dark:bg-dark"
-		// 	data={dummyRecipePosts}
-		// 	renderItem={({ item }) => <RecipePostCard recipe={item} />}
-		// 	keyExtractor={(item) => item.id.toString()}
-		// 	refreshControl={
-		// 		<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
-		// 	}
-		// 	ListHeaderComponent={
-
-		// 	}
-		// 	ListFooterComponent={<View style={{ height: 16 }} />}
-		// />
 	);
 };
 
 export default Home;
+
+const HomeNav = () => {
+	const { colorScheme } = useColorScheme();
+	const [showSearch, setShowSearch] = useState(false);
+
+	const onClose = () => {
+		setShowSearch((prev) => !prev);
+	};
+
+	return (
+		<>
+			<View className="flex-row items-center justify-between w-full my-4">
+				<Image
+					source={
+						colorScheme === "dark"
+							? images.headerLogoLight
+							: images.headerLogoDark
+					}
+					resizeMode="contain"
+					className="w-[150px] h-[30px]"
+				/>
+
+				<StyledPressable
+					size="icon"
+					onPress={() => setShowSearch((prev) => !prev)}>
+					<Image
+						source={
+							colorScheme === "dark"
+								? icons.searchLightDark
+								: icons.searchDarkLight
+						}
+						resizeMode="contain"
+						className="w-6 h-6 rounded-full"
+					/>
+				</StyledPressable>
+			</View>
+
+			<SearchRecipe isVisible={showSearch} onClose={onClose} />
+		</>
+	);
+};

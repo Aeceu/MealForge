@@ -1,8 +1,8 @@
 import React from "react";
 import { Redirect, Stack } from "expo-router";
 import { useThemeColors } from "@/constants/colors";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const HomeScreenLayout = () => {
 	const { tabColor, textColor } = useThemeColors();

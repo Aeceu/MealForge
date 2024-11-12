@@ -1,26 +1,12 @@
-import { getPosts } from "@/redux/actions/postAction";
-import { AppDispatch, RootState } from "@/redux/store";
-import { useEffect } from "react";
-import { Alert, View } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { View } from "react-native";
+import { useSelector } from "react-redux";
 import RecipePostCard from "../RecipePostCard";
 import StyledText from "../StyledText";
 import Spin from "../animations/Spin";
-import { RecipePost } from "@/utils/types/post";
 
-type Props = {
-	post: RecipePost[];
-};
-
-const PostFeed: React.FC<Props> = ({ post }) => {
-	const dispatch = useDispatch<AppDispatch>();
-	const { status } = useSelector((state: RootState) => state.post);
-	const { user } = useSelector((state: RootState) => state.user);
-
-	useEffect(() => {
-		if (!user) return Alert.alert("No user is found!");
-		dispatch(getPosts(user.id));
-	}, [user?.id]);
+const PostFeed = () => {
+	const { post, status } = useSelector((state: RootState) => state.post);
 
 	if (status === "pending")
 		return (

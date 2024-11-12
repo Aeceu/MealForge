@@ -2,7 +2,7 @@ import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
 import { icons } from "@/constants";
 import { useColorScheme } from "nativewind";
-import { Image, ScrollView, Text, View } from "react-native";
+import { Image, ScrollView, View } from "react-native";
 
 const Theme = () => {
 	const { colorScheme, toggleColorScheme } = useColorScheme();
@@ -19,8 +19,9 @@ const Theme = () => {
 			<StyledPressable
 				onPress={toggleColorScheme}
 				size="xl"
-				className={`flex-row items-center justify-between py-4 px-6   ${colorScheme === "dark" && "bg-dark-light"
-					}`}>
+				className={`flex-row items-center justify-between py-4 px-6   ${
+					colorScheme === "dark" && "bg-dark-light"
+				}`}>
 				<View className="flex-row items-center">
 					<Image
 						source={
@@ -37,8 +38,9 @@ const Theme = () => {
 			<StyledPressable
 				onPress={toggleColorScheme}
 				size="xl"
-				className={`flex-row items-center justify-between py-4 px-6 ${colorScheme === "light" && "bg-white"
-					} `}>
+				className={`flex-row items-center justify-between py-4 px-6 ${
+					colorScheme === "light" && "bg-white"
+				} `}>
 				<View className="flex-row items-center">
 					<Image
 						source={

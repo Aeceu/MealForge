@@ -1,4 +1,4 @@
-import { Alert, Image, Modal, StyleSheet, View } from "react-native";
+import { Alert, Image, Modal, View } from "react-native";
 import StyledText from "../StyledText";
 import StyledPressable from "../StyledPressable";
 import { useColorScheme } from "nativewind";
@@ -8,9 +8,9 @@ import { useThemeColors } from "@/constants/colors";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useState } from "react";
-import { TRecipe } from "@/utils/types/recipe";
 import { createPost } from "@/redux/actions/postAction";
 import Spin from "../animations/Spin";
+import * as ImagePicker from "expo-image-picker";
 
 type Props = {
 	isVisible: boolean;
@@ -19,36 +19,66 @@ type Props = {
 
 const CreatePost: React.FC<Props> = ({ isVisible, onClose }) => {
 	const { colorScheme } = useColorScheme();
-	const dispatch = useDispatch<AppDispatch>();
 	const { textColor, borderColor, inputBgColor } = useThemeColors();
-	const { recipe, status } = useSelector((state: RootState) => state.recipe);
-	const { user } = useSelector((state: RootState) => state.user);
+
 	const [selectedRecipe, setSelectedRecipe] = useState<string>("");
+	const [selectedPhoto, setSelectedPhoto] = useState<string>("");
+
+	const dispatch = useDispatch<AppDispatch>();
+	const { recipe } = useSelector((state: RootState) => state.recipe);
+	const { status } = useSelector((state: RootState) => state.post);
+	const { user } = useSelector((state: RootState) => state.user);
+	const { accessToken } = useSelector((state: RootState) => state.auth);
 
 	const handleClose = () => {
 		onClose();
+		setSelectedRecipe("");
+		setSelectedPhoto("");
 	};
 
 	const handleSelectedRecipe = (recipeName: string) => {
 		setSelectedRecipe(recipeName);
 	};
 
-	const handleCreatePost = () => {
-		if (!user || !selectedRecipe) {
-			return Alert.alert("User or Recipe name is not found!");
+	const handleCreatePost = async () => {
+		if (!user || !selectedRecipe || !accessToken) {
+			return Alert.alert("User or Recipe name or accessToken is not found!");
 		}
 
-		dispatch(
+		await dispatch(
 			createPost({
 				recipe_name: selectedRecipe,
 				user_id: user?.id,
+				file: selectedPhoto,
+				accessToken,
 			})
 		).then((res) => {
 			if (res.meta.requestStatus === "fulfilled") {
 				onClose();
-				setSelectedRecipe("");
 			}
 		});
+	};
+
+	const handlePhotoUpload = async () => {
+		const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+		if (status !== "granted") {
+			Alert.alert(
+				"Permission denied",
+				"Permission to access photos is required."
+			);
+			return;
+		}
+
+		const result = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			allowsEditing: true,
+			aspect: [1, 1],
+			quality: 1,
+		});
+
+		if (!result.canceled && result.assets[0].uri) {
+			setSelectedPhoto(result.assets[0].uri);
+		}
 	};
 
 	return (
@@ -74,7 +104,24 @@ const CreatePost: React.FC<Props> = ({ isVisible, onClose }) => {
 				</View>
 
 				<View className="mt-4">
+					{/* Display selected image if available */}
+					{selectedPhoto ? (
+						<Image
+							source={{ uri: selectedPhoto }}
+							style={{ width: 100, height: 100, borderRadius: 10 }}
+							className="self-center mb-4"
+						/>
+					) : null}
+
 					<View>
+						<StyledPressable
+							onPress={handlePhotoUpload}
+							className="bg-main py-2 px-4 rounded-lg">
+							<StyledText>Add Photo</StyledText>
+						</StyledPressable>
+					</View>
+
+					<View className="mt-4">
 						<StyledText className="mb-2">Select recipe to post</StyledText>
 						{recipe && recipe.length > 0 ? (
 							<SelectList
@@ -153,7 +200,7 @@ const CreatePost: React.FC<Props> = ({ isVisible, onClose }) => {
 							{status === "pending" && (
 								<Spin size="sm" loading={status === "pending"} />
 							)}
-							<StyledText>Post</StyledText>
+							<StyledText className="text-white">Post</StyledText>
 						</StyledPressable>
 					</View>
 				</View>
@@ -161,4 +208,5 @@ const CreatePost: React.FC<Props> = ({ isVisible, onClose }) => {
 		</Modal>
 	);
 };
+
 export default CreatePost;

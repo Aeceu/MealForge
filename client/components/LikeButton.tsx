@@ -4,7 +4,10 @@ import { icons } from "@/constants";
 import { useColorScheme } from "nativewind";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { likeorunlikePost } from "@/redux/actions/postAction";
+import {
+	dislikeorundislikePost,
+	likeorunlikePost,
+} from "@/redux/actions/postAction";
 import { useState } from "react";
 import Spin from "./animations/Spin";
 import { Link } from "expo-router";
@@ -19,12 +22,15 @@ const LikeButton: React.FC<Props> = ({ recipe }) => {
 	const { colorScheme } = useColorScheme();
 	const dispatch = useDispatch<AppDispatch>();
 	const [loading, setLoading] = useState(false);
+	const [dislikeLoading, setDislikeLoading] = useState(false);
 	const { user } = useSelector((state: RootState) => state.user);
 	const [isLiked, setIsLiked] = useState(recipe.is_liked);
 	const [totalLikes, setTotalLikes] = useState(recipe.total_likes);
+	const [isDisliked, setIsDisliked] = useState(recipe.is_disliked);
+	const [totalDislikes, setTotalDislikes] = useState(recipe.total_dislikes);
 
 	const onLikeButton = () => {
-		if (!user) return Alert.alert("No user is found!");
+		if (!user) return;
 		setLoading(true);
 		dispatch(
 			likeorunlikePost({
@@ -34,7 +40,6 @@ const LikeButton: React.FC<Props> = ({ recipe }) => {
 		).then((res) => {
 			if (res.meta.requestStatus === "fulfilled") {
 				setLoading(false);
-				Alert.alert(res.payload.message);
 				// If naka like, i unlike!
 				if (isLiked) {
 					setTotalLikes((prev) => prev - 1);
@@ -46,7 +51,33 @@ const LikeButton: React.FC<Props> = ({ recipe }) => {
 			}
 			if (res.meta.requestStatus === "rejected") {
 				setLoading(false);
-				Alert.alert(res.payload.message);
+			}
+		});
+	};
+
+	const onDislikeButton = () => {
+		if (!user) return;
+		setDislikeLoading(true);
+		dispatch(
+			dislikeorundislikePost({
+				post_id: recipe.id,
+				user_id: user.id,
+			})
+		).then((res) => {
+			if (res.meta.requestStatus === "fulfilled") {
+				setDislikeLoading(false);
+
+				// If naka dislike, i undislike!
+				if (isDisliked) {
+					setTotalDislikes((prev) => prev - 1);
+					setIsDisliked((prev) => !prev);
+				} else {
+					setTotalDislikes((prev) => prev + 1);
+					setIsDisliked((prev) => !prev);
+				}
+			}
+			if (res.meta.requestStatus === "rejected") {
+				setDislikeLoading(false);
 			}
 		});
 	};
@@ -65,10 +96,9 @@ const LikeButton: React.FC<Props> = ({ recipe }) => {
 
 						<StyledText className="mx-2 text-2xl ">•</StyledText>
 
-						<StyledText className="font-psemibold">0</StyledText>
+						<StyledText className="font-psemibold">{totalDislikes}</StyledText>
 						<StyledText className="ml-1" type="xs" fontStyle="light">
-							{/* {recipe.likes.length === 1 ? "Dislike" : "Dislikes"} */}
-							Dislike
+							{totalDislikes <= 1 ? "Dislike" : "Dislikes"}
 						</StyledText>
 					</StyledPressable>
 
@@ -95,16 +125,27 @@ const LikeButton: React.FC<Props> = ({ recipe }) => {
 								/>
 							)}
 						</StyledPressable>
-						<StyledPressable size="icon">
-							<Image
-								source={
-									colorScheme === "dark"
-										? icons.unlikesLightDark
-										: icons.unlikesDarkLight
-								}
-								resizeMode="contain"
-								className="w-6 h-6"
-							/>
+						<StyledPressable
+							disabled={dislikeLoading}
+							onPress={onDislikeButton}
+							size="icon">
+							{dislikeLoading ? (
+								<Spin size="sm" loading={dislikeLoading} />
+							) : (
+								<Image
+									source={
+										colorScheme === "dark"
+											? isDisliked
+												? icons.unlikeOrange
+												: icons.unlikesLightDark
+											: isDisliked
+											? icons.unlikeOrange
+											: icons.unlikesDarkLight
+									}
+									resizeMode="contain"
+									className="w-6 h-6"
+								/>
+							)}
 						</StyledPressable>
 					</View>
 				</View>

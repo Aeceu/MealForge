@@ -31,13 +31,22 @@ export const useThemeColors = () => {
 			? [colors.light, colors.white]
 			: [colors.dark, colors.darkLight];
 
+	// Gradient color with transparent on the right
+	const NewGradientColor =
+		colorScheme === "light"
+			? [colors.light, "rgba(255, 255, 255, 0)"] // light to transparent
+			: [colors.darkLight, "rgba(21, 18, 16, 0)"]; // dark to transparent
+
 	const logoImage = colorScheme === "dark" ? icons.logo_light : icons.logo_dark;
 	const textColor = colorScheme === "light" ? colors.dark : colors.main50;
 	const tabColor = colorScheme === "light" ? colors.white : colors.darkLight;
-	const inActiveColor = colorScheme === "light" ? colors.darkLight : colors.mainLight;
+	const inActiveColor =
+		colorScheme === "light" ? colors.darkLight : colors.mainLight;
 	const statusColor = colorScheme === "light" ? colors.dark : colors.light;
-	const borderColor = colorScheme === "light" ? colors.lightBorder : colors.darkBorder;
-	const inputBgColor = colorScheme === "light" ? colors.white : colors.darkLight;
+	const borderColor =
+		colorScheme === "light" ? colors.lightBorder : colors.darkBorder;
+	const inputBgColor =
+		colorScheme === "light" ? colors.white : colors.darkLight;
 	const placeholderColor =
 		colorScheme === "light" ? colors.grayLight : colors.gray;
 
@@ -51,5 +60,6 @@ export const useThemeColors = () => {
 		placeholderColor,
 		borderColor,
 		inputBgColor,
+		NewGradientColor,
 	};
 };

@@ -2,6 +2,7 @@ export type RecipePost = {
 	id: string;
 	user_id: string;
 	posted_at: Date;
+	recipe_post_image: string | null;
 	recipe: {
 		id: string;
 		name: string;
@@ -18,4 +19,6 @@ export type RecipePost = {
 	is_bookmarked: boolean;
 	is_liked: boolean;
 	total_likes: number;
+	is_disliked: boolean;
+	total_dislikes: number;
 };

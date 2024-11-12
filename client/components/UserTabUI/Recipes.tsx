@@ -20,7 +20,9 @@ const Recipes = () => {
 				<StyledText>No Recipe is added!</StyledText>
 			) : (
 				recipe.map((item, i) => (
-					<View key={i} className="w-full bg-dark-light rounded-lg p-4 my-1">
+					<View
+						key={i}
+						className="w-full bg-white dark:bg-dark-light rounded-lg p-4   border border-light-border dark:border-dark-border my-1">
 						<StyledPressable
 							size="link"
 							onPress={() =>

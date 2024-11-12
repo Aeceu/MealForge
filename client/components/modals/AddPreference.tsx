@@ -1,4 +1,4 @@
-import { Image, Modal, Text, TextInput, View } from "react-native";
+import { Image, Modal, TextInput, View } from "react-native";
 import StyledText from "../StyledText";
 import StyledPressable from "../StyledPressable";
 import { icons } from "@/constants";
@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useThemeColors } from "@/constants/colors";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { addAllergy, deleteAllergy } from "@/redux/actions/userActions";
+import { addAllergy } from "@/redux/actions/userActions";
 import Spin from "../animations/Spin";
 
 type Props = {

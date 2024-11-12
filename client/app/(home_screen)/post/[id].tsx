@@ -1,15 +1,11 @@
-import Spin from "@/components/animations/Spin";
 import BookmarkButton from "@/components/BookmarkButton";
 import LikeButton from "@/components/LikeButton";
 import Loading from "@/components/Loading";
-import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
-import { icons } from "@/constants";
 import { getPostById } from "@/redux/actions/postAction";
 import { AppDispatch, RootState } from "@/redux/store";
 import { RecipePost } from "@/utils/types/post";
 import { router, useLocalSearchParams } from "expo-router";
-import { useColorScheme } from "nativewind";
 import { useEffect, useState } from "react";
 import { Alert, Image } from "react-native";
 import { ScrollView, View } from "react-native";
@@ -17,7 +13,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 const RecipePostPage = () => {
 	const { id } = useLocalSearchParams();
-	const { colorScheme } = useColorScheme();
 	const [post, setPost] = useState<RecipePost | null>(null);
 
 	const dispatch = useDispatch<AppDispatch>();
@@ -53,13 +48,15 @@ const RecipePostPage = () => {
 			className="w-full p-4 bg-light dark:bg-dark">
 			<View className="mb-8">
 				{/* Header */}
-				{/* <View className="w-full h-[150px] mb-4">
-					<Image
-						source={images.adobo}
-						resizeMode="cover"
-						className="object-center w-full h-full rounded-xl"
-					/>
-				</View> */}
+				{post.recipe_post_image && (
+					<View className="w-full h-[150px] mb-4">
+						<Image
+							source={{ uri: post.recipe_post_image }}
+							resizeMode="cover"
+							className="object-center w-full h-full rounded-xl"
+						/>
+					</View>
+				)}
 				<View className="mx-2 mb-4">
 					<View className="flex-row justify-between flex-1 w-full">
 						<StyledText type="heading-4" className="flex-1 font-chunk">
@@ -92,26 +89,26 @@ const RecipePostPage = () => {
 					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
 						Recipe Information:
 					</StyledText>
-					<View className="w-full px-6 py-4 space-y-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
-						<View className="flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
+					<View className="w-full px-4 py-4 space-y-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
+						<View className="px-2 flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
 							<StyledText type="paragraph">• Serve for: </StyledText>
 							<StyledText type="paragraph">
 								{post?.recipe.serve_for} people{" "}
 							</StyledText>
 						</View>
-						<View className="flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
+						<View className="px-2 flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
 							<StyledText type="paragraph">• Serve in: </StyledText>
 							<StyledText type="paragraph">
 								{post?.recipe.serve_hot_or_cold}{" "}
 							</StyledText>
 						</View>
-						<View className="flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
+						<View className="px-2 flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
 							<StyledText type="paragraph">• Cooking time: </StyledText>
 							<StyledText type="paragraph">
 								{post?.recipe.cooking_time} minutes{" "}
 							</StyledText>
 						</View>
-						<View className="flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
+						<View className="px-2 flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
 							<StyledText type="paragraph">• Cuisine type: </StyledText>
 							<StyledText type="paragraph">
 								{post?.recipe.type_of_cuisine}{" "}

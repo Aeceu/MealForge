@@ -1,14 +1,26 @@
+import os
 import uuid
 
+import boto3
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required
 from sqlalchemy import text
 from utils.database import engine
 
 posts_bp = Blueprint("posts", __name__)
 
-# Create a new post for a recipe
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id = os.getenv("AWS_ACCESS_KEY_ID"),
+    aws_secret_access_key = os.getenv("AWS_SECRET_ACCESS_KEY"),
+    region_name = "ap-southeast-2"
+);
+
+BUCKET_NAME = "mealforgebucket"
+
 @posts_bp.route("/user/<user_id>/recipe/<recipe_name>/create_post", methods=["POST"])
 def create_post(user_id, recipe_name):
+    file = request.files.get('recipe_image')
     try:
         with engine.connect() as conn:
             # Check if user and recipe exist
@@ -20,17 +32,43 @@ def create_post(user_id, recipe_name):
             if not recipe:
                 return jsonify({"error": "Recipe not found"}), 404
 
-            # Create a unique ID for the post
+            # Generate unique post ID and handle optional image upload
             post_id = str(uuid.uuid4())
+            image_url = None
+
+            if file:
+                # Save the image in a "recipe_posts" folder within the S3 bucket
+                file_extension = file.filename.split('.')[-1]
+                file_name = f"recipe_posts/{user_id}_{post_id}.{file_extension}"
+
+                try:
+                    # Upload the file to S3
+                    s3.upload_fileobj(
+                        file,
+                        BUCKET_NAME,
+                        file_name,
+                        ExtraArgs={"ContentType": file.content_type}
+                    )
+                    # Create the S3 file URL
+                    image_url = f"https://{BUCKET_NAME}.s3.amazonaws.com/{file_name}"
+                except Exception as upload_error:
+                    return jsonify({"error": f"Could not upload image: {str(upload_error)}"}), 500
+
+            # Insert the new post with the optional image URL
             conn.execute(text(
                 """
-                INSERT INTO recipe_posts (id, user_id, recipe_id, posted_at)
-                VALUES (:id, :user_id, :recipe_id, CURRENT_DATE)
+                INSERT INTO recipe_posts (id, user_id, recipe_id, recipe_post_image, posted_at)
+                VALUES (:id, :user_id, :recipe_id, :recipe_post_image, CURRENT_DATE)
                 """
-            ), {"id": post_id, "user_id": user_id, "recipe_id": recipe.id})
+            ), {
+                "id": post_id,
+                "user_id": user_id,
+                "recipe_id": recipe.id,
+                "recipe_post_image": image_url
+            })
 
             conn.commit()
-            return jsonify({"message": "Post created successfully!", "post_id": post_id}), 201
+            return jsonify({"message": "Post created successfully!", "post_id": post_id, "recipe_post_image": image_url}), 201
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -40,17 +78,34 @@ def create_post(user_id, recipe_name):
 def delete_post(post_id):
     try:
         with engine.connect() as conn:
-            post = conn.execute(text("SELECT id FROM recipe_posts WHERE id = :post_id"), {"post_id": post_id}).fetchone()
+            # Fetch the post along with the image URL, if available
+            post = conn.execute(text(
+                "SELECT id, recipe_post_image FROM recipe_posts WHERE id = :post_id"
+            ), {"post_id": post_id}).fetchone()
 
             if not post:
                 return jsonify({"error": "Post not found"}), 404
 
+            # Delete the image from S3 if it exists
+            if post.recipe_post_image:
+                # Extract the S3 object key from the URL
+                image_key = post.recipe_post_image.split(f"{BUCKET_NAME}.s3.amazonaws.com/")[-1]
+                try:
+                    s3.delete_object(Bucket=BUCKET_NAME, Key=image_key)
+                except Exception as delete_error:
+                    print(f"Failed to delete image from S3: {delete_error}")
+                    return jsonify({"error": "Failed to delete image from S3"}), 500
+
+            # Delete the post from the database
             conn.execute(text("DELETE FROM recipe_posts WHERE id = :post_id"), {"post_id": post_id})
             conn.commit()
-            return jsonify({"message": "Post deleted successfully!"}), 200
+
+            return jsonify({"message": "Post deleted successfully!", "post_id": post_id}), 200
 
     except Exception as e:
+        print(e)
         return jsonify({"error": str(e)}), 500
+
 
 # TODO:IDK IF WE'LL USE THIS!!
 # Update a post (e.g., change recipe details associated with a post)
@@ -116,6 +171,44 @@ def like_unlike_post(post_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Dislike or unDislike a post
+@posts_bp.route("/post/<post_id>/dislike", methods=["POST"])
+def dislike_undislike_post(post_id):
+    data = request.get_json()
+    user_id = data.get("user_id")
+
+    try:
+        with engine.connect() as conn:
+            # Check if post and user exist
+            post = conn.execute(text("SELECT id FROM recipe_posts WHERE id = :post_id"), {"post_id": post_id}).fetchone()
+            user = conn.execute(text("SELECT id FROM users WHERE id = :user_id"), {"user_id": user_id}).fetchone()
+
+            if not post or not user:
+                return jsonify({"error": "User or Post not found"}), 404
+
+            # Check if the user has already liked the post
+            dislikes = conn.execute(text(
+                "SELECT id FROM dislikes WHERE user_id = :user_id AND post_id = :post_id"
+            ), {"user_id": user_id, "post_id": post_id}).fetchone()
+
+            if dislikes:
+                # Unlike the post
+                conn.execute(text("DELETE FROM dislikes WHERE user_id = :user_id AND post_id = :post_id"), {"user_id": user_id, "post_id": post_id})
+                message = "Post undisliked successfully!"
+            else:
+                # Like the post
+                like_id = str(uuid.uuid4())
+                conn.execute(text(
+                    "INSERT INTO dislikes (id, user_id, post_id, disliked_at) VALUES (:id, :user_id, :post_id, CURRENT_DATE)"
+                ), {"id": like_id, "user_id": user_id, "post_id": post_id})
+                message = "Post disliked successfully!"
+
+            conn.commit()
+            return jsonify({"message": message}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 # Get a specific post by post ID, including bookmark info for the current user
 @posts_bp.route("/post/<post_id>", methods=["GET"])
 def get_post(post_id):
@@ -125,7 +218,7 @@ def get_post(post_id):
             # Fetch post and recipe details
             result = conn.execute(text(
                 """
-                SELECT rp.id AS post_id, rp.user_id AS post_user_id, rp.posted_at AS post_date,
+                SELECT rp.id AS post_id, rp.user_id AS post_user_id, rp.posted_at AS post_date, rp.recipe_post_image AS recipePostImage,
                 r.id AS recipe_id, r.name AS recipe_name, r.ingredients AS recipe_ingredients,
                 r.instruction AS recipe_instruction, r.type_of_cuisine AS recipe_cuisine,
                 r.nutrient_counts AS recipe_nutrients, r.serve_hot_or_cold AS recipe_serving_temp,
@@ -151,6 +244,16 @@ def get_post(post_id):
                 "SELECT 1 FROM likes WHERE user_id = :user_id AND post_id = :post_id"
             ), {"user_id": user_id, "post_id": post_id}).fetchone() is not None
 
+            # Count total dislikes for each post
+            total_dislikes = conn.execute(text(
+                "SELECT COUNT(*) FROM dislikes WHERE post_id = :post_id"
+            ), {"post_id": post_id}).scalar()
+
+            # Check if the current user has liked the post
+            is_disliked = conn.execute(text(
+                "SELECT 1 FROM dislikes WHERE user_id = :user_id AND post_id = :post_id"
+            ), {"user_id": user_id, "post_id": post_id}).fetchone() is not None
+
             # Check if the user has bookmarked the post
             is_bookmarked = conn.execute(text(
                 "SELECT 1 FROM bookmarks WHERE user_id = :user_id AND post_id = :post_id"
@@ -161,6 +264,7 @@ def get_post(post_id):
                 "id": result.post_id,
                 "user_id": result.post_user_id,
                 "posted_at": result.post_date,
+                "recipe_post_image":result.recipePostImage,
                 "recipe": {
                     "id": result.recipe_id,
                     "name": result.recipe_name,
@@ -176,7 +280,9 @@ def get_post(post_id):
                 "author": result.author_name,
                 "is_bookmarked": is_bookmarked,
                 "total_likes": total_likes,
-                "is_liked": is_liked
+                "is_liked": is_liked,
+                "total_dislikes": total_dislikes,
+                "is_disliked": is_disliked
             }
             return jsonify({"post": post}), 200
 
@@ -191,7 +297,7 @@ def get_all_posts():
         with engine.connect() as conn:
             result = conn.execute(text(
                 """
-                SELECT rp.id AS post_id, rp.user_id AS post_user_id, rp.posted_at AS post_date,
+                SELECT rp.id AS post_id, rp.user_id AS post_user_id, rp.posted_at AS post_date, rp.recipe_post_image AS recipePostImage,
                 r.id AS recipe_id, r.name AS recipe_name, r.ingredients AS recipe_ingredients,
                 r.instruction AS recipe_instruction, r.type_of_cuisine AS recipe_cuisine,
                 r.nutrient_counts AS recipe_nutrients, r.serve_hot_or_cold AS recipe_serving_temp,
@@ -200,10 +306,10 @@ def get_all_posts():
                 FROM recipe_posts rp
                 JOIN recipes r ON rp.recipe_id = r.id
                 JOIN users u ON rp.user_id = u.id
-                ORDER BY rp.posted_at DESC
+
                 """
             ))
-
+# ORDER BY rp.posted_at DESC
             posts = []
             for row in result:
                 # Count total likes for each post
@@ -216,6 +322,16 @@ def get_all_posts():
                     "SELECT 1 FROM likes WHERE user_id = :user_id AND post_id = :post_id"
                 ), {"user_id": user_id, "post_id": row.post_id}).fetchone() is not None
 
+                # Count total dislikes for each post
+                total_dislikes = conn.execute(text(
+                    "SELECT COUNT(*) FROM dislikes WHERE post_id = :post_id"
+                ), {"post_id": row.post_id}).scalar()
+
+                # Check if the current user has liked the post
+                is_disliked = conn.execute(text(
+                    "SELECT 1 FROM dislikes WHERE user_id = :user_id AND post_id = :post_id"
+                ), {"user_id": user_id, "post_id": row.post_id}).fetchone() is not None
+
                 # Check if the post is bookmarked by the current user
                 is_bookmarked = conn.execute(text(
                     "SELECT 1 FROM bookmarks WHERE user_id = :user_id AND post_id = :post_id"
@@ -225,6 +341,7 @@ def get_all_posts():
                     "id": row.post_id,
                     "user_id": row.post_user_id,
                     "posted_at": row.post_date,
+                    "recipe_post_image":row.recipePostImage,
                     "recipe": {
                         "id": row.recipe_id,
                         "name": row.recipe_name,
@@ -240,7 +357,9 @@ def get_all_posts():
                     "author": row.author_name,
                     "is_bookmarked": is_bookmarked,
                     "total_likes": total_likes,
-                    "is_liked": is_liked
+                    "is_liked": is_liked,
+                    "total_dislikes": total_dislikes,
+                    "is_disliked": is_disliked
                 }
                 posts.append(post)
 
@@ -257,6 +376,7 @@ def get_all_user_posts(user_id):
             result = conn.execute(text(
                 """
                 SELECT rp.id AS post_id, rp.user_id, rp.posted_at,
+                rp.recipe_post_image as recipePostImage,
                 r.id AS recipe_id, r.name, r.ingredients, r.instruction,
                 r.type_of_cuisine, r.nutrient_counts, r.serve_hot_or_cold,
                 r.cooking_time, r.benefits, r.serve_for,
@@ -280,6 +400,7 @@ def get_all_user_posts(user_id):
                     "id": row.post_id,
                     "user_id": row.user_id,
                     "posted_at": row.posted_at,
+                    "recipe_post_image":row.recipePostImage,
                     "recipe": {
                         "id": row.recipe_id,
                         "name": row.name,
@@ -298,38 +419,6 @@ def get_all_user_posts(user_id):
                 user_posts.append(post)
 
             return jsonify({"user_posts": user_posts}), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-# Search posts via search button by any keywords in the recipe name or user name
-@posts_bp.route("/posts/search", methods=["GET"])
-def search_posts():
-    query = request.args.get("query", "")
-    try:
-        with engine.connect() as conn:
-            result = conn.execute(text(
-                """
-                SELECT rp.*, r.name AS recipe_name, u.userName AS author
-                FROM recipe_posts rp
-                JOIN recipes r ON rp.recipe_id = r.id
-                JOIN users u ON rp.user_id = u.id
-                WHERE r.name ILIKE :query OR u.userName ILIKE :query
-                ORDER BY rp.posted_at DESC
-                """
-            ), {"query": query})
-
-
-            searched_posts = [{
-                "id": row.id,
-                "user_id": row.user_id,
-                "recipe_id": row.recipe_id,
-                "posted_at": row.posted_at,
-                "recipe_name": row.recipe_name,
-                "author": row.author,
-            } for row in result]
-
-            return jsonify({"searched_posts": searched_posts}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -421,6 +510,116 @@ def get_user_bookmarked_posts(user_id):
                 })
 
             return jsonify({"bookmarked_posts": bookmarked_posts}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Fetch all posts filtered by popularity or latest
+@posts_bp.route("/posts/filtered", methods=["GET"])
+def get_all_posts_filtered():
+    filter_type = request.args.get("filter", "Latest")  # Filter type: "Latest" or "Popular"
+    user_id = request.args.get("user_id")  # Current user's ID
+
+    try:
+        with engine.connect() as conn:
+            # Define SQL order by clause based on filter type
+            order_by_clause = "ORDER BY posted_at DESC" if filter_type == "Latest" else "ORDER BY total_likes DESC"
+            print(order_by_clause)
+            # Query to get posts along with total likes and dislikes
+            result = conn.execute(text(
+                f"""
+                SELECT rp.id AS post_id, rp.user_id AS post_user_id, rp.posted_at AS post_date,rp.recipe_post_image AS recipePostImage,
+                r.id AS recipe_id, r.name AS recipe_name, r.ingredients AS recipe_ingredients,
+                r.instruction AS recipe_instruction, r.type_of_cuisine AS recipe_cuisine,
+                r.nutrient_counts AS recipe_nutrients, r.serve_hot_or_cold AS recipe_serving_temp,
+                r.cooking_time AS recipe_cooking_time, r.benefits AS recipe_benefits,
+                r.serve_for AS recipe_servings, u.userName AS author_name,
+                (SELECT COUNT(*) FROM likes WHERE post_id = rp.id) AS total_likes,
+                (SELECT COUNT(*) FROM dislikes WHERE post_id = rp.id) AS total_dislikes
+                FROM recipe_posts rp
+                JOIN recipes r ON rp.recipe_id = r.id
+                JOIN users u ON rp.user_id = u.id
+                {order_by_clause}
+                """
+            ))
+
+            posts = []
+            for row in result:
+                # Check if the user has liked, disliked, or bookmarked each post
+                is_liked = conn.execute(text(
+                    "SELECT 1 FROM likes WHERE user_id = :user_id AND post_id = :post_id"
+                ), {"user_id": user_id, "post_id": row.post_id}).fetchone() is not None
+
+                is_disliked = conn.execute(text(
+                    "SELECT 1 FROM dislikes WHERE user_id = :user_id AND post_id = :post_id"
+                ), {"user_id": user_id, "post_id": row.post_id}).fetchone() is not None
+
+                is_bookmarked = conn.execute(text(
+                    "SELECT 1 FROM bookmarks WHERE user_id = :user_id AND post_id = :post_id"
+                ), {"user_id": user_id, "post_id": row.post_id}).fetchone() is not None
+
+                # Construct post data with required fields
+                post = {
+                    "id": row.post_id,
+                    "user_id": row.post_user_id,
+                    "posted_at": row.post_date,
+                    "recipe_post_image": row.recipePostImage,
+                    "recipe": {
+                        "id": row.recipe_id,
+                        "name": row.recipe_name,
+                        "ingredients": row.recipe_ingredients,
+                        "instruction": row.recipe_instruction,
+                        "type_of_cuisine": row.recipe_cuisine,
+                        "nutrient_counts": row.recipe_nutrients,
+                        "serve_hot_or_cold": row.recipe_serving_temp,
+                        "cooking_time": row.recipe_cooking_time,
+                        "benefits": row.recipe_benefits,
+                        "serve_for": row.recipe_servings,
+                    },
+                    "author": row.author_name,
+                    "total_likes": row.total_likes,
+                    "total_dislikes": row.total_dislikes,
+                    "is_liked": is_liked,
+                    "is_disliked": is_disliked,
+                    "is_bookmarked": is_bookmarked
+                }
+                posts.append(post)
+
+            return jsonify({"posts": posts}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@posts_bp.route("/post/search", methods=["GET"])
+def search_recipe():
+    query = request.args.get("query", "").strip()
+    search_query = f"%{query.lower()}%"
+    if not query:
+        return jsonify({"error": "A search query is required"}), 400
+
+    try:
+        with engine.connect() as conn:
+            result = conn.execute(text("""
+                SELECT rp.id AS post_id, rp.recipe_post_image AS recipePostImage,r.name AS recipe_name,
+                r.ingredients as recipe_ingredients
+                FROM recipe_posts rp
+                JOIN recipes r ON rp.recipe_id = r.id
+                WHERE LOWER(r.name) LIKE :query
+                OR LOWER(r.ingredients) LIKE :query
+            """), {"query": search_query})
+
+            # Process the results
+            search_posts = []
+            for row in result:
+                post = {
+                    "id": row.post_id,
+                    "recipe_name": row.recipe_name,
+                    "recipe_ingredients": row.recipe_ingredients,
+                    "recipe_post_image": row.recipePostImage
+                }
+                search_posts.append(post)
+
+            return jsonify({"searchPost": search_posts}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

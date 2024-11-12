@@ -5,7 +5,6 @@ import StyledText from "@/components/StyledText";
 import { icons } from "@/constants";
 import { useThemeColors } from "@/constants/colors";
 import { handleRefresh } from "@/redux/actions/authActions";
-import { handleLGenerate } from "@/redux/actions/recipeAction";
 import axios from "@/redux/api/axios";
 import { RootState, AppDispatch } from "@/redux/store";
 import { useColorScheme } from "nativewind";

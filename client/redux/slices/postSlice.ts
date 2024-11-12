@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
 	createPost,
+	deletePost,
+	getFilteredPosts,
 	getPostById,
 	getPosts,
 	getUserPosts,
@@ -14,6 +16,7 @@ type TInitialState = {
 	error: any | null;
 	pageLoading: boolean;
 	bookmarkLoading: boolean;
+	deleteLoading: boolean;
 };
 
 const initialState: TInitialState = {
@@ -23,6 +26,7 @@ const initialState: TInitialState = {
 	error: null,
 	pageLoading: false,
 	bookmarkLoading: false,
+	deleteLoading: false,
 };
 
 const postSlice = createSlice({
@@ -74,6 +78,28 @@ const postSlice = createSlice({
 				state.userPost = action.payload;
 			})
 			.addCase(getUserPosts.rejected, (state, action) => {
+				state.status = "failed";
+			})
+			.addCase(deletePost.pending, (state, action) => {
+				state.deleteLoading = true;
+			})
+			.addCase(deletePost.fulfilled, (state, action) => {
+				state.deleteLoading = false;
+				state.post = state.post.filter(
+					(item) => item.id !== action.payload.post_id
+				);
+			})
+			.addCase(deletePost.rejected, (state, action) => {
+				state.deleteLoading = false;
+			})
+			.addCase(getFilteredPosts.pending, (state, action) => {
+				state.status = "pending";
+			})
+			.addCase(getFilteredPosts.fulfilled, (state, action) => {
+				state.status = "completed";
+				state.post = action.payload;
+			})
+			.addCase(getFilteredPosts.rejected, (state, action) => {
 				state.status = "failed";
 			});
 	},

@@ -1,18 +1,38 @@
-import { useColorScheme } from "nativewind";
-import { View, ScrollView, TouchableOpacity } from "react-native";
+import { View, ScrollView, TouchableOpacity, Image } from "react-native";
 import StyledText from "./StyledText";
 import { Link } from "expo-router";
 import { RecipePost } from "@/utils/types/post";
 import BookmarkButton from "./BookmarkButton";
 import LikeButton from "./LikeButton";
+import { LinearGradient } from "expo-linear-gradient";
+import { useThemeColors } from "@/constants/colors";
+import { useColorScheme } from "nativewind";
 
 type TRecipePostCard = {
 	recipe: RecipePost;
 };
 const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 	const { colorScheme } = useColorScheme();
+	const { NewGradientColor } = useThemeColors();
 	return (
-		<View className="flex-1 w-full mt-2 bg-white border border-light-border dark:bg-dark-light dark:border-dark-border rounded-xl">
+		<View className="flex-1 w-full mt-2 bg-white border border-light-border dark:bg-dark-light dark:border-dark-border rounded-xl overflow-hidden">
+			{recipe.recipe_post_image && (
+				<View className="w-full h-full absolute top-0 left-0">
+					<Image
+						source={{ uri: recipe.recipe_post_image }}
+						resizeMode="cover"
+						className="absolute w-full h-full"
+						style={{ opacity: colorScheme === "dark" ? 0.2 : 0.4 }}
+					/>
+					<LinearGradient
+						start={{ x: 0.3, y: 1 }}
+						end={{ x: 1.5, y: 1 }}
+						colors={NewGradientColor}
+						className="absolute top-0 left-0 w-full h-full"
+					/>
+				</View>
+			)}
+
 			{/* Header */}
 			<Link href={`/(home_screen)/post/${recipe.id}`} asChild>
 				<TouchableOpacity>
@@ -35,18 +55,6 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 			</Link>
 
 			<View className="px-4 pb-4 rounded-xl">
-				{/* Body */}
-				{/* <View className="flex-col w-full mt-4 border rounded-xl border-light-border dark:border-dark-border"> */}
-				{/* <Link href={`/(home_screen)/recipe/${recipe.id}`} asChild>
-						<TouchableOpacity>
-							<Image
-								source={images.adobo}
-								resizeMode="cover"
-								className="w-full h-[150px] rounded-t-xl object-center"
-							/>
-						</TouchableOpacity>
-					</Link> */}
-
 				<ScrollView
 					horizontal
 					showsHorizontalScrollIndicator={false}

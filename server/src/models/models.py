@@ -1,7 +1,8 @@
 import uuid
-from sqlalchemy import Column, String, Text, ForeignKey, Integer, func, Boolean
-from sqlalchemy.orm import relationship
+
+from sqlalchemy import Column, ForeignKey, Integer, String, Text, func
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 from utils.GUID import GUID
 
 Base = declarative_base()
@@ -22,6 +23,7 @@ class User(Base):
     recipes = relationship('Recipe', back_populates='user', cascade="all, delete-orphan")
     recipe_posts = relationship('RecipePost', back_populates='user', cascade="all, delete-orphan")
     likes = relationship('Like', back_populates='user', cascade="all, delete-orphan")
+    dislikes = relationship('Dislike', back_populates='user', cascade="all, delete-orphan")
     bookmarks = relationship('Bookmark', back_populates='user', cascade="all, delete-orphan")
 
     def __repr__(self):
@@ -56,11 +58,12 @@ class RecipePost(Base):
     user_id = Column(GUID(), ForeignKey('users.id'), nullable=False)
     recipe_id = Column(GUID(), ForeignKey('recipes.id'), nullable=False)
     posted_at = Column(String(20), nullable=False, default=func.current_date())
-
+    recipe_post_image  = Column(String(500), nullable=True)
     # Relationships
     user = relationship("User", back_populates="recipe_posts")
     recipe = relationship("Recipe", back_populates="recipe_posts")
     likes = relationship("Like", back_populates="recipe_post", cascade="all, delete-orphan")
+    dislikes = relationship("Dislike", back_populates="recipe_post", cascade="all, delete-orphan")
     bookmarks = relationship("Bookmark", back_populates="recipe_post", cascade="all, delete-orphan")
 
     def __repr__(self):
@@ -80,6 +83,21 @@ class Like(Base):
 
     def __repr__(self):
         return f"<Like(user_id={self.user_id}, post_id={self.post_id}, liked_at={self.liked_at})>"
+
+class Dislike(Base):
+    __tablename__ = 'dislikes'
+
+    id = Column(GUID(), primary_key=True, default=uuid.uuid4)
+    user_id = Column(GUID(), ForeignKey('users.id'), nullable=False)
+    post_id = Column(GUID(), ForeignKey('recipe_posts.id'), nullable=False)
+    disliked_at = Column(String(20), nullable=False, default=func.current_date())
+
+    # Relationships
+    user = relationship("User", back_populates="dislikes")
+    recipe_post = relationship("RecipePost", back_populates="dislikes")
+
+    def __repr__(self):
+        return f"<Dislike(user_id={self.user_id}, post_id={self.post_id}, disliked_at={self.disliked_at})>"
 
 class Bookmark(Base):
     __tablename__ = 'bookmarks'

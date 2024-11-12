@@ -1,14 +1,12 @@
 import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
 import StyledTextInput from "@/components/StyledTextInput";
-import { icons } from "@/constants";
 import { changePassword } from "@/redux/actions/userActions";
 import { AppDispatch, RootState } from "@/redux/store";
 import { ChangePasswordSchema, TChangePassword } from "@/utils/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useColorScheme } from "nativewind";
 import { Controller, useForm } from "react-hook-form";
-import { Alert, Image, ScrollView, Text, View } from "react-native";
+import { Alert, ScrollView, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 const ChangePassword = () => {
@@ -92,7 +90,9 @@ const ChangePassword = () => {
 						disabled={status === "pending"}
 						onPress={handleSubmit(onSubmit)}
 						className="w-full py-4 rounded-md bg-main">
-						<StyledText type="subheading" className="text-white dark:text-main-50">
+						<StyledText
+							type="subheading"
+							className="text-white dark:text-main-50">
 							{status === "pending" ? "Updating..." : "Save changes"}
 						</StyledText>
 					</StyledPressable>

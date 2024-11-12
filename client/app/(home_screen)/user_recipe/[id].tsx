@@ -1,13 +1,10 @@
-import Spin from "@/components/animations/Spin";
 import Loading from "@/components/Loading";
-import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
-import { icons, images } from "@/constants";
+import { images } from "@/constants";
 import { getUserRecipe } from "@/redux/actions/recipeAction";
 import { AppDispatch, RootState } from "@/redux/store";
 import { TRecipe } from "@/utils/types/recipe";
 import { useLocalSearchParams } from "expo-router";
-import { useColorScheme } from "nativewind";
 import { useEffect, useState } from "react";
 import { Image } from "react-native";
 import { ScrollView, View } from "react-native";
@@ -15,8 +12,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 const RecipePostPage = () => {
 	const { id } = useLocalSearchParams();
-	const { colorScheme } = useColorScheme();
-	const [loading, setLoading] = useState(false);
 	const [recipe, setRecipe] = useState<TRecipe | null>(null);
 
 	const dispatch = useDispatch<AppDispatch>();
@@ -35,13 +30,6 @@ const RecipePostPage = () => {
 		<ScrollView className="w-full p-4 bg-light dark:bg-dark">
 			<View className="mb-8">
 				{/* Header */}
-				<View className="w-full h-[150px] mb-4">
-					<Image
-						source={images.adobo}
-						resizeMode="cover"
-						className="object-center w-full h-full rounded-xl"
-					/>
-				</View>
 				<View className="mx-2 mb-4">
 					<View className="flex-row justify-between flex-1 w-full">
 						<StyledText
@@ -49,24 +37,6 @@ const RecipePostPage = () => {
 							className="flex-1  font-chunk text-2xl">
 							{recipe?.name}
 						</StyledText>
-						<StyledPressable
-							onPress={() => setLoading(!loading)}
-							size="icon"
-							className="">
-							{loading ? (
-								<Spin size="md" loading={loading} />
-							) : (
-								<Image
-									source={
-										colorScheme === "dark"
-											? icons.bookmarkLightDark
-											: icons.bookmarkDarkLight
-									}
-									resizeMode="contain"
-									className="w-6 h-6"
-								/>
-							)}
-						</StyledPressable>
 					</View>
 				</View>
 

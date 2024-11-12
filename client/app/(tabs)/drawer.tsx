@@ -20,12 +20,14 @@ const drawer = () => {
 		"main ingredient" | "seasoning"
 	>("main ingredient");
 	const { user } = useSelector((state: RootState) => state.user);
-	const { pageLoading, accessToken } = useSelector(
-		(state: RootState) => state.auth
-	);
 	const [showTestModal, setShowTestModal] = useState<boolean>(false);
 	const [darkbg, setdarkbg] = useState<boolean>(false);
 	const { colorScheme } = useColorScheme();
+
+	const { ingredients } = useSelector((state: RootState) => state.ingredients);
+	const { pageLoading, accessToken } = useSelector(
+		(state: RootState) => state.auth
+	);
 
 	const onClose = () => {
 		setShowTestModal(false);
@@ -35,7 +37,7 @@ const drawer = () => {
 	const handleAddBtn = () => {
 		setShowTestModal(true);
 		setdarkbg(true);
-	}
+	};
 
 	const onRefresh = async () => {
 		dispatch(handleRefresh(accessToken)).then((res) => {
@@ -50,8 +52,10 @@ const drawer = () => {
 
 	useEffect(() => {
 		if (!user?.id) return console.log("no userid");
-		dispatch(getIngredients(user.id));
-	}, []);
+		if (pageLoading || ingredients.length <= 0) {
+			dispatch(getIngredients(user.id));
+		}
+	}, [pageLoading]);
 
 	if (pageLoading) return <Loading />;
 
@@ -69,23 +73,24 @@ const drawer = () => {
 					<View className="flex-row px-6 space-x-4">
 						<StyledPressable
 							onPress={() => setSelectedTab("main ingredient")}
-							className={`rounded-none opacity-60 ${selectedTab === "main ingredient" &&
+							className={`rounded-none opacity-60 ${
+								selectedTab === "main ingredient" &&
 								"border-b-2 border-main dark:border-main-50 opacity-100"
-								}`}>
+							}`}>
 							<StyledText>My Ingredients</StyledText>
 						</StyledPressable>
 						<StyledPressable
 							onPress={() => setSelectedTab("seasoning")}
-							className={`rounded-none opacity-60 ${selectedTab === "seasoning" &&
+							className={`rounded-none opacity-60 ${
+								selectedTab === "seasoning" &&
 								"border-b-2 border-main dark:border-main-50 opacity-100"
-								}`}>
+							}`}>
 							<StyledText>My Seasonings</StyledText>
 						</StyledPressable>
 					</View>
 
 					{selectedTab === "main ingredient" && <Ingredients />}
 					{selectedTab === "seasoning" && <Seasonings />}
-
 
 					<AddIngredients
 						type={selectedTab}
@@ -94,14 +99,16 @@ const drawer = () => {
 					/>
 				</View>
 			</ScrollView>
-			{darkbg && (<View className="absolute w-full h-full bg-black/50 z-[9]"></View>)}
+			{darkbg && (
+				<View className="absolute w-full h-full bg-black/50 z-[9]"></View>
+			)}
 			{/* ADD button */}
 			<StyledPressable
 				size="icon"
 				className="absolute rounded-full bottom-5 right-5 bg-main"
 				onPress={handleAddBtn}>
 				<Image
-					source={colorScheme === "light" ? (icons.plusWhite) : (icons.plus)}
+					source={colorScheme === "light" ? icons.plusWhite : icons.plus}
 					resizeMode="contain"
 					className="w-12 h-12 rounded-full"
 				/>

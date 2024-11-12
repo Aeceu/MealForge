@@ -4,12 +4,10 @@ import LikeButton from "@/components/LikeButton";
 import Loading from "@/components/Loading";
 import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
-import { icons } from "@/constants";
-import { getPostById } from "@/redux/actions/postAction";
+import { deletePost, getPostById } from "@/redux/actions/postAction";
 import { AppDispatch, RootState } from "@/redux/store";
 import { RecipePost } from "@/utils/types/post";
-import { useLocalSearchParams } from "expo-router";
-import { useColorScheme } from "nativewind";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, Image } from "react-native";
 import { ScrollView, View } from "react-native";
@@ -17,13 +15,23 @@ import { useDispatch, useSelector } from "react-redux";
 
 const UserRecipePost = () => {
 	const { id } = useLocalSearchParams();
-	const { colorScheme } = useColorScheme();
-	const [loading, setLoading] = useState(false);
+
 	const [post, setPost] = useState<RecipePost | null>(null);
 
 	const dispatch = useDispatch<AppDispatch>();
-	const { status } = useSelector((state: RootState) => state.post);
+	const { status, deleteLoading } = useSelector(
+		(state: RootState) => state.post
+	);
 	const { user } = useSelector((state: RootState) => state.user);
+
+	const handleDelete = () => {
+		if (!post) return Alert.alert("No post is found!");
+		dispatch(deletePost(post?.id)).then((res) => {
+			if (res.meta.requestStatus === "fulfilled") {
+				router.back();
+			}
+		});
+	};
 
 	useEffect(() => {
 		if (!user) return Alert.alert("No user is found!");
@@ -41,24 +49,35 @@ const UserRecipePost = () => {
 
 	if (status === "pending") return <Loading />;
 
+	if (!post) {
+		return (
+			<ScrollView className="w-full p-4 bg-light dark:bg-dark">
+				<View className="flex-col items-center">
+					<StyledText className="text-red-500">No Post is found!</StyledText>
+				</View>
+			</ScrollView>
+		);
+	}
 	return (
 		<ScrollView className="w-full p-4 bg-light dark:bg-dark">
 			<View className="mb-8">
 				{/* Header */}
-				{/* <View className="w-full h-[150px] mb-4">
-					<Image
-						source={images.adobo}
-						resizeMode="cover"
-						className="object-center w-full h-full rounded-xl"
-					/>
-				</View> */}
+				{post.recipe_post_image && (
+					<View className="w-full h-[150px] mb-4">
+						<Image
+							source={{ uri: post.recipe_post_image }}
+							resizeMode="cover"
+							className="object-center w-full h-full rounded-xl"
+						/>
+					</View>
+				)}
 				<View className="mx-2 mb-4">
 					<View className="flex-row justify-between flex-1 w-full">
 						<StyledText type="heading-4" className="flex-1 font-chunk">
 							{post?.recipe.name}
 						</StyledText>
 						<BookmarkButton
-							is_bookmarked={post?.is_bookmarked}
+							is_bookmarked={post.is_bookmarked}
 							post_id={post?.id}
 						/>
 					</View>
@@ -77,7 +96,7 @@ const UserRecipePost = () => {
 				</View>
 
 				{/* Separator */}
-				<View className="flex-1 h-px mx-2 mb-4 rounded-full bg-light-border dark:bg-dark-border"></View>
+				<View className="flex-1 h-px mx-2 mb-4 rounded-full bg-light-border dark:bg-dark-border" />
 
 				{/* Infos */}
 				<View className="mb-4">
@@ -168,6 +187,19 @@ const UserRecipePost = () => {
 							• Soy Sauce
 						</StyledText>
 					</View>
+				</View>
+
+				<View className="flex-row items-center justify-end py-4">
+					<StyledPressable
+						disabled={deleteLoading}
+						className="bg-red-500 flex-row items-center"
+						onPress={handleDelete}>
+						{deleteLoading ? (
+							<Spin size="sm" loading={deleteLoading} />
+						) : (
+							<StyledText className="text-white">Delete Post</StyledText>
+						)}
+					</StyledPressable>
 				</View>
 			</View>
 		</ScrollView>

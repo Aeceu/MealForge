@@ -5,7 +5,6 @@ import Posts from "@/components/UserTabUI/Posts";
 import Recipes from "@/components/UserTabUI/Recipes";
 import { icons, images } from "@/constants";
 import { handleRefresh } from "@/redux/actions/authActions";
-import { getUserPosts } from "@/redux/actions/postAction";
 import { handleGetUserRecipes } from "@/redux/actions/recipeAction";
 import { RootState, AppDispatch } from "@/redux/store";
 import { router } from "expo-router";
@@ -18,8 +17,9 @@ const user = () => {
 	const { colorScheme } = useColorScheme();
 	const dispatch = useDispatch<AppDispatch>();
 	const [selectedTab, setSelectedTab] = useState("recipes");
-	const { user } = useSelector((state: RootState) => state.user);
 
+	const { user } = useSelector((state: RootState) => state.user);
+	const { recipe } = useSelector((state: RootState) => state.recipe);
 	const { pageLoading, accessToken } = useSelector(
 		(state: RootState) => state.auth
 	);
@@ -29,10 +29,13 @@ const user = () => {
 	useEffect(() => {
 		if (!user) return Alert.alert("user is not found!");
 
-		if (selectedTab === "recipes") {
+		if (
+			(selectedTab === "recipes" && pageLoading) ||
+			(selectedTab === "recipes" && (!recipe || recipe.length === 0))
+		) {
 			dispatch(handleGetUserRecipes(user?.id));
 		}
-	}, [selectedTab]);
+	}, [selectedTab, pageLoading]);
 
 	if (pageLoading) return <Loading />;
 	return (
@@ -134,6 +137,15 @@ const UserHeader = () => {
 const UserInfo = () => {
 	const { ingredients } = useSelector((state: RootState) => state.ingredients);
 	const { recipe } = useSelector((state: RootState) => state.recipe);
+	const { post } = useSelector((state: RootState) => state.post);
+	const [totalLikes, setTotalLikes] = useState(0);
+
+	useEffect(() => {
+		post.map((item) => {
+			setTotalLikes((prev) => prev + item.total_likes);
+		});
+	}, []);
+
 	return (
 		<View className="flex-row items-center p-4 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
 			<StyledPressable className="flex-col items-center flex-grow basis-1/3">
@@ -156,7 +168,7 @@ const UserInfo = () => {
 
 			<StyledPressable className="flex-col items-center flex-grow basis-1/3">
 				<StyledText type="paragraph" className="font-chunk">
-					1.2 k
+					{totalLikes}
 				</StyledText>
 				<StyledText type="label" fontStyle="light">
 					Likes
