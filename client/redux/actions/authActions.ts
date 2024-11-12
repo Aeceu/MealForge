@@ -5,6 +5,9 @@ import axios from "../api/axios";
 import { Alert } from "react-native";
 import { router } from "expo-router";
 import { setLogout, setUser } from "../slices/userSlice";
+import { clearIngredients } from "../slices/ingredientsSlice";
+import { setRecipe } from "../slices/recipeSlice";
+import { setPost, setUserPost } from "../slices/postSlice";
 
 export const handleLogin = createAsyncThunk(
 	"auth/handleLogin",
@@ -86,6 +89,10 @@ export const handleRefresh = createAsyncThunk(
 			dispatch(setUser(res.data.user));
 			return res.data;
 		} catch (error) {
+			dispatch(clearIngredients());
+			dispatch(setRecipe([]));
+			dispatch(setPost([]));
+			dispatch(setUserPost([]));
 			const resError = handleError(error);
 			console.log(resError);
 			return rejectWithValue(resError);

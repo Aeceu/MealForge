@@ -90,7 +90,7 @@ const SearchRecipe: React.FC<Props> = ({ isVisible, onClose }) => {
 			<View className="absolute w-full h-full p-4 bg-light dark:bg-dark border border-light-dark dark:border-dark-light">
 				{/* header */}
 				<View className="flex-row items-center justify-between">
-					<StyledText type="heading-4"></StyledText>
+					<StyledText type="heading-4">Search for recipes</StyledText>
 					<StyledPressable onPress={handleClose} size="icon">
 						<Image
 							source={
@@ -134,51 +134,53 @@ const SearchRecipe: React.FC<Props> = ({ isVisible, onClose }) => {
 						<Spin size="sm" loading={loading} />
 					</View>
 				) : postRecipe.length > 0 ? (
-					<View className="w-full flex-col mt-4">
-						{postRecipe.map((item, i) => (
-							<View
-								key={i}
-								className="w-full bg-light dark:bg-dark-light border border-light-border dark:border-dark-border rounded-lg p-4 my-1 relative overflow-hidden">
-								{item.recipe_post_image && (
-									<View className="w-full h-full absolute top-0 left-0">
-										<Image
-											source={{ uri: item.recipe_post_image }}
-											resizeMode="cover"
-											className="absolute w-full  h-[150px]"
-											style={{ opacity: colorScheme === "dark" ? 0.2 : 0.4 }}
-										/>
-										<LinearGradient
-											start={{ x: 1, y: 0 }}
-											end={{ x: 0, y: 0 }}
-											colors={NewGradientColor}
-											className="absolute top-0 left-0 w-full  h-[150px]"
-										/>
-									</View>
-								)}
-								<StyledPressable
-									size="link"
-									onPress={() => handleClick(item.id)}>
-									<StyledText className="font-chunk text-lg">
-										{item.recipe_name}
-									</StyledText>
-								</StyledPressable>
-								<ScrollView
-									horizontal
-									showsHorizontalScrollIndicator={false}
-									className="w-full">
-									<View className="mt-2 flex-row items-start justify-center w-full">
-										{item.recipe_ingredients.split(",").map((item, i) => (
-											<StyledText
-												key={i}
-												className="px-3 bg-light-dark dark:bg-dark py-1 text-xs mr-0.5 rounded-full w-max ">
-												{item}
-											</StyledText>
-										))}
-									</View>
-								</ScrollView>
-							</View>
-						))}
-					</View>
+					<ScrollView>
+						<View className="w-full flex-col mt-4">
+							{postRecipe.map((item, i) => (
+								<View
+									key={i}
+									className="w-full bg-light dark:bg-dark-light border border-light-border dark:border-dark-border rounded-lg p-4 my-1 relative overflow-hidden">
+									{item.recipe_post_image && (
+										<View className="w-full h-full absolute top-0 left-0">
+											<Image
+												source={{ uri: item.recipe_post_image }}
+												resizeMode="cover"
+												className="absolute w-full aspect-square"
+												style={{ opacity: colorScheme === "dark" ? 0.2 : 0.4 }}
+											/>
+											<LinearGradient
+												start={{ x: 1, y: 0 }}
+												end={{ x: 0, y: 0 }}
+												colors={NewGradientColor}
+												className="absolute top-0 left-0 w-full  aspect-square"
+											/>
+										</View>
+									)}
+									<StyledPressable
+										size="link"
+										onPress={() => handleClick(item.id)}>
+										<StyledText className="font-chunk text-lg">
+											{item.recipe_name}
+										</StyledText>
+									</StyledPressable>
+									<ScrollView
+										horizontal
+										showsHorizontalScrollIndicator={false}
+										className="w-full">
+										<View className="mt-2 flex-row items-start justify-center w-full">
+											{item.recipe_ingredients.split(",").map((item, i) => (
+												<StyledText
+													key={i}
+													className="px-3 bg-light-dark dark:bg-dark py-1 text-xs mr-0.5 rounded-full w-max ">
+													{item}
+												</StyledText>
+											))}
+										</View>
+									</ScrollView>
+								</View>
+							))}
+						</View>
+					</ScrollView>
 				) : (
 					<StyledText className="mt-4">No post is search.</StyledText>
 				)}

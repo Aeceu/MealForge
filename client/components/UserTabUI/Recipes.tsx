@@ -10,7 +10,7 @@ const Recipes = () => {
 
 	if (status === "pending")
 		return (
-			<View className="p-4">
+			<View className="p-4 flex items-center">
 				<Spin loading={status === "pending"} size="md" />
 			</View>
 		);

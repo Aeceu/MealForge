@@ -1,9 +1,10 @@
-import os
 import json
-import pickle
+import os
 import random
-import pandas as pd
+
 import google.generativeai as genai
+import joblib as joblib
+import pandas as pd
 from flask import Blueprint, jsonify, request
 from model.NLP import get_recipe_details_top5, get_similar_top5
 
@@ -14,11 +15,11 @@ generate_bp = Blueprint("generate", __name__)
 # Load pre-trained NLP model data ONCE as global variables
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 print(f"Base directory: {base_dir}")
-loaded_vectorizer = pickle.load(open(os.path.join(base_dir, 'dataset', 'nlp_vectorizer.pkl'), 'rb'))
-loaded_tfidf_matrix = pickle.load(open(os.path.join(base_dir, 'dataset', 'nlp_tfidf_matrix.pkl'), 'rb'))
-filtered_recipes = pd.read_csv(os.path.join(base_dir, 'dataset', 'recipes_data_all.csv'))
+loaded_vectorizer = joblib.load(open(os.path.join(base_dir, 'dataset', 'nlp_vectorizer.pkl'), 'rb'))
+loaded_tfidf_matrix = joblib.load(open(os.path.join(base_dir, 'dataset', 'nlp_tfidf_matrix.pkl'), 'rb'))
+filtered_recipes = pd.read_csv(os.path.join(base_dir, 'dataset', 'recipes_data_all.csv'), usecols=['title', 'ingredients', 'directions', 'NER'])  # Specify required columns to save memory
 
-# Initialize the Generative AI model once
+# Initialize the Generative AI model once (check the correct usage in the SDK)
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 @generate_bp.route("/test", methods=["POST"])
@@ -37,7 +38,7 @@ def generate():
     top_recipe_str = f"Title: {top_recipe['title']}, Ingredients: {top_recipe['ingredients']}, Directions: {top_recipe['directions']}, NER: {top_recipe['NER']}"
     ingredients_input_str = ', '.join(ingredients)
     user_preference_str = ', '.join(user_preference)
-
+    print(top_recipe)
     # 2. Generate the updated recipe with new columns using Generative AI
     response = model.generate_content(f"""
       Create a new recipe that incorporates the following ingredients provided by the user: {ingredients_input_str}.
@@ -69,7 +70,12 @@ def generate():
       Ensure the instructions are provided in a clear step-by-step array format, and that the recipe fully aligns with the user-provided ingredients.
   """)
 
+    print(response.text)
     # Parse the AI response and return it as JSON
-    json_response = response.text.replace("```json", "").replace("```", "").strip()
-    json_data = json.loads(json_response)
-    return jsonify(json_data)
+    try:
+        json_response = response.text.replace("```json", "").replace("```", "").strip()
+        print(json_response)
+        json_data = json.loads(json_response)
+        return jsonify(json_data)
+    except json.JSONDecodeError:
+        return jsonify({"error": "Failed to parse JSON from AI response.", "response": response.generated_text}), 500
