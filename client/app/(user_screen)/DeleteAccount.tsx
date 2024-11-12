@@ -1,9 +1,7 @@
 import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
-import { icons } from "@/constants";
-import { useColorScheme } from "nativewind";
-import { Alert, Image, ScrollView, View } from "react-native";
-import { router, useRouter } from "expo-router"; // Import Expo Router for navigation
+import { Alert, ScrollView, View } from "react-native";
+import { router } from "expo-router"; // Import Expo Router for navigation
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { deleteAccount } from "@/redux/actions/userActions";
@@ -41,33 +39,21 @@ const DeleteAccount = () => {
 					<StyledText className="mb-2">
 						By deleting your account, the following will happen:
 					</StyledText>
-					<StyledText
-						type="subheading"
-						className="mt-2 ml-4">
+					<StyledText type="subheading" className="mt-2 ml-4">
 						• All your personal information will be erased.
 					</StyledText>
-					<StyledText
-						type="subheading"
-						className="mt-2 ml-4">
+					<StyledText type="subheading" className="mt-2 ml-4">
 						• All your personal preferences will be erased.
 					</StyledText>
-					<StyledText
-						type="subheading"
-						className="mt-2 ml-4">
+					<StyledText type="subheading" className="mt-2 ml-4">
 						• All your ingredients and recipes will be erased.
 					</StyledText>
-					<StyledText
-						type="subheading"
-						className="mt-2 ml-4">
+					<StyledText type="subheading" className="mt-2 ml-4">
 						• You will lose access to saved content and settings.
 					</StyledText>
-					<StyledText
-						type="subheading"
-						className="mt-2 ml-4">
+					<StyledText type="subheading" className="mt-2 ml-4">
 						• This action is{" "}
-						<StyledText
-							type="subheading"
-							className="text-red-500 font-pbold ">
+						<StyledText type="subheading" className="text-red-500 font-pbold ">
 							irreversible
 						</StyledText>{" "}
 						and cannot be undone.
@@ -79,7 +65,9 @@ const DeleteAccount = () => {
 					onPress={handleDelete}
 					size="xl"
 					className="w-full p-4 mb-4 bg-red-600 rounded-lg">
-					<StyledText type="subheading" className="text-center text-white font-psemibold">
+					<StyledText
+						type="subheading"
+						className="text-center text-white font-psemibold">
 						{status === "pending"
 							? "Deleting Account . . . ."
 							: "Delete Account"}

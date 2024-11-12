@@ -1,13 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Redirect, Stack } from "expo-router";
 import { useThemeColors } from "@/constants/colors";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/redux/store";
-import { handleRefresh } from "@/redux/actions/authActions";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 const AuthLayout = () => {
-	const dispatch = useDispatch<AppDispatch>();
 	const { tabColor, textColor } = useThemeColors();
-	const { user } = useSelector((state: RootState) => state.user);
 	const { accessToken, refreshToken, pageLoading } = useSelector(
 		(state: RootState) => state.auth
 	);

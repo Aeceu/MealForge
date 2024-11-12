@@ -1,7 +1,7 @@
 import { icons, images } from "@/constants";
 import { router } from "expo-router";
 import { useColorScheme } from "nativewind";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, View } from "react-native";
 import StyledPressable from "../StyledPressable";
 const Header = () => {
 	const { colorScheme } = useColorScheme();

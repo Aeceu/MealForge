@@ -1,8 +1,8 @@
 import React from "react";
 import { Redirect, Stack } from "expo-router";
 import { useThemeColors } from "@/constants/colors";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const HomeScreenLayout = () => {
 	const { tabColor, textColor } = useThemeColors();
@@ -18,10 +18,44 @@ const HomeScreenLayout = () => {
 		<>
 			<Stack screenOptions={{ headerShown: false }}>
 				<Stack.Screen
-					name="recipe/[id]"
+					name="post/[id]"
 					options={{
 						headerShown: true,
-						title: "Recipe Page",
+						title: "Posted Recipe",
+						headerStyle: {
+							backgroundColor: tabColor,
+						},
+						headerTitleStyle: {
+							fontFamily: "Poppins-Regular",
+							fontSize: 16,
+						},
+						headerTitleAlign: "center",
+						headerTintColor: textColor,
+						headerShadowVisible: false,
+					}}
+				/>
+				<Stack.Screen
+					name="user_recipe/[id]"
+					options={{
+						headerShown: true,
+						title: "Your Recipe",
+						headerStyle: {
+							backgroundColor: tabColor,
+						},
+						headerTitleStyle: {
+							fontFamily: "Poppins-Regular",
+							fontSize: 16,
+						},
+						headerTitleAlign: "center",
+						headerTintColor: textColor,
+						headerShadowVisible: false,
+					}}
+				/>
+				<Stack.Screen
+					name="user_post/[id]"
+					options={{
+						headerShown: true,
+						title: "Your Post Recipe",
 						headerStyle: {
 							backgroundColor: tabColor,
 						},

@@ -2,21 +2,22 @@ import { handleError } from "@/utils/errorHandler";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../api/axios";
 import { Alert } from "react-native";
+import { TRecipe } from "@/utils/types/recipe";
 
 type generateProps = {
-	ingredients:string[];
-	user_preference:string;
-}
+	ingredients: string[];
+	user_preference: string;
+};
 
 export const handleLGenerate = createAsyncThunk(
 	"recipe/handleLGenerate",
-	async (data:generateProps, { rejectWithValue, dispatch }) => {
+	async (data: generateProps, { rejectWithValue, dispatch }) => {
 		try {
 			const res = await axios.post("/test", {
-				ingredients:data.ingredients,
-				user_preference:""
+				ingredients: data.ingredients,
+				user_preference: "",
 			});
-			console.log(res.data)
+			console.log(res.data);
 			return res.data;
 		} catch (error) {
 			const resError = handleError(error);
@@ -27,7 +28,7 @@ export const handleLGenerate = createAsyncThunk(
 );
 
 type handleSaveRecipeProps = {
-	userId: string|undefined;
+	userId: string | undefined;
 	recipe: {
 		name: string;
 		ingredients: [
@@ -49,15 +50,43 @@ type handleSaveRecipeProps = {
 export const handleSaveRecipe = createAsyncThunk(
 	"recipe/handleSaveRecipe",
 	async (data: handleSaveRecipeProps, { rejectWithValue }) => {
-		try { 
+		try {
 			const { userId, recipe } = data;
 			const res = await axios.post(`/create_recipe/${userId}`, { recipe });
 
 			console.log("Recipe saved:", res.data);
-			Alert.alert(res.data.message)
+			Alert.alert(res.data.message);
 			return res.data;
 		} catch (error) {
 			// Handle and log the error
+			const resError = handleError(error);
+			console.log("resError:", resError);
+			return rejectWithValue(resError);
+		}
+	}
+);
+
+export const handleGetUserRecipes = createAsyncThunk(
+	"recipe/handleGetUserRecipes",
+	async (userId: string | undefined, { rejectWithValue }) => {
+		try {
+			const res = await axios.get(`/user/${userId}/recipes`);
+			return res.data.recipes;
+		} catch (error) {
+			const resError = handleError(error);
+			console.log("resError:", resError);
+			return rejectWithValue(resError);
+		}
+	}
+);
+
+export const getUserRecipe = createAsyncThunk(
+	"recipe/getUserRecipe",
+	async (recipeId: string | string[], { rejectWithValue }) => {
+		try {
+			const res = await axios.get(`/user/recipe/${recipeId}`);
+			return res.data.recipe;
+		} catch (error) {
 			const resError = handleError(error);
 			console.log("resError:", resError);
 			return rejectWithValue(resError);

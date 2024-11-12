@@ -100,6 +100,7 @@ const EditInformation = () => {
 	// Function to upload the selected image using axios
 	const uploadProfilePicture = async (uri: string): Promise<void> => {
 		const formData = new FormData();
+		console.log(uri);
 		formData.append("profile_picture", {
 			uri,
 			name: "profile.jpg",

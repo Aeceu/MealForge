@@ -101,30 +101,3 @@ export type TLike = {
 	post_id: string;
 	liked_at: string;
 };
-
-export type TRecipePost = {
-	id: string;
-	recipe_id: string;
-	user: {
-		id: string;
-		firstName: string;
-		lastName: string;
-		userName: string;
-		email: string;
-	};
-	posted_at: string;
-	recipe: {
-		id: string;
-		name: string;
-		instruction: string;
-		type_of_cuisine: string;
-		nutrient_counts: string;
-		serve_hot_or_cold: string;
-		cooking_time: string;
-		benefits: string | null;
-		serve_for: string;
-		user_id: string;
-		ingredients: string;
-	};
-	likes: TLike[];
-};

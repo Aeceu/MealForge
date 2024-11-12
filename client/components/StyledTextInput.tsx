@@ -1,11 +1,4 @@
-import {
-	View,
-	Text,
-	TextInput,
-	TextProps,
-	TouchableOpacity,
-	Image,
-} from "react-native";
+import { View, TextInput, TextProps, Image } from "react-native";
 import React, { useState } from "react";
 import StyledText from "./StyledText";
 import { useThemeColors } from "@/constants/colors";
@@ -15,13 +8,13 @@ import StyledPressable from "./StyledPressable";
 
 type Props = TextProps & {
 	title?:
-	| "default"
-	| "Email"
-	| "Password"
-	| "Username"
-	| "Firstname"
-	| "Lastname"
-	| string;
+		| "default"
+		| "Email"
+		| "Password"
+		| "Username"
+		| "Firstname"
+		| "Lastname"
+		| string;
 	handleTextChange?: ((text: string) => void) | undefined;
 	value: string;
 	error?: string;
@@ -43,23 +36,28 @@ const StyledTextInput = ({
 				{title}
 			</StyledText>
 
-			<View className={`flex-row items-center w-full border rounded-lg shadow-sm h-14
-				${colorScheme === "light"
-					? "border-light-border focus:border-gray"
-					: "border-dark-border focus:border-main"}
+			<View
+				className={`flex-row items-center w-full border rounded-lg shadow-sm h-14
+				${
+					colorScheme === "light"
+						? "border-light-border focus:border-gray"
+						: "border-dark-border focus:border-main"
+				}
 			${error && "border-red-600"}`}>
 				<TextInput
-					className={`flex-1 h-full px-4 text-base ${colorScheme === "light" ? "text-dark" : "text-main-50"
-						}`}
+					className={`flex-1 h-full px-4 text-base ${
+						colorScheme === "light" ? "text-dark" : "text-main-50"
+					}`}
 					placeholder={title}
 					placeholderTextColor={placeholderColor}
 					value={value}
 					onChangeText={handleTextChange}
 					autoCapitalize={
-						title === "Username" ||
-							title === "Email" ||
-							title === "Password"
-							? "none" : title === "default" ? "sentences" : "words"
+						title === "Username" || title === "Email" || title === "Password"
+							? "none"
+							: title === "default"
+							? "sentences"
+							: "words"
 					}
 					secureTextEntry={
 						(title === "Password" ||
@@ -75,23 +73,23 @@ const StyledTextInput = ({
 					title === "Current Password" ||
 					title === "Retype Current Password" ||
 					title === "New Password") && (
-						<StyledPressable
-							size="icon"
-							onPress={() => setShowPassword(!showPassword)}>
-							<Image
-								source={
-									colorScheme === "dark"
-										? showPassword
-											? icons.eyeLightDark
-											: icons.eyeOffLightDark
-										: showPassword
-											? icons.eyeDarkLight
-											: icons.eyeOffDarkLight
-								}
-								className="w-6 h-full mr-4"
-								resizeMode="contain"></Image>
-						</StyledPressable>
-					)}
+					<StyledPressable
+						size="icon"
+						onPress={() => setShowPassword(!showPassword)}>
+						<Image
+							source={
+								colorScheme === "dark"
+									? showPassword
+										? icons.eyeLightDark
+										: icons.eyeOffLightDark
+									: showPassword
+									? icons.eyeDarkLight
+									: icons.eyeOffDarkLight
+							}
+							className="w-6 h-full mr-4"
+							resizeMode="contain"></Image>
+					</StyledPressable>
+				)}
 
 				<View
 					className={`absolute w-full h-full rounded-lg -z-10

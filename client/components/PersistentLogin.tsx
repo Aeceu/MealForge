@@ -1,17 +1,18 @@
-import { handleRefresh } from "@/redux/actions/userActions";
+import { handleRefresh } from "@/redux/actions/authActions";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useEffect } from "react";
 import { Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import StyledText from "./StyledText";
+
 const PersistentLogin = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const { accessToken, pageLoading } = useSelector(
-		(state: RootState) => state.user
+		(state: RootState) => state.auth
 	);
 
 	useEffect(() => {
-		!accessToken && dispatch(handleRefresh());
+		!accessToken && dispatch(handleRefresh(accessToken));
 	}, []);
 
 	if (pageLoading) {

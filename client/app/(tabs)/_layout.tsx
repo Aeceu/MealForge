@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Redirect, Tabs } from "expo-router";
 import { View, Image, Text, ImageProps } from "react-native";
 import { useSelector } from "react-redux";
@@ -16,8 +16,9 @@ type TabIconProps = {
 const TabIcon: React.FC<TabIconProps> = ({ icon, color, name, focused }) => {
 	return (
 		<View
-			className={`flex-col items-center justify-center space-y-1 ${focused && "#f97316"
-				}`}>
+			className={`flex-col items-center justify-center space-y-1 ${
+				focused && "#f97316"
+			}`}>
 			<Image
 				source={icon}
 				resizeMode="contain"

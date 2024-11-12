@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, View } from "react-native";
 import Pulse from "./animations/Pulse";
 import { images } from "@/constants";
 import { useColorScheme } from "nativewind";
