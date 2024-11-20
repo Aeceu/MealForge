@@ -5,7 +5,7 @@ import axios from "../api/axios";
 type addIngredientsProps = {
 	userId: string;
 	name: string;
-	type: "main ingredient" | "seasoning";
+	type: string;
 	measurements: string;
 	expirationDate: Date | null | undefined;
 };

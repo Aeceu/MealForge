@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { addIngredients } from "@/redux/actions/ingredientsAction";
 import { useColorScheme } from "nativewind";
+import finalIngredients from "@/constants/final_ingredients.json";
 
 type Props = {
 	type: "main ingredient" | "seasoning";
@@ -43,12 +44,13 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 	});
 	const { user } = useSelector((state: RootState) => state.user);
 	const dispatch = useDispatch<AppDispatch>();
+
 	const onSubmit = async (data: TNewIngredients) => {
 		if (!user?.id) return;
 		dispatch(
 			addIngredients({
 				name: data.name,
-				type: type,
+				type: data.type,
 				expirationDate: data.expirationDate,
 				measurements: data.measurements,
 				userId: user.id,
@@ -72,7 +74,9 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 				<View className="absolute bottom-0 w-full p-4 border bg-light h-3/4 rounded-t-3xl border-light-dark dark:border-dark-light dark:bg-dark">
 					{/* header */}
 					<View className="flex-row items-center justify-between">
-						<StyledText type="heading-4">Add new {type === "main ingredient" ? "ingredient" : "seasoning"}</StyledText>
+						<StyledText type="heading-4">
+							Add new {type === "main ingredient" ? "ingredient" : "seasoning"}
+						</StyledText>
 						<StyledPressable onPress={handleClose} size="icon">
 							<Image
 								source={
@@ -87,20 +91,17 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 					{/* body */}
 					<View className="mt-4 space-y-10">
 						<View className="mt-2">
+							{/* Ingredient Name*/}
 							<View className="">
 								<StyledText type="label" className="mb-2">
-									Select {type === "main ingredient" ? "an ingredient" : "a seasoning"}
+									Select an ingredient
 								</StyledText>
 								<Controller
 									control={control}
 									name="name"
 									render={({ field: { onChange } }) => (
 										<SelectList
-											data={
-												type === "main ingredient"
-													? mainIngredients
-													: seasonings
-											}
+											data={finalIngredients.vegan}
 											save="value"
 											setSelected={onChange}
 											inputStyles={{
@@ -168,34 +169,125 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 								)}
 							</View>
 
-							<View className="mt-4">
-								<StyledText type="label" className="mb-2">
-									Measurements
-								</StyledText>
-								<Controller
-									control={control}
-									name="measurements"
-									render={({ field: { value, onChange } }) => (
-										<TextInput
-											value={value}
-											onChangeText={onChange}
-											className={`
-                        border border-light-border font-pregular dark:border-dark-border bg-white dark:bg-dark-light text-dark dark:text-main-50 rounded-lg px-6 py-2 text-sm
-                        `}
-											placeholderTextColor={placeholderColor}
-											placeholder="ex. 1/2 kg, 1ml, 1tbsp"
-										/>
-									)}
-								/>
-								{errors.measurements && (
-									<StyledText
-										fontStyle="default"
-										className="px-1 text-sm text-red-500">
-										{errors.measurements.message}
+							<View className="mt-4 space-x-2 flex-row items-start">
+								{/* Ingredient Type */}
+								<View className="w-1/2">
+									<StyledText type="label" className="mb-2">
+										Type
 									</StyledText>
-								)}
+									<Controller
+										control={control}
+										name="type"
+										render={({ field: { onChange } }) => (
+											<SelectList
+												data={[
+													{
+														key: 1,
+														value: "Main Ingredient",
+													},
+													{
+														key: 1,
+														value: "Seasoning",
+													},
+												]}
+												save="value"
+												setSelected={onChange}
+												inputStyles={{
+													color: textColor,
+													fontSize: 14,
+													fontFamily: "Poppins-Regular",
+												}}
+												boxStyles={{
+													backgroundColor: inputBgColor,
+													borderColor: borderColor,
+													borderRadius: 8,
+												}}
+												dropdownStyles={{
+													backgroundColor: inputBgColor,
+													borderColor: borderColor,
+													borderRadius: 8,
+												}}
+												dropdownTextStyles={{
+													color: textColor,
+													fontSize: 14,
+													fontFamily: "Poppins-Regular",
+												}}
+												searchicon={
+													<Image
+														source={
+															colorScheme === "light"
+																? icons.searchDarkLight
+																: icons.searchLightDark
+														}
+														resizeMode="contain"
+														className="w-4 h-4 mr-2"
+													/>
+												}
+												closeicon={
+													<Image
+														source={
+															colorScheme === "light"
+																? icons.closeDarkLight
+																: icons.closeLightDark
+														}
+														resizeMode="contain"
+														className="w-6 h-6 ml-2"
+													/>
+												}
+												arrowicon={
+													<Image
+														source={
+															colorScheme === "dark"
+																? icons.arrowDownLight
+																: icons.arrowDownDark
+														}
+														resizeMode="contain"
+														className="w-6 h-6"
+													/>
+												}
+											/>
+										)}
+									/>
+									{errors.name && (
+										<StyledText
+											fontStyle="default"
+											className="px-1 text-sm text-red-500">
+											{errors.name.message}
+										</StyledText>
+									)}
+								</View>
+
+								{/* Measurements */}
+								<View className="w-1/2">
+									<StyledText type="label" className="mb-2">
+										Measurements
+									</StyledText>
+									<Controller
+										control={control}
+										name="measurements"
+										render={({ field: { value, onChange } }) => (
+											<TextInput
+												value={value}
+												onChangeText={onChange}
+												className={`
+                        border border-light-border font-pregular dark:border-dark-border bg-white dark:bg-dark-light text-dark dark:text-main-50 rounded-lg px-6 py-2.5 text-sm
+                        `}
+												placeholderTextColor={placeholderColor}
+												placeholder="ex. 1/2 kg, 1ml, 1tbsp"
+											/>
+										)}
+									/>
+									{errors.measurements && (
+										<StyledText
+											fontStyle="default"
+											className="px-1 text-sm text-red-500">
+											{errors.measurements.message}
+										</StyledText>
+									)}
+								</View>
 							</View>
 
+							{/* Expiration Date */}
 							<View className="mt-4">
 								<StyledText type="label" className="mb-2">
 									Expiration Date
@@ -247,10 +339,9 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 									<StyledPressable
 										onPress={() => setAddExpirationDate(true)}
 										className="w-full border border-main">
-										<StyledText
-											className="text-main"
-											type="subheading"
-										>Add</StyledText>
+										<StyledText className="text-main" type="subheading">
+											Add
+										</StyledText>
 									</StyledPressable>
 								)}
 							</View>

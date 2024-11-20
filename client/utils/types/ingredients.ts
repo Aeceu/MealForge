@@ -1,6 +1,7 @@
 import z from "zod";
 
 export const IngredientSchema = z.object({
+	type: z.string().min(1, "Required"),
 	name: z.string().min(1, "Required"),
 	measurements: z.string().min(1, "Required"),
 	expirationDate: z.date().optional(),
