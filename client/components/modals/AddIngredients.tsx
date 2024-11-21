@@ -73,20 +73,23 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 					{/* header */}
 					<View className="flex-row items-center justify-between">
 						<StyledText type="heading-4">Add new {type === "main ingredient" ? "ingredient" : "seasoning"}</StyledText>
-						<StyledPressable onPress={handleClose} size="icon">
-							<Image
+						<StyledPressable onPress={handleClose} size="text">
+							{/* <Image
 								source={
 									colorScheme === "light"
 										? icons.closeDarkLight
 										: icons.closeLightDark
 								}
-								className="w-8 h-8"></Image>
+								className="w-8 h-8"></Image> */}
+							<StyledText type="xs" className="underline">
+								Close
+							</StyledText>
 						</StyledPressable>
 					</View>
 
 					{/* body */}
-					<View className="mt-4 space-y-10">
-						<View className="mt-2">
+					<View className="mt-4">
+						<View className="">
 							<View className="">
 								<StyledText type="label" className="mb-2">
 									Select {type === "main ingredient" ? "an ingredient" : "a seasoning"}
@@ -249,8 +252,8 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 										className="w-full border border-main">
 										<StyledText
 											className="text-main"
-											type="subheading"
-										>Add</StyledText>
+											type="paragraph"
+										>Add Date</StyledText>
 									</StyledPressable>
 								)}
 							</View>
@@ -258,7 +261,7 @@ const AddIngredients: React.FC<Props> = ({ type, isVisible, onClose }) => {
 						<View>
 							<StyledPressable
 								size="xl"
-								className={`mt-4 bg-main flex-row items-center`}
+								className={`mt-10 bg-main flex-row items-center`}
 								onPress={handleSubmit(onSubmit)}>
 								<StyledText
 									className="text-white dark:text-main-50"

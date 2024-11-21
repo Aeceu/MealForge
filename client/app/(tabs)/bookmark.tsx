@@ -25,8 +25,8 @@ const bookmark = () => {
 			}>
 			<View className="p-4 ">
 				{/* Header */}
-				<View className="flex-row items-center justify-between px-2 mt-8">
-					<View className="flex-1 flex-row items-center">
+				<View className="flex-row items-center justify-between px-2 mt-4">
+					<View className="flex-row items-center flex-1">
 						<Image
 							source={icons.bookmarkOrange}
 							resizeMode="contain"

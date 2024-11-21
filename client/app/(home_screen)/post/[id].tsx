@@ -2,10 +2,12 @@ import BookmarkButton from "@/components/BookmarkButton";
 import LikeButton from "@/components/LikeButton";
 import Loading from "@/components/Loading";
 import StyledText from "@/components/StyledText";
+import { icons } from "@/constants";
 import { getPostById } from "@/redux/actions/postAction";
 import { AppDispatch, RootState } from "@/redux/store";
 import { RecipePost } from "@/utils/types/post";
 import { router, useLocalSearchParams } from "expo-router";
+import { useColorScheme } from "nativewind";
 import { useEffect, useState } from "react";
 import { Alert, Image } from "react-native";
 import { ScrollView, View } from "react-native";
@@ -18,6 +20,7 @@ const RecipePostPage = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const { status } = useSelector((state: RootState) => state.post);
 	const { user } = useSelector((state: RootState) => state.user);
+	const { colorScheme } = useColorScheme();
 
 	useEffect(() => {
 		if (!user) {
@@ -57,7 +60,7 @@ const RecipePostPage = () => {
 						/>
 					</View>
 				)}
-				<View className="mx-2 mb-4">
+				<View className="mx-2">
 					<View className="flex-row justify-between flex-1 w-full">
 						<StyledText type="heading-4" className="flex-1 font-chunk">
 							{post?.recipe.name}
@@ -71,48 +74,118 @@ const RecipePostPage = () => {
 					{/* <StyledText type="heading-3" className="font-chunk">
 						Spaghetti Bolognese
 					</StyledText> */}
-					<StyledText type="label" className="mt-px text-main">
+					<StyledText type="label" className="text-main">
 						@{post?.author}
 					</StyledText>
+				</View>
 
-					{/* save */}
-
-					{/* like/dislike */}
+				{/* like/dislike */}
+				<View className="mb-4">
 					<LikeButton recipe={post} />
 				</View>
 
 				{/* Separator */}
-				<View className="flex-1 h-px mx-2 mb-4 rounded-full bg-light-border dark:bg-dark-border"></View>
+				<View className="flex-1 h-px mx-2 mb-6 rounded-full bg-light-border dark:bg-dark-border"></View>
 
 				{/* Infos */}
-				<View className="mb-4">
+				{/* <View className="mb-4">
 					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
 						Recipe Information:
 					</StyledText>
 					<View className="w-full px-4 py-4 space-y-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
-						<View className="px-2 flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
-							<StyledText type="paragraph">• Serve for: </StyledText>
+						<View className="flex-row items-center px-2">
+							<StyledText type="paragraph">Serve for: </StyledText>
 							<StyledText type="paragraph">
 								{post?.recipe.serve_for} people{" "}
 							</StyledText>
 						</View>
-						<View className="px-2 flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
-							<StyledText type="paragraph">• Serve in: </StyledText>
+						<View className="flex-row items-center px-2">
+							<StyledText type="paragraph">Serve in: </StyledText>
 							<StyledText type="paragraph">
 								{post?.recipe.serve_hot_or_cold}{" "}
 							</StyledText>
 						</View>
-						<View className="px-2 flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
-							<StyledText type="paragraph">• Cooking time: </StyledText>
+						<View className="flex-row items-center px-2">
+							<StyledText type="paragraph">Cooking time: </StyledText>
 							<StyledText type="paragraph">
 								{post?.recipe.cooking_time} minutes{" "}
 							</StyledText>
 						</View>
-						<View className="px-2 flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
-							<StyledText type="paragraph">• Cuisine type: </StyledText>
+						<View className="flex-row items-center px-2">
+							<StyledText type="paragraph">Cuisine type: </StyledText>
 							<StyledText type="paragraph">
 								{post?.recipe.type_of_cuisine}{" "}
 							</StyledText>
+						</View>
+					</View>
+				</View> */}
+
+				<View className="mb-4">
+					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
+						Recipe Information:
+					</StyledText>
+					<View className="flex-row flex-1 w-full px-4 py-4 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
+
+						<View className="flex-col justify-between flex-1 space-y-4">
+							<View className="flex-row w-full">
+								<Image
+									source={colorScheme === "light" ? icons.usersDark : icons.usersLight}
+									resizeMode="contain"
+									className="mt-1 w-7 h-7"
+								/>
+								<View className="flex-1 w-full ml-3">
+									<StyledText type="xs">Serve for: </StyledText>
+									<StyledText type="paragraph" className="">
+										{post?.recipe.serve_for}
+										{post?.recipe.serve_for === "1" ? " person" : " people"}
+									</StyledText>
+								</View>
+							</View>
+
+							<View className="flex-row w-full">
+								<Image
+									source={colorScheme === "light" ? icons.timeDark : icons.timeLight}
+									resizeMode="contain"
+									className="mt-1 w-7 h-7"
+								/>
+								<View className="flex-1 w-full ml-3">
+									<StyledText type="xs">Cooking time: </StyledText>
+									<StyledText type="paragraph" className="">
+										{post?.recipe.cooking_time}
+										{post?.recipe.cooking_time === "1" ? " minute" : " minutes"}
+									</StyledText>
+								</View>
+							</View>
+						</View>
+
+						<View className="flex-col justify-between flex-1 space-y-4">
+							<View className="flex-row w-full">
+								<Image
+									source={colorScheme === "light" ? icons.tempDark : icons.tempLight}
+									resizeMode="contain"
+									className="mt-1 w-7 h-7"
+								/>
+								<View className="flex-1 w-full ml-3">
+									<StyledText type="xs">Serve in: </StyledText>
+									<StyledText type="paragraph" className="">
+										{post?.recipe.serve_hot_or_cold}{" "}
+									</StyledText>
+								</View>
+							</View>
+
+							<View className="flex-row w-full">
+								<Image
+									source={colorScheme === "light" ? icons.cuisineTypeDark : icons.cuisineTypeLight}
+									resizeMode="contain"
+									className="mt-1 w-7 h-7"
+								/>
+								<View className="flex-1 w-full ml-3">
+									<StyledText type="xs">Cuisine type: </StyledText>
+									<StyledText type="paragraph" className="">
+										{post?.recipe.type_of_cuisine}
+									</StyledText>
+								</View>
+							</View>
 						</View>
 					</View>
 				</View>
@@ -136,12 +209,12 @@ const RecipePostPage = () => {
 					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
 						Instructions:
 					</StyledText>
-					<View className="w-full px-6 py-4 space-y-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
+					<View className="w-full px-6 py-4 space-y-6 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
 						{post?.recipe.instruction.split("Step ").map(
 							(item: string, i: number) =>
 								item && ( // Check to ignore any empty strings from the split
 									<StyledText key={i} type="paragraph">
-										• Step {item.trim()}
+										Step {item.trim()}
 									</StyledText>
 								)
 						)}
@@ -149,28 +222,19 @@ const RecipePostPage = () => {
 				</View>
 
 				{/* vvv optional vvv */}
-				{/* remove "mb-4" sa last */}
+				{/* remove "mb-4" sa last component*/}
 
 				{/* Separator */}
 				<View className="flex-1 h-px mx-2 mt-2 mb-4 rounded-full bg-light-border dark:bg-dark-border" />
 
-				{/* More Like This */}
+				{/* Comments */}
 				<View className="">
-					<StyledText type="subheading" className="px-2 mb-2">
-						More Like This
+					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
+						Comments
 					</StyledText>
 					<View className="w-full px-6 py-4 space-y-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
 						<StyledText type="paragraph" className="">
-							• 1/2 Chicken
-						</StyledText>
-						<StyledText type="paragraph" className="">
-							• 2 Bayleaf
-						</StyledText>
-						<StyledText type="paragraph" className="">
-							• Vinegar
-						</StyledText>
-						<StyledText type="paragraph" className="">
-							• Soy Sauce
+							Type comment...
 						</StyledText>
 					</View>
 				</View>

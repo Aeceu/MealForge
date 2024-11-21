@@ -65,57 +65,64 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 			<View className="z-10 flex-1">
 				<View className="absolute bottom-0 w-full  border bg-light h-[90%] rounded-t-3xl border-light-dark dark:border-dark-light dark:bg-dark">
 					<ScrollView>
-						<View className="flex-row items-center justify-between bg-main p-4 rounded-t-3xl">
-							<StyledText type="heading-4">Generated Recipe</StyledText>
-							<StyledPressable onPress={handleClose} size="icon">
-								<Image
-									source={
-										colorScheme === "light"
-											? icons.closeDarkLight
-											: icons.closeLightDark
-									}
-									className="w-8 h-8"
-								/>
+						<View className="flex-row items-center justify-between p-4 rounded-t-3xl">
+							<StyledText type="subheading">Generated Recipe</StyledText>
+							<StyledPressable onPress={handleClose} className="ml-auto " size="text">
+								{/* <Image
+								source={
+									colorScheme === "light"
+										? icons.closeDarkLight
+										: icons.closeLightDark
+								}
+								className="w-8 h-8"></Image> */}
+								<StyledText type="xs" className="underline">
+									Close
+								</StyledText>
 							</StyledPressable>
 						</View>
 
 						<View className="flex-col items-start justify-start">
 							{/* Header */}
-							<View className="w-full flex-col items-start justify-start p-4">
-								<StyledText type="heading-2" className="font-chunk">
+							<View className="flex-col items-start justify-start w-full px-4 py-2">
+								<StyledText
+									className="font-chunk"
+									type="subheading">
+									Recipe Name:
+								</StyledText>
+								<StyledText type="heading-3" className="px-3 font-chunk">
 									{recipe?.name}
 								</StyledText>
 							</View>
 
 							{/* Infos */}
-							<View className="w-full flex-col p-4">
+							<View className="flex-col w-full p-4">
 								<StyledText
-									className="tracking-wider text-main font-chunk"
-									type="heading-4">
-									Infos:
+									className="font-chunk"
+									type="subheading">
+									Recipe Information:
 								</StyledText>
 								<View className="flex-col items-start justify-center w-full ">
-									<View className="flex-row items-center px-3 bg-light-dark dark:bg-dark-light py-1.5 my-1 rounded-full w-max ">
-										<StyledText type="label">Serve for: </StyledText>
-										<StyledText type="label">
+									<View className="flex-row items-center px-3 py-1.5 my-1 rounded-full w-max ">
+										<StyledText type="paragraph">Serve for: </StyledText>
+										<StyledText type="paragraph">
 											{recipe?.serve_for} people{" "}
 										</StyledText>
 									</View>
-									<View className="flex-row items-center px-3 bg-light-dark dark:bg-dark-light py-1.5 my-1 rounded-full w-max ">
-										<StyledText type="label">Serve in: </StyledText>
-										<StyledText type="label">
+									<View className="flex-row items-center px-3 py-1.5 my-1 rounded-full w-max ">
+										<StyledText type="paragraph">Serve in: </StyledText>
+										<StyledText type="paragraph">
 											{recipe?.serve_hot_or_cold}{" "}
 										</StyledText>
 									</View>
-									<View className="flex-row items-center px-3 bg-light-dark dark:bg-dark-light py-1.5 my-1 rounded-full w-max ">
-										<StyledText type="label">Cooking time: </StyledText>
-										<StyledText type="label">
+									<View className="flex-row items-center px-3 py-1.5 my-1 rounded-full w-max ">
+										<StyledText type="paragraph">Cooking time: </StyledText>
+										<StyledText type="paragraph">
 											{recipe?.cooking_time} minutes{" "}
 										</StyledText>
 									</View>
-									<View className="flex-row items-center px-3 bg-light-dark dark:bg-dark-light py-1.5 my-1 rounded-full w-max ">
-										<StyledText type="label">Cuisine type: </StyledText>
-										<StyledText type="label">
+									<View className="flex-row items-center px-3 py-1.5 my-1 rounded-full w-max ">
+										<StyledText type="paragraph">Cuisine type: </StyledText>
+										<StyledText type="paragraph">
 											{recipe?.type_of_cuisine}{" "}
 										</StyledText>
 									</View>
@@ -123,17 +130,17 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 							</View>
 
 							{/* Ingredients */}
-							<View className="w-full flex-col  p-4">
+							<View className="flex-col w-full p-4">
 								<StyledText
-									className="tracking-wider text-main font-chunk"
-									type="heading-4">
+									className="font-chunk"
+									type="subheading">
 									Ingredients:
 								</StyledText>
-								<View className="px-2 flex-col w-full">
+								<View className="flex-col w-full px-3">
 									{recipe?.ingredients.map((item, i) => (
 										<StyledText
 											key={i}
-											type="label"
+											type="paragraph"
 											className="py-2 tracking-wide">
 											• {item.name}
 										</StyledText>
@@ -142,36 +149,36 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 							</View>
 
 							{/* Instructions */}
-							<View className="w-full flex-col  p-4">
+							<View className="flex-col w-full p-4">
 								<StyledText
-									className="tracking-wider text-main font-chunk"
-									type="heading-4">
+									className="font-chunk"
+									type="subheading">
 									Instructions:
 								</StyledText>
-								<View className="px-2 flex-col w-full">
+								<View className="flex-col w-full px-3">
 									{recipe?.instructions.map((item, i) => (
 										<StyledText
 											key={i}
-											type="label"
-											className="py-2 tracking-wide">
-											• {item}
+											type="paragraph"
+											className="py-4 tracking-wide">
+											{item}
 										</StyledText>
 									))}
 								</View>
 							</View>
 
-							<View className="w-full flex-row items-center justify-end p-4">
+							<View className="flex-row items-center justify-end w-full p-4">
 								<StyledPressable
 									onPress={handleSave}
-									className="bg-main mx-1 rounded-md"
+									className="mx-1 rounded-md bg-main"
 									size="sm">
-									<StyledText>Save</StyledText>
+									<StyledText className="text-white">Save</StyledText>
 								</StyledPressable>
 								<StyledPressable
 									onPress={handleDelete}
-									className="bg-red-500 mx-1 rounded-md"
+									className="mx-1 bg-red-500 rounded-md"
 									size="sm">
-									<StyledText>Delete</StyledText>
+									<StyledText className="text-white">Delete</StyledText>
 								</StyledPressable>
 							</View>
 						</View>

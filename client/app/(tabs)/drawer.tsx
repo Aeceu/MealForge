@@ -70,21 +70,15 @@ const drawer = () => {
 					<Header />
 
 					{/* Tabs */}
-					<View className="flex-row px-6 space-x-4">
+					<View className="flex-row px-8 space-x-4">
 						<StyledPressable
 							onPress={() => setSelectedTab("main ingredient")}
-							className={`rounded-none opacity-60 ${
-								selectedTab === "main ingredient" &&
-								"border-b-2 border-main dark:border-main-50 opacity-100"
-							}`}>
+							className={`rounded-none ${selectedTab === "main ingredient" ? "border-b  border-main opacity-100" : "opacity-60"}`}>
 							<StyledText>My Ingredients</StyledText>
 						</StyledPressable>
 						<StyledPressable
 							onPress={() => setSelectedTab("seasoning")}
-							className={`rounded-none opacity-60 ${
-								selectedTab === "seasoning" &&
-								"border-b-2 border-main dark:border-main-50 opacity-100"
-							}`}>
+							className={`rounded-none ${selectedTab === "seasoning" ? "border-b  border-main opacity-100" : "opacity-60"}`}>
 							<StyledText>My Seasonings</StyledText>
 						</StyledPressable>
 					</View>

@@ -58,6 +58,9 @@ Before you begin, ensure you have the following installed:
 5. Install Dependencies
    ```bash
    pip install -r requirements.txt
+   pip install joblib
+   pip install pandas
+   pip install scikit-learn
    ```
 
 ### Environment Variables
@@ -69,5 +72,7 @@ Create a `.env` file in the root directory of the project. Use the `.env.example
 To run the Flask development server, use the following command:
 
 ```bash
+py src/app.py
 python app.py
 ```
+mysql -h 127.0.0.1 -P 3306 -u root -p

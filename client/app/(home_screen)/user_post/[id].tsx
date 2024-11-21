@@ -4,10 +4,12 @@ import LikeButton from "@/components/LikeButton";
 import Loading from "@/components/Loading";
 import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
+import { icons } from "@/constants";
 import { deletePost, getPostById } from "@/redux/actions/postAction";
 import { AppDispatch, RootState } from "@/redux/store";
 import { RecipePost } from "@/utils/types/post";
 import { router, useLocalSearchParams } from "expo-router";
+import { useColorScheme } from "nativewind";
 import { useEffect, useState } from "react";
 import { Alert, Image } from "react-native";
 import { ScrollView, View } from "react-native";
@@ -17,6 +19,7 @@ const UserRecipePost = () => {
 	const { id } = useLocalSearchParams();
 
 	const [post, setPost] = useState<RecipePost | null>(null);
+	const { colorScheme } = useColorScheme();
 
 	const dispatch = useDispatch<AppDispatch>();
 	const { status, deleteLoading } = useSelector(
@@ -71,7 +74,7 @@ const UserRecipePost = () => {
 						/>
 					</View>
 				)}
-				<View className="mx-2 mb-4">
+				<View className="mx-2">
 					<View className="flex-row justify-between flex-1 w-full">
 						<StyledText type="heading-4" className="flex-1 font-chunk">
 							{post?.recipe.name}
@@ -88,45 +91,115 @@ const UserRecipePost = () => {
 					<StyledText type="label" className="mt-px text-main">
 						@{post?.author}
 					</StyledText>
+				</View>
 
-					{/* save */}
-
-					{/* like/dislike */}
+				{/* like/dislike */}
+				<View className="mb-4">
 					{post && <LikeButton recipe={post} />}
 				</View>
 
 				{/* Separator */}
-				<View className="flex-1 h-px mx-2 mb-4 rounded-full bg-light-border dark:bg-dark-border" />
+				<View className="flex-1 h-px mx-2 mb-6 rounded-full bg-light-border dark:bg-dark-border" />
 
 				{/* Infos */}
-				<View className="mb-4">
+				{/* <View className="mb-4">
 					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
 						Recipe Information:
 					</StyledText>
 					<View className="w-full px-6 py-4 space-y-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
-						<View className="flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
+						<View className="flex-row items-center rounded-full bg-light-dark dark:bg-dark-light w-max ">
 							<StyledText type="paragraph">• Serve for: </StyledText>
 							<StyledText type="paragraph">
 								{post?.recipe.serve_for} people{" "}
 							</StyledText>
 						</View>
-						<View className="flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
+						<View className="flex-row items-center rounded-full bg-light-dark dark:bg-dark-light w-max ">
 							<StyledText type="paragraph">• Serve in: </StyledText>
 							<StyledText type="paragraph">
 								{post?.recipe.serve_hot_or_cold}{" "}
 							</StyledText>
 						</View>
-						<View className="flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
+						<View className="flex-row items-center rounded-full bg-light-dark dark:bg-dark-light w-max ">
 							<StyledText type="paragraph">• Cooking time: </StyledText>
 							<StyledText type="paragraph">
 								{post?.recipe.cooking_time} minutes{" "}
 							</StyledText>
 						</View>
-						<View className="flex-row items-center bg-light-dark dark:bg-dark-light rounded-full w-max ">
+						<View className="flex-row items-center rounded-full bg-light-dark dark:bg-dark-light w-max ">
 							<StyledText type="paragraph">• Cuisine type: </StyledText>
 							<StyledText type="paragraph">
 								{post?.recipe.type_of_cuisine}{" "}
 							</StyledText>
+						</View>
+					</View>
+				</View> */}
+
+				<View className="mb-4">
+					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
+						Recipe Information:
+					</StyledText>
+					<View className="flex-row flex-1 w-full px-4 py-4 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
+
+						<View className="flex-col justify-between flex-1 space-y-4">
+							<View className="flex-row w-full">
+								<Image
+									source={colorScheme === "light" ? icons.usersDark : icons.usersLight}
+									resizeMode="contain"
+									className="mt-1 w-7 h-7"
+								/>
+								<View className="flex-1 w-full ml-3">
+									<StyledText type="xs">Serve for: </StyledText>
+									<StyledText type="paragraph" className="">
+										{post?.recipe.serve_for}
+										{post?.recipe.serve_for === "1" ? " person" : " people"}
+									</StyledText>
+								</View>
+							</View>
+
+							<View className="flex-row w-full">
+								<Image
+									source={colorScheme === "light" ? icons.timeDark : icons.timeLight}
+									resizeMode="contain"
+									className="mt-1 w-7 h-7"
+								/>
+								<View className="flex-1 w-full ml-3">
+									<StyledText type="xs">Cooking time: </StyledText>
+									<StyledText type="paragraph" className="">
+										{post?.recipe.cooking_time}
+										{post?.recipe.cooking_time === "1" ? " minute" : " minutes"}
+									</StyledText>
+								</View>
+							</View>
+						</View>
+
+						<View className="flex-col justify-between flex-1 space-y-4">
+							<View className="flex-row w-full">
+								<Image
+									source={colorScheme === "light" ? icons.tempDark : icons.tempLight}
+									resizeMode="contain"
+									className="mt-1 w-7 h-7"
+								/>
+								<View className="flex-1 w-full ml-3">
+									<StyledText type="xs">Serve in: </StyledText>
+									<StyledText type="paragraph" className="">
+										{post?.recipe.serve_hot_or_cold}{" "}
+									</StyledText>
+								</View>
+							</View>
+
+							<View className="flex-row w-full">
+								<Image
+									source={colorScheme === "light" ? icons.cuisineTypeDark : icons.cuisineTypeLight}
+									resizeMode="contain"
+									className="mt-1 w-7 h-7"
+								/>
+								<View className="flex-1 w-full ml-3">
+									<StyledText type="xs">Cuisine type: </StyledText>
+									<StyledText type="paragraph" className="">
+										{post?.recipe.type_of_cuisine}
+									</StyledText>
+								</View>
+							</View>
 						</View>
 					</View>
 				</View>
@@ -150,12 +223,12 @@ const UserRecipePost = () => {
 					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
 						Instructions:
 					</StyledText>
-					<View className="w-full px-6 py-4 space-y-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
+					<View className="w-full px-6 py-4 space-y-6 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
 						{post?.recipe.instruction.split("Step ").map(
 							(item: string, i: number) =>
 								item && ( // Check to ignore any empty strings from the split
 									<StyledText key={i} type="paragraph">
-										• Step {item.trim()}
+										Step {item.trim()}
 									</StyledText>
 								)
 						)}
@@ -168,39 +241,29 @@ const UserRecipePost = () => {
 				{/* Separator */}
 				<View className="flex-1 h-px mx-2 mt-2 mb-4 rounded-full bg-light-border dark:bg-dark-border" />
 
-				{/* More Like This */}
+				{/* Comments */}
 				<View className="">
-					<StyledText type="subheading" className="px-2 mb-2">
-						More Like This
+					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
+						Comments
 					</StyledText>
 					<View className="w-full px-6 py-4 space-y-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
 						<StyledText type="paragraph" className="">
-							• 1/2 Chicken
-						</StyledText>
-						<StyledText type="paragraph" className="">
-							• 2 Bayleaf
-						</StyledText>
-						<StyledText type="paragraph" className="">
-							• Vinegar
-						</StyledText>
-						<StyledText type="paragraph" className="">
-							• Soy Sauce
+							Type comment...
 						</StyledText>
 					</View>
 				</View>
 
-				<View className="flex-row items-center justify-end py-4">
-					<StyledPressable
-						disabled={deleteLoading}
-						className="bg-red-500 flex-row items-center"
-						onPress={handleDelete}>
-						{deleteLoading ? (
-							<Spin size="sm" loading={deleteLoading} />
-						) : (
-							<StyledText className="text-white">Delete Post</StyledText>
-						)}
-					</StyledPressable>
-				</View>
+				<StyledPressable
+					disabled={deleteLoading}
+					size="xl"
+					className="w-full mt-6 bg-red-500"
+					onPress={handleDelete}>
+					{deleteLoading ? (
+						<Spin size="sm" loading={deleteLoading} />
+					) : (
+						<StyledText className="text-white">Delete Post</StyledText>
+					)}
+				</StyledPressable>
 			</View>
 		</ScrollView>
 	);

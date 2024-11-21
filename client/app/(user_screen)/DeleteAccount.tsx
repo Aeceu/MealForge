@@ -64,7 +64,7 @@ const DeleteAccount = () => {
 					disabled={status === "pending"}
 					onPress={handleDelete}
 					size="xl"
-					className="w-full p-4 mb-4 bg-red-600 rounded-lg">
+					className="w-full p-4 mb-4 bg-red-600">
 					<StyledText
 						type="subheading"
 						className="text-center text-white font-psemibold">

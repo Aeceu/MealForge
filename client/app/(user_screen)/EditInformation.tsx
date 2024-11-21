@@ -150,13 +150,13 @@ const EditInformation = () => {
 					className="w-[100px] h-[100px] rounded-xl"
 				/>
 
-				<View className="flex-1 w-full space-y-8">
+				<View className="flex-1 w-full space-y-6">
 					<View className="flex-row items-center justify-center w-full mt-2">
 						<StyledPressable
 							onPress={handleProfilePicUpload}
-							className="border rounded border-main">
+							className="border border-main">
 							<StyledText type="label" className="text-main">
-								Change Profile
+								Change Picture
 							</StyledText>
 						</StyledPressable>
 					</View>
@@ -229,8 +229,9 @@ const EditInformation = () => {
 					<View className="w-full pt-6">
 						<StyledPressable
 							disabled={status === "pending"}
+							size="xl"
 							onPress={handleSubmit(onSubmit)}
-							className="w-full py-4 rounded-md bg-main">
+							className="w-full bg-main">
 							<StyledText
 								type="subheading"
 								className="text-white dark:text-main-50">

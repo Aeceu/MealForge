@@ -55,6 +55,14 @@ import arrowDownLight from "@/assets/icons/arrow-down-light.png";
 import bookmarkOrange from "@/assets/icons/bookmark-orange.png";
 import likeOrange from "@/assets/icons/like-orange.png";
 import unlikeOrange from "@/assets/icons/unliked-orange.png";
+import usersDark from "@/assets/icons/users-dark.png";
+import usersLight from "@/assets/icons/users-light.png";
+import timeDark from "@/assets/icons/time-dark.png";
+import timeLight from "@/assets/icons/time-light.png";
+import tempDark from "@/assets/icons/temp-dark.png";
+import tempLight from "@/assets/icons/temp-light.png";
+import cuisineTypeDark from "@/assets/icons/cuisineType-dark.png";
+import cuisineTypeLight from "@/assets/icons/cuisineType-light.png";
 
 export default {
 	logo_dark,
@@ -114,4 +122,12 @@ export default {
 	bookmarkOrange,
 	likeOrange,
 	unlikeOrange,
+	usersDark,
+	usersLight,
+	timeDark,
+	timeLight,
+	tempDark,
+	tempLight,
+	cuisineTypeDark,
+	cuisineTypeLight,
 };

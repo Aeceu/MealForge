@@ -10,25 +10,25 @@ const Recipes = () => {
 
 	if (status === "pending")
 		return (
-			<View className="p-4 flex items-center">
+			<View className="flex items-center p-4">
 				<Spin loading={status === "pending"} size="md" />
 			</View>
 		);
 	return (
-		<View className="w-full h-full p-2 flex-col">
+		<View className="flex-col w-full h-full p-2">
 			{!recipe || recipe.length <= 0 ? (
-				<StyledText>No Recipe is added!</StyledText>
+				<StyledText>No recipe added yet!</StyledText>
 			) : (
 				recipe.map((item, i) => (
 					<View
 						key={i}
-						className="w-full bg-white dark:bg-dark-light rounded-lg p-4   border border-light-border dark:border-dark-border my-1">
+						className="w-full p-4 my-2 bg-white border rounded-lg dark:bg-dark-light border-light-border dark:border-dark-border">
 						<StyledPressable
 							size="link"
 							onPress={() =>
 								router.push(`/(home_screen)/user_recipe/${item.id}`)
 							}>
-							<StyledText className="font-chunk text-lg">
+							<StyledText type="heading-4" className="font-chunk">
 								{item.name}
 							</StyledText>
 						</StyledPressable>
@@ -36,11 +36,11 @@ const Recipes = () => {
 							horizontal
 							showsHorizontalScrollIndicator={false}
 							className="w-full">
-							<View className="mt-2 flex-row items-start justify-center w-full">
+							<View className="flex-row items-start justify-center w-full mt-2 space-x-1.5">
 								{item.ingredients.split(",").map((item, i) => (
 									<StyledText
 										key={i}
-										className="px-3 bg-light-dark dark:bg-dark py-1 text-xs mr-0.5 rounded-full w-max ">
+										className="px-3 py-1 text-sm border rounded-full bg-light border-light-border dark:border-dark-border dark:bg-dark">
 										{item}
 									</StyledText>
 								))}

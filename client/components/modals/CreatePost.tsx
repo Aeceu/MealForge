@@ -91,15 +91,17 @@ const CreatePost: React.FC<Props> = ({ isVisible, onClose }) => {
 				{/* header */}
 				<View className="flex-row items-center justify-between">
 					<StyledText type="heading-4">Create post</StyledText>
-					<StyledPressable onPress={handleClose} size="icon">
-						<Image
-							source={
-								colorScheme === "light"
-									? icons.closeDarkLight
-									: icons.closeLightDark
-							}
-							className="w-8 h-8"
-						/>
+					<StyledPressable onPress={handleClose} size="text">
+						{/* <Image
+								source={
+									colorScheme === "light"
+										? icons.closeDarkLight
+										: icons.closeLightDark
+								}
+								className="w-8 h-8"></Image> */}
+						<StyledText type="xs" className="underline">
+							Close
+						</StyledText>
 					</StyledPressable>
 				</View>
 
@@ -108,15 +110,15 @@ const CreatePost: React.FC<Props> = ({ isVisible, onClose }) => {
 						<Image
 							source={{ uri: selectedPhoto }}
 							style={{ width: 100, height: 100, borderRadius: 10 }}
-							className="self-center mb-4"
+							className="self-center"
 						/>
 					)}
 
-					<View>
+					<View className="my-4">
 						<StyledPressable
 							onPress={handlePhotoUpload}
-							className="bg-main py-2 px-4 rounded-lg">
-							<StyledText>Add Photo</StyledText>
+							className="mx-auto border border-main">
+							<StyledText className="text-main">Add Photo</StyledText>
 						</StyledPressable>
 					</View>
 
@@ -191,15 +193,23 @@ const CreatePost: React.FC<Props> = ({ isVisible, onClose }) => {
 							</StyledText>
 						)}
 					</View>
-					<View className="mt-4 flex-row items-center justify-end">
+					<View className="flex-row items-center justify-end mt-4">
 						<StyledPressable
 							disabled={status === "pending"}
-							className="bg-main flex items-center"
+							size="xl"
+							className="items-center mt-6 bg-main"
 							onPress={handleCreatePost}>
-							{status === "pending" && (
+							{status === "pending" ?
 								<Spin size="sm" loading={status === "pending"} />
-							)}
-							<StyledText className="text-white">Post</StyledText>
+								:
+								<StyledText
+									className="text-white dark:text-main-50"
+									selectable={false}
+									type="subheading">
+									Post
+								</StyledText>
+							}
+
 						</StyledPressable>
 					</View>
 				</View>

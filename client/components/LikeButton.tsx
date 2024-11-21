@@ -83,74 +83,74 @@ const LikeButton: React.FC<Props> = ({ recipe }) => {
 	};
 
 	return (
-		<Link href={`/(home_screen)/post/${recipe.id}`} asChild>
-			<TouchableOpacity>
-				<View className="flex-row items-center justify-between w-full px-2 pt-4 pb-0 ">
-					<StyledPressable size="text" className="flex-row items-center">
-						<StyledText className="flex font-psemibold">
-							{totalLikes}
-						</StyledText>
-						<StyledText className="flex ml-1" type="xs" fontStyle="light">
-							{totalLikes <= 1 ? "Like" : "Likes"}
-						</StyledText>
+		// <Link href={`/(home_screen)/post/${recipe.id}`} asChild>
+		// 	<TouchableOpacity>
+		<View className="flex-row items-center justify-between w-full px-2 pt-4 pb-0 ">
+			<View className="flex-row items-center">
+				<StyledText className="flex font-psemibold">
+					{totalLikes}
+				</StyledText>
+				<StyledText className="flex ml-1" type="xs" fontStyle="light">
+					{totalLikes <= 1 ? "Like" : "Likes"}
+				</StyledText>
 
-						<StyledText className="mx-2 text-2xl ">•</StyledText>
+				<StyledText className="mx-2 text-2xl ">•</StyledText>
 
-						<StyledText className="font-psemibold">{totalDislikes}</StyledText>
-						<StyledText className="ml-1" type="xs" fontStyle="light">
-							{totalDislikes <= 1 ? "Dislike" : "Dislikes"}
-						</StyledText>
-					</StyledPressable>
+				<StyledText className="font-psemibold">{totalDislikes}</StyledText>
+				<StyledText className="ml-1" type="xs" fontStyle="light">
+					{totalDislikes <= 1 ? "Dislike" : "Dislikes"}
+				</StyledText>
+			</View>
 
-					<View className="flex-row items-center space-x-2">
-						<StyledPressable
-							disabled={loading}
-							onPress={onLikeButton}
-							size="icon">
-							{loading ? (
-								<Spin size="sm" loading={loading} />
-							) : (
-								<Image
-									source={
-										colorScheme === "dark"
-											? isLiked
-												? icons.likeOrange
-												: icons.likesLightDark
-											: isLiked
-											? icons.likeOrange
-											: icons.likesDarkLight
-									}
-									resizeMode="contain"
-									className="w-6 h-6"
-								/>
-							)}
-						</StyledPressable>
-						<StyledPressable
-							disabled={dislikeLoading}
-							onPress={onDislikeButton}
-							size="icon">
-							{dislikeLoading ? (
-								<Spin size="sm" loading={dislikeLoading} />
-							) : (
-								<Image
-									source={
-										colorScheme === "dark"
-											? isDisliked
-												? icons.unlikeOrange
-												: icons.unlikesLightDark
-											: isDisliked
-											? icons.unlikeOrange
-											: icons.unlikesDarkLight
-									}
-									resizeMode="contain"
-									className="w-6 h-6"
-								/>
-							)}
-						</StyledPressable>
-					</View>
-				</View>
-			</TouchableOpacity>
-		</Link>
+			<View className="flex-row items-center space-x-2">
+				<StyledPressable
+					disabled={loading}
+					onPress={onLikeButton}
+					size="icon">
+					{loading ? (
+						<Spin size="sm" loading={loading} />
+					) : (
+						<Image
+							source={
+								colorScheme === "dark"
+									? isLiked
+										? icons.likeOrange
+										: icons.likesLightDark
+									: isLiked
+										? icons.likeOrange
+										: icons.likesDarkLight
+							}
+							resizeMode="contain"
+							className="w-6 h-6"
+						/>
+					)}
+				</StyledPressable>
+				<StyledPressable
+					disabled={dislikeLoading}
+					onPress={onDislikeButton}
+					size="icon">
+					{dislikeLoading ? (
+						<Spin size="sm" loading={dislikeLoading} />
+					) : (
+						<Image
+							source={
+								colorScheme === "dark"
+									? isDisliked
+										? icons.unlikeOrange
+										: icons.unlikesLightDark
+									: isDisliked
+										? icons.unlikeOrange
+										: icons.unlikesDarkLight
+							}
+							resizeMode="contain"
+							className="w-6 h-6"
+						/>
+					)}
+				</StyledPressable>
+			</View>
+		</View>
+		// 	</TouchableOpacity>
+		// </Link>
 	);
 };
 export default LikeButton;

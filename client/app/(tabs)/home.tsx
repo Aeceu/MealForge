@@ -96,50 +96,49 @@ const Home = () => {
 						</StyledPressable>
 					</View>
 
+					{/* <StyledText type="xs" className="mx-2 mt-4">
+						Filter by:
+					</StyledText> */}
+
 					{/* Separator */}
-					<View className="flex-1 h-px mx-2 mt-3 rounded-full bg-light-border dark:bg-dark-border" />
+					<View className="flex-1 h-px mx-2 mt-4 rounded-full bg-light-border dark:bg-dark-border" />
 
 					{/* filter */}
-					<View className="flex-row items-center flex-1 pl-4 my-1">
-						<StyledText type="xs" className="">
-							Filter by:
-						</StyledText>
-						<View className="flex-row flex-1 justify-evenly">
+					<View className="flex-row items-center flex-1 my-1">
+						<View className="flex-row w-full justify-evenly">
 							<StyledPressable
 								onPress={() => handleFilter("Popular")}
-								className={`mx-2 px-2 py-1.5 rounded-md flex-row items-center justify-between ${
-									filter === "Popular" && "bg-main "
-								}`}
+								className={`px-2 py-1.5 relative rounded-md flex-row items-center w-1/2 justify-between ${filter === "Popular" && "bg-main "
+									}`}
 								size="icon">
 								<StyledText
-									type="xs"
-									className={`mr-1 ${filter === "Popular" && "text-white"}`}>
+									type="label"
+									className={`text-center w-full ${filter === "Popular" && "text-white"}`}>
 									Popular
 								</StyledText>
 								{filter === "Popular" && (
 									<Image
 										source={icons.closeWhite}
 										resizeMode="contain"
-										className="w-3 h-3"
+										className="absolute right-0 w-3 h-3 mr-2"
 									/>
 								)}
 							</StyledPressable>
 							<StyledPressable
 								onPress={() => handleFilter("Latest")}
-								className={`mx-2 px-2 py-1.5 rounded-md flex-row items-center justify-between ${
-									filter === "Latest" && "bg-main "
-								}`}
+								className={`px-2 py-1.5 relative rounded-md flex-row items-center w-1/2 justify-between ${filter === "Latest" && "bg-main "
+									}`}
 								size="icon">
 								<StyledText
-									type="xs"
-									className={`mr-1 ${filter === "Latest" && "text-white"}`}>
+									type="label"
+									className={`text-center w-full ${filter === "Latest" && "text-white"}`}>
 									Latest
 								</StyledText>
 								{filter === "Latest" && (
 									<Image
 										source={icons.closeWhite}
 										resizeMode="contain"
-										className="w-3 h-3"
+										className="absolute right-0 w-3 h-3 mr-2"
 									/>
 								)}
 							</StyledPressable>
@@ -147,7 +146,8 @@ const Home = () => {
 					</View>
 
 					{/* Separator */}
-					<View className="flex-1 h-px mx-2 mb-3 rounded-full bg-light-border dark:bg-dark-border" />
+					<View className="flex-1 h-px mx-2 rounded-full bg-light-border dark:bg-dark-border" />
+
 					<PostFeed />
 				</View>
 			</ScrollView>

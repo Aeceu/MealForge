@@ -75,7 +75,7 @@ const UserHeader = () => {
 	const { colorScheme } = useColorScheme();
 	const { user } = useSelector((state: RootState) => state.user);
 	return (
-		<View className="flex-row items-start mt-6 mb-4 p-2">
+		<View className="flex-row items-start p-2 mt-6 mb-4">
 			<View className="my-auto border rounded-xl border-light-border dark:border-dark-border">
 				<Image
 					source={
@@ -147,33 +147,33 @@ const UserInfo = () => {
 	}, []);
 
 	return (
-		<View className="flex-row items-center p-4 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
-			<StyledPressable className="flex-col items-center flex-grow basis-1/3">
+		<View className="flex-row items-center p-4 mx-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
+			<View className="flex-col items-center flex-grow basis-1/3">
 				<StyledText type="paragraph" className="font-chunk">
 					{ingredients && ingredients.length}
 				</StyledText>
 				<StyledText type="label" fontStyle="light">
 					Ingredients
 				</StyledText>
-			</StyledPressable>
+			</View>
 
-			<StyledPressable className="flex-col items-center flex-grow basis-1/3">
+			<View className="flex-col items-center flex-grow basis-1/3">
 				<StyledText type="paragraph" className="font-chunk">
 					{recipe && recipe.length}
 				</StyledText>
 				<StyledText type="label" fontStyle="light">
 					Recipes
 				</StyledText>
-			</StyledPressable>
+			</View>
 
-			<StyledPressable className="flex-col items-center flex-grow basis-1/3">
+			<View className="flex-col items-center flex-grow basis-1/3">
 				<StyledText type="paragraph" className="font-chunk">
 					{totalLikes}
 				</StyledText>
 				<StyledText type="label" fontStyle="light">
 					Likes
 				</StyledText>
-			</StyledPressable>
+			</View>
 		</View>
 	);
 };
@@ -185,20 +185,16 @@ type UserTabsProps = {
 
 const UserTabs: React.FC<UserTabsProps> = ({ selectedTab, setSelectedTab }) => {
 	return (
-		<View className="flex-row mt-2">
+		<View className="flex-row px-4 mt-2">
 			<StyledPressable
 				onPress={() => setSelectedTab("recipes")}
-				className={`basis-1/2 ${
-					selectedTab === "recipes" && "border-b  border-b-main"
-				}`}>
-				<StyledText>My Recipes</StyledText>
+				className={`basis-1/2 rounded-none ${selectedTab === "recipes" ? "border-b  border-main opacity-100" : "opacity-60"}`}>
+				<StyledText className="">My Recipes</StyledText>
 			</StyledPressable>
 			<StyledPressable
 				onPress={() => setSelectedTab("posts")}
-				className={`basis-1/2 ${
-					selectedTab === "posts" && "border-b  border-b-main"
-				}`}>
-				<StyledText>My Posts</StyledText>
+				className={`basis-1/2 rounded-none ${selectedTab === "posts" ? "border-b  border-main opacity-100" : "opacity-60"}`}>
+				<StyledText className="">My Posts</StyledText>
 			</StyledPressable>
 		</View>
 	);

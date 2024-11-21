@@ -110,7 +110,7 @@ const Login = () => {
 						</View>
 						<StyledText
 							type="heading-1"
-							fontStyle="ChunkP"
+							fontStyle="Chunk"
 							className="pt-3 text-center">
 							Welcome Back
 						</StyledText>
@@ -184,9 +184,8 @@ const Login = () => {
 
 						<StyledPressable
 							size="xl"
-							className={`mt-4 bg-main flex-row items-center ${
-								auth.status === "pending" && "bg-main/20"
-							}`}
+							className={`mt-4 bg-main flex-row items-center ${auth.status === "pending" && "bg-main/20"
+								}`}
 							disabled={auth.status === "pending"}
 							onPress={handleSubmit(onSubmit)}>
 							{auth.status === "pending" && (

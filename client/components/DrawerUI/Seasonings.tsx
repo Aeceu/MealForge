@@ -46,7 +46,7 @@ const Seasonings = () => {
 						item.type === "seasoning" && (
 							<View
 								key={i}
-								className="flex-row items-center justify-between w-full p-4 my-1 bg-white border border-light-border dark:bg-dark-light dark:border-dark-border rounded-xl">
+								className="flex-row items-center justify-between w-full p-4 mb-4 bg-white border border-light-border dark:bg-dark-light dark:border-dark-border rounded-xl">
 								<View className="flex-col items-start justify-center">
 									<StyledText type="label" className="mb-2 text-xs">
 										{item.type === "seasoning" ? "Seasoning" : item.type}

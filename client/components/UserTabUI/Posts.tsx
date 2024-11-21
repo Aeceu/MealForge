@@ -15,11 +15,11 @@ const Posts = () => {
 	const { user } = useSelector((state: RootState) => state.user);
 
 	if (!user) {
-		return <StyledText>No user is found!</StyledText>;
+		return <StyledText>User is not found!</StyledText>;
 	}
 
 	return (
-		<View className="w-full h-full p-2 flex-col">
+		<View className="flex-col w-full h-full p-2">
 			{post.length > 0 ? (
 				post.map(
 					(item, i) =>
@@ -27,9 +27,9 @@ const Posts = () => {
 							// Fix this
 							<View
 								key={i}
-								className="w-full bg-light  dark:bg-dark-light rounded-lg p-4 border border-light-border dark:border-dark-border my-1 overflow-hidden">
+								className="w-full p-4 my-2 overflow-hidden border rounded-lg bg-light dark:bg-dark-light border-light-border dark:border-dark-border">
 								{item.recipe_post_image && (
-									<View className="w-full h-full absolute top-0 left-0">
+									<View className="absolute top-0 left-0 w-full h-full">
 										<Image
 											source={{ uri: item.recipe_post_image }}
 											resizeMode="cover"
@@ -40,7 +40,7 @@ const Posts = () => {
 											start={{ x: 1, y: 0 }}
 											end={{ x: 0, y: 0 }}
 											colors={NewGradientColor}
-											className="absolute top-0 left-0 w-full  aspect-square"
+											className="absolute top-0 left-0 w-full aspect-square"
 										/>
 									</View>
 								)}
@@ -50,7 +50,7 @@ const Posts = () => {
 									onPress={() =>
 										router.push(`/(home_screen)/user_post/${item.id}`)
 									}>
-									<StyledText className="font-chunk text-lg">
+									<StyledText type="heading-4" className="font-chunk">
 										{item.recipe.name}
 									</StyledText>
 								</StyledPressable>
@@ -59,11 +59,11 @@ const Posts = () => {
 									horizontal
 									showsHorizontalScrollIndicator={false}
 									className="w-full">
-									<View className="mt-2 flex-row items-start justify-center w-full">
+									<View className="flex-row items-start justify-center w-full mt-2 space-x-1.5">
 										{item.recipe.ingredients.split(",").map((ingredient, i) => (
 											<StyledText
 												key={i}
-												className="px-3 bg-light-dark dark:bg-dark py-1 text-xs mr-0.5 rounded-full w-max">
+												className="px-3 py-1 text-sm border rounded-full bg-light border-light-border dark:border-dark-border dark:bg-dark w-max">
 												{ingredient}
 											</StyledText>
 										))}
@@ -96,7 +96,7 @@ const Posts = () => {
 						)
 				)
 			) : (
-				<StyledText>No Recipe is added!</StyledText>
+				<StyledText>No recipe added yet!</StyledText>
 			)}
 		</View>
 	);

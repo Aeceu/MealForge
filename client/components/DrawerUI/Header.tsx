@@ -7,7 +7,7 @@ const Header = () => {
 	const { colorScheme } = useColorScheme();
 
 	return (
-		<View className="flex-row items-center justify-between w-full p-4 mt-6">
+		<View className="flex-row items-center justify-between w-full p-4 mt-4">
 			<Image
 				source={
 					colorScheme === "dark"

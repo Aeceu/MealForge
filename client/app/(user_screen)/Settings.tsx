@@ -70,9 +70,9 @@ const Settings = () => {
 
 				<StyledPressable
 					onPress={logout}
-					className={`flex-row items-center justify-start w-full px-6 py-4 mt-16 rounded-lg h-max ${
-						status === "pending" ? "bg-red-600/50" : "bg-red-600"
-					}`}>
+					size="xl"
+					className={`flex-row items-center justify-start w-full mt-16 px-6 h-max ${status === "pending" ? "bg-red-600/50" : "bg-red-600"
+						}`}>
 					{status === "pending" ? (
 						<Spin loading={status === "pending"} size="md" />
 					) : (

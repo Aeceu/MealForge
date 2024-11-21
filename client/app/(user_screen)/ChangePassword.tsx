@@ -89,7 +89,8 @@ const ChangePassword = () => {
 					<StyledPressable
 						disabled={status === "pending"}
 						onPress={handleSubmit(onSubmit)}
-						className="w-full py-4 rounded-md bg-main">
+						size="xl"
+						className="w-full bg-main">
 						<StyledText
 							type="subheading"
 							className="text-white dark:text-main-50">

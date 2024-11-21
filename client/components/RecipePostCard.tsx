@@ -15,9 +15,9 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 	const { colorScheme } = useColorScheme();
 	const { NewGradientColor } = useThemeColors();
 	return (
-		<View className="flex-1 w-full mt-2 bg-white border border-light-border dark:bg-dark-light dark:border-dark-border rounded-xl overflow-hidden">
+		<View className="flex-1 w-full mt-4 overflow-hidden bg-white border border-light-border dark:bg-dark-light dark:border-dark-border rounded-xl">
 			{recipe.recipe_post_image && (
-				<View className="w-full h-full absolute top-0 left-0">
+				<View className="absolute top-0 left-0 w-full h-full">
 					<Image
 						source={{ uri: recipe.recipe_post_image }}
 						resizeMode="cover"
@@ -54,28 +54,27 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 				</TouchableOpacity>
 			</Link>
 
-			<View className="px-4 pb-4 rounded-xl">
-				<ScrollView
-					horizontal
-					showsHorizontalScrollIndicator={false}
-					className="w-full">
-					<View className="flex-row items-start justify-center w-full pr-1 pt-2 pb-1">
-						{recipe.recipe.ingredients.split(",").map((item, i) => (
-							<StyledText
-								key={i}
-								type="label"
-								className="px-3 bg-light-dark dark:bg-dark py-1.5 mx-0.5 rounded-full w-max ">
-								{item}
-							</StyledText>
-						))}
-					</View>
-				</ScrollView>
+			<ScrollView
+				horizontal
+				showsHorizontalScrollIndicator={false}
+				className="w-full mt-4">
+				<View className="flex-row items-start justify-center w-full px-4 space-x-2">
+					{recipe.recipe.ingredients.split(",").map((item, i) => (
+						<StyledText
+							key={i}
+							type="label"
+							className="px-3 bg-light border border-light-border dark:border-dark-border dark:bg-dark py-1.5 rounded-full">
+							{item}
+						</StyledText>
+					))}
+				</View>
+			</ScrollView>
 
-				{/* <ScrollView
+			{/* <ScrollView
 					horizontal
 					showsHorizontalScrollIndicator={false}
 					className="w-full">
-					<View className="flex-row items-start justify-center w-full pr-1 pt-1 pb-2">
+					<View className="flex-row items-start justify-center w-full pt-1 pb-2 pr-1">
 						{[recipe.recipe.nutrient_counts.split(",")].map((item, i) => (
 							<StyledText
 								key={i}
@@ -86,9 +85,10 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 						))}
 					</View>
 				</ScrollView> */}
-				{/* </View> */}
+			{/* </View> */}
 
-				{/* Footer */}
+			{/* Footer */}
+			<View className="px-4 pb-3">
 				<LikeButton recipe={recipe} />
 			</View>
 		</View>

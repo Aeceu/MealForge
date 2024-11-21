@@ -10,13 +10,13 @@ const PostFeed = () => {
 
 	if (status === "pending")
 		return (
-			<View className="w-full h-full flex-1 flex-col items-center">
+			<View className="flex-col items-center flex-1 w-full h-full mt-4">
 				<Spin size={"md"} loading={status === "pending"} />
 			</View>
 		);
 
 	return (
-		<View className="w-full h-full flex-1 flex-col">
+		<View className="flex-col flex-1 w-full h-full">
 			{post.length > 0 ? (
 				post.map((item, i) => <RecipePostCard recipe={item} key={i} />)
 			) : (

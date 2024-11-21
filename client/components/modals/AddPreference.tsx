@@ -70,41 +70,39 @@ const AddPreference: React.FC<Props> = ({ isVisible, onClose }) => {
 				</View>
 
 				{/* body */}
-				<View className="mt-4 space-y-10">
-					<View className="mt-2">
-						<View className="mt-4">
-							<StyledText type="label" className="mb-2">
-								Allergies
-							</StyledText>
-							<Controller
-								control={control}
-								name="allergies"
-								render={({ field: { value, onChange } }) => (
-									<TextInput
-										value={value}
-										onChangeText={onChange}
-										className={`
+				<View className="mt-4">
+					<View className="">
+						<StyledText type="label" className="mb-2">
+							Allergies
+						</StyledText>
+						<Controller
+							control={control}
+							name="allergies"
+							render={({ field: { value, onChange } }) => (
+								<TextInput
+									value={value}
+									onChangeText={onChange}
+									className={`
                         border border-light-border font-pregular dark:border-dark-border bg-white dark:bg-dark-light text-dark dark:text-main-50 rounded-lg px-6 py-2 text-sm
                         `}
-										placeholderTextColor={placeholderColor}
-										placeholder="type your allegies here...."
-									/>
-								)}
-							/>
-							{errors.allergies && (
-								<StyledText
-									fontStyle="default"
-									className="px-1 text-sm text-red-500">
-									{errors.allergies.message}
-								</StyledText>
+									placeholderTextColor={placeholderColor}
+									placeholder="type your allegies here...."
+								/>
 							)}
-						</View>
+						/>
+						{errors.allergies && (
+							<StyledText
+								fontStyle="default"
+								className="px-1 text-sm text-red-500">
+								{errors.allergies.message}
+							</StyledText>
+						)}
 					</View>
 					<View>
 						<StyledPressable
 							size="xl"
 							disabled={status === "pending"}
-							className={`mt-4 bg-main flex-row items-center`}
+							className={`mt-10 bg-main flex-row items-center`}
 							onPress={handleSubmit(onSubmit)}>
 							<StyledText
 								className="text-white dark:text-main-50"

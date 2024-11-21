@@ -73,7 +73,7 @@ const Register = () => {
 
 						<StyledText
 							type="heading-1"
-							fontStyle="ChunkP"
+							fontStyle="Chunk"
 							className="pt-3 text-center">
 							Create an Account
 						</StyledText>
@@ -192,9 +192,8 @@ const Register = () => {
 
 						<StyledPressable
 							size="xl"
-							className={`mt-4 bg-main flex-row items-center ${
-								status === "pending" && "bg-main/20"
-							}`}
+							className={`mt-4 bg-main flex-row items-center ${status === "pending" && "bg-main/20"
+								}`}
 							disabled={status === "pending"}
 							onPress={handleSubmit(onSubmit)}>
 							{status === "pending" && (

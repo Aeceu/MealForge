@@ -55,7 +55,7 @@ const HomeScreenLayout = () => {
 					name="user_post/[id]"
 					options={{
 						headerShown: true,
-						title: "Your Post Recipe",
+						title: "Your Posted Recipe",
 						headerStyle: {
 							backgroundColor: tabColor,
 						},

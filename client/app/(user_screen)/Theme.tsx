@@ -19,9 +19,8 @@ const Theme = () => {
 			<StyledPressable
 				onPress={toggleColorScheme}
 				size="xl"
-				className={`flex-row items-center justify-between py-4 px-6   ${
-					colorScheme === "dark" && "bg-dark-light"
-				}`}>
+				className={`flex-row items-center justify-between py-4 px-6   ${colorScheme === "dark" && "bg-dark-light"
+					}`}>
 				<View className="flex-row items-center">
 					<Image
 						source={
@@ -38,9 +37,8 @@ const Theme = () => {
 			<StyledPressable
 				onPress={toggleColorScheme}
 				size="xl"
-				className={`flex-row items-center justify-between py-4 px-6 ${
-					colorScheme === "light" && "bg-white"
-				} `}>
+				className={`flex-row items-center justify-between py-4 px-6 ${colorScheme === "light" && "bg-white"
+					} `}>
 				<View className="flex-row items-center">
 					<Image
 						source={
