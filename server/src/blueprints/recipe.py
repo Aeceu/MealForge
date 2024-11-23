@@ -1,6 +1,7 @@
+import uuid
+
 from flask import Blueprint, jsonify, request
 from sqlalchemy import text
-import uuid
 from utils.database import engine
 
 recipes_bp = Blueprint("recipes", __name__)
@@ -134,7 +135,7 @@ def get_user_recipe(recipe_id):
   except Exception as e:
     return jsonify({"error": str(e)}), 500
 
-# TODO: Remove the recipe
+# Remove the recipe
 @recipes_bp.route("/user/recipe/<recipe_id>", methods=["DELETE"])
 def delete_recipe(recipe_id):
     try:

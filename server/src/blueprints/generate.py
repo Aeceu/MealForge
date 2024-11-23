@@ -22,7 +22,7 @@ filtered_recipes = pd.read_csv(os.path.join(base_dir, 'dataset', 'recipes_data_a
 # Initialize the Generative AI model once (check the correct usage in the SDK)
 model = genai.GenerativeModel("gemini-1.5-flash")
 
-@generate_bp.route("/test", methods=["POST"])
+@generate_bp.route("/generate/recipe", methods=["POST"])
 def generate():
     data = request.get_json()
     ingredients = data.get("ingredients")

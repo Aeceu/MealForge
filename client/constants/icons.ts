@@ -63,6 +63,11 @@ import tempDark from "@/assets/icons/temp-dark.png";
 import tempLight from "@/assets/icons/temp-light.png";
 import cuisineTypeDark from "@/assets/icons/cuisineType-dark.png";
 import cuisineTypeLight from "@/assets/icons/cuisineType-light.png";
+import starLight from "@/assets/icons/star-light.png";
+import starDark from "@/assets/icons/star-dark.png";
+import starOrange from "@/assets/icons/star-orange.png";
+import rateDark from "@/assets/icons/rate-icon-dark.png";
+import rateLight from "@/assets/icons/rate-icon-light.png";
 
 export default {
 	logo_dark,
@@ -130,4 +135,9 @@ export default {
 	tempLight,
 	cuisineTypeDark,
 	cuisineTypeLight,
+	starLight,
+	starDark,
+	starOrange,
+	rateDark,
+	rateLight,
 };

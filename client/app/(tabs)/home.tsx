@@ -12,6 +12,7 @@ import CreatePost from "@/components/modals/CreatePost";
 import PostFeed from "@/components/HomeUI/PostFeed";
 import { getFilteredPosts, getPosts } from "@/redux/actions/postAction";
 import SearchRecipe from "@/components/modals/SearchRecipe";
+import DarkBgOverlay from "@/components/DarkBgOverlay";
 
 const Home = () => {
 	const [filter, setFilter] = useState("");
@@ -57,8 +58,7 @@ const Home = () => {
 	};
 
 	useEffect(() => {
-		if (!user) return;
-		if (pageLoading || post.length <= 0) {
+		if (user && (pageLoading || post.length <= 0)) {
 			dispatch(getPosts(user.id));
 		}
 	}, [user?.id, pageLoading]);
@@ -104,45 +104,70 @@ const Home = () => {
 					<View className="flex-1 h-px mx-2 mt-4 rounded-full bg-light-border dark:bg-dark-border" />
 
 					{/* filter */}
-					<View className="flex-row items-center flex-1 my-1">
-						<View className="flex-row w-full justify-evenly">
-							<StyledPressable
-								onPress={() => handleFilter("Popular")}
-								className={`px-2 py-1.5 relative rounded-md flex-row items-center w-1/2 justify-between ${filter === "Popular" && "bg-main "
-									}`}
-								size="icon">
-								<StyledText
-									type="label"
-									className={`text-center w-full ${filter === "Popular" && "text-white"}`}>
-									Popular
-								</StyledText>
-								{filter === "Popular" && (
-									<Image
-										source={icons.closeWhite}
-										resizeMode="contain"
-										className="absolute right-0 w-3 h-3 mr-2"
-									/>
-								)}
-							</StyledPressable>
-							<StyledPressable
-								onPress={() => handleFilter("Latest")}
-								className={`px-2 py-1.5 relative rounded-md flex-row items-center w-1/2 justify-between ${filter === "Latest" && "bg-main "
-									}`}
-								size="icon">
-								<StyledText
-									type="label"
-									className={`text-center w-full ${filter === "Latest" && "text-white"}`}>
-									Latest
-								</StyledText>
-								{filter === "Latest" && (
-									<Image
-										source={icons.closeWhite}
-										resizeMode="contain"
-										className="absolute right-0 w-3 h-3 mr-2"
-									/>
-								)}
-							</StyledPressable>
-						</View>
+					<View className="flex-row items-center  my-1  w-full justify-evenly">
+						<StyledPressable
+							onPress={() => handleFilter("Ratings")}
+							className={`flex-1 px-2 py-1.5 relative rounded-md flex-row items-center w-full justify-between ${
+								filter === "Ratings" && "bg-main "
+							}`}
+							size="icon">
+							<StyledText
+								type="label"
+								className={`text-center w-full ${
+									filter === "Ratings" && "text-light"
+								}`}>
+								Ratings
+							</StyledText>
+							{filter === "Ratings" && (
+								<Image
+									source={icons.closeWhite}
+									resizeMode="contain"
+									className="absolute right-0 w-3 h-3 mr-2"
+								/>
+							)}
+						</StyledPressable>
+						<StyledPressable
+							onPress={() => handleFilter("Popular")}
+							className={`flex-1 px-2 py-1.5 relative rounded-md flex-row items-center w-full justify-between ${
+								filter === "Popular" && "bg-main "
+							}`}
+							size="icon">
+							<StyledText
+								type="label"
+								className={`text-center w-full ${
+									filter === "Popular" && "text-white"
+								}`}>
+								Popular
+							</StyledText>
+							{filter === "Popular" && (
+								<Image
+									source={icons.closeWhite}
+									resizeMode="contain"
+									className="absolute right-0 w-3 h-3 mr-2"
+								/>
+							)}
+						</StyledPressable>
+						<StyledPressable
+							onPress={() => handleFilter("Latest")}
+							className={`flex-1 px-2 py-1.5 relative rounded-md flex-row items-center w-full justify-between ${
+								filter === "Latest" && "bg-main "
+							}`}
+							size="icon">
+							<StyledText
+								type="label"
+								className={`text-center w-full ${
+									filter === "Latest" && "text-white"
+								}`}>
+								Latest
+							</StyledText>
+							{filter === "Latest" && (
+								<Image
+									source={icons.closeWhite}
+									resizeMode="contain"
+									className="absolute right-0 w-3 h-3 mr-2"
+								/>
+							)}
+						</StyledPressable>
 					</View>
 
 					{/* Separator */}
@@ -151,7 +176,7 @@ const Home = () => {
 					<PostFeed />
 				</View>
 			</ScrollView>
-			{darkbg && <View className="absolute w-full h-full bg-black/50 z-[9]" />}
+			{darkbg && <DarkBgOverlay />}
 			<CreatePost isVisible={showModal} onClose={onClose} />
 		</>
 	);

@@ -7,6 +7,7 @@ import LikeButton from "./LikeButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { useThemeColors } from "@/constants/colors";
 import { useColorScheme } from "nativewind";
+import { icons } from "@/constants";
 
 type TRecipePostCard = {
 	recipe: RecipePost;
@@ -41,10 +42,6 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 							<StyledText type="heading-4" className="flex-1 font-chunk">
 								{recipe.recipe.name}
 							</StyledText>
-							<BookmarkButton
-								is_bookmarked={recipe.is_bookmarked}
-								post_id={recipe.id}
-							/>
 						</View>
 
 						<StyledText type="label" className="text-main">
@@ -70,22 +67,22 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 				</View>
 			</ScrollView>
 
-			{/* <ScrollView
-					horizontal
-					showsHorizontalScrollIndicator={false}
-					className="w-full">
-					<View className="flex-row items-start justify-center w-full pt-1 pb-2 pr-1">
-						{[recipe.recipe.nutrient_counts.split(",")].map((item, i) => (
-							<StyledText
-								key={i}
-								type="label"
-								className="w-max bg-light-dark dark:bg-dark px-3 py-1.5 rounded-full mx-0.5 ">
-								{item}
-							</StyledText>
-						))}
-					</View>
-				</ScrollView> */}
-			{/* </View> */}
+			{/* Ratings */}
+			<View className="mt-4 ml-4  flex-row items-center">
+				{Array(5)
+					.fill(5)
+					.map((item, i) => (
+						<Image
+							key={i}
+							source={i >= 3 ? icons.starLight : icons.starOrange}
+							resizeMode="contain"
+							className="w-4 h-4 mx-0.5"
+						/>
+					))}
+				<StyledText className="ml-1" type="xs">
+					(3.7 ratings)
+				</StyledText>
+			</View>
 
 			{/* Footer */}
 			<View className="px-4 pb-3">

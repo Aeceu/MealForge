@@ -1,3 +1,4 @@
+import DarkBgOverlay from "@/components/DarkBgOverlay";
 import Header from "@/components/DrawerUI/Header";
 import Ingredients from "@/components/DrawerUI/Ingredients";
 import Seasonings from "@/components/DrawerUI/Seasonings";
@@ -73,12 +74,20 @@ const drawer = () => {
 					<View className="flex-row px-8 space-x-4">
 						<StyledPressable
 							onPress={() => setSelectedTab("main ingredient")}
-							className={`rounded-none ${selectedTab === "main ingredient" ? "border-b  border-main opacity-100" : "opacity-60"}`}>
+							className={`rounded-none ${
+								selectedTab === "main ingredient"
+									? "border-b  border-main opacity-100"
+									: "opacity-60"
+							}`}>
 							<StyledText>My Ingredients</StyledText>
 						</StyledPressable>
 						<StyledPressable
 							onPress={() => setSelectedTab("seasoning")}
-							className={`rounded-none ${selectedTab === "seasoning" ? "border-b  border-main opacity-100" : "opacity-60"}`}>
+							className={`rounded-none ${
+								selectedTab === "seasoning"
+									? "border-b  border-main opacity-100"
+									: "opacity-60"
+							}`}>
 							<StyledText>My Seasonings</StyledText>
 						</StyledPressable>
 					</View>
@@ -93,9 +102,7 @@ const drawer = () => {
 					/>
 				</View>
 			</ScrollView>
-			{darkbg && (
-				<View className="absolute w-full h-full bg-black/50 z-[9]"></View>
-			)}
+			{darkbg && <DarkBgOverlay />}
 			{/* ADD button */}
 			<StyledPressable
 				size="icon"

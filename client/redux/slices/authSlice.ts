@@ -9,10 +9,9 @@ import {
 export type TInitialState = {
 	accessToken: string | null;
 	refreshToken: string | null;
-
 	status: "idle" | "pending" | "completed" | "failed";
 	pageLoading: boolean;
-	error: any | null;
+	error: string | null;
 };
 
 const initialState: TInitialState = {
@@ -28,8 +27,8 @@ const authSlice = createSlice({
 	initialState,
 	reducers: {
 		setToken: (state, action) => {
-			(state.accessToken = action.payload.accessToken),
-				(state.refreshToken = action.payload.refreshToken);
+			state.accessToken = action.payload.accessToken;
+			state.refreshToken = action.payload.refreshToken;
 		},
 		clearToken: (state) => {
 			state.accessToken = null;
@@ -37,6 +36,9 @@ const authSlice = createSlice({
 			state.pageLoading = false;
 			state.status = "idle";
 			state.error = null;
+		},
+		resetPageLoading: (state) => {
+			state.pageLoading = false;
 		},
 	},
 	extraReducers: (builder) => {
@@ -58,14 +60,14 @@ const authSlice = createSlice({
 			.addCase(handleSignup.pending, (state) => {
 				state.status = "pending";
 			})
-			.addCase(handleSignup.fulfilled, (state, action) => {
+			.addCase(handleSignup.fulfilled, (state) => {
 				state.status = "completed";
 			})
 			.addCase(handleSignup.rejected, (state, action) => {
 				state.status = "failed";
 				state.error = action.payload as string;
 			})
-			.addCase(handleRefresh.pending, (state, action) => {
+			.addCase(handleRefresh.pending, (state) => {
 				state.pageLoading = true;
 			})
 			.addCase(handleRefresh.fulfilled, (state, action) => {
@@ -80,10 +82,10 @@ const authSlice = createSlice({
 				state.pageLoading = false;
 				state.error = action.payload as string;
 			})
-			.addCase(handleLogout.pending, (state, action) => {
+			.addCase(handleLogout.pending, (state) => {
 				state.status = "pending";
 			})
-			.addCase(handleLogout.fulfilled, (state, action) => {
+			.addCase(handleLogout.fulfilled, (state) => {
 				state.accessToken = null;
 				state.refreshToken = null;
 				state.status = "completed";
@@ -98,5 +100,5 @@ const authSlice = createSlice({
 	},
 });
 
-export const { setToken, clearToken } = authSlice.actions;
+export const { setToken, clearToken, resetPageLoading } = authSlice.actions;
 export default authSlice.reducer;

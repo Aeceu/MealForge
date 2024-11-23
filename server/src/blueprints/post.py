@@ -106,8 +106,6 @@ def delete_post(post_id):
         print(e)
         return jsonify({"error": str(e)}), 500
 
-
-# TODO:IDK IF WE'LL USE THIS!!
 # Update a post (e.g., change recipe details associated with a post)
 @posts_bp.route("/post/<post_id>/update", methods=["PUT"])
 def update_post(post_id):
@@ -461,6 +459,7 @@ def bookmark_unbookmark_post(post_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# fetch user all bookmarked post
 @posts_bp.route("/user/<user_id>/bookmarked_posts", methods=["GET"])
 def get_user_bookmarked_posts(user_id):
     try:
@@ -590,6 +589,7 @@ def get_all_posts_filtered():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Search recipe name or ingredients
 @posts_bp.route("/post/search", methods=["GET"])
 def search_recipe():
     query = request.args.get("query", "").strip()
@@ -620,6 +620,76 @@ def search_recipe():
                 search_posts.append(post)
 
             return jsonify({"searchPost": search_posts}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# fetch posts ratings
+@posts_bp.route("/post/<post_id>/ratings", methods=["GET"])
+def get_recipe_post_ratings(post_id):
+    try:
+        with engine.connect() as conn:
+            result = conn.execute(
+                text("""
+                    SELECT r.rating, r.rated_at, u.userName, u.id
+                    FROM ratings r
+                    JOIN users u ON r.user_id = u.id
+                    WHERE r.post_id = :post_id
+                """), {"post_id": post_id}
+            )
+
+            ratings = [
+                {"id":row.id,"userName": row.userName, "rating": row.rating, "rated_at": row.rated_at}
+                for row in result
+            ]
+
+            return jsonify({"ratings": ratings}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@posts_bp.route("/post/<post_id>/rate", methods=["POST"])
+def rate_recipe_post(post_id):
+    data = request.get_json()
+    user_id = data.get("user_id")
+    rating = data.get("rating")
+
+    if not (1 <= rating <= 5):
+        return jsonify({"error": "Rating must be between 1 and 5"}), 400
+
+    try:
+        with engine.connect() as conn:
+            # Check if the recipe post exists
+            post = conn.execute(text("SELECT id FROM recipe_posts WHERE id = :post_id"), {"post_id": post_id}).fetchone()
+            if not post:
+                return jsonify({"error": "Recipe post not found"}), 404
+
+            # Check if the user has already rated this post
+            existing_rating = conn.execute(
+                text("""
+                    SELECT id FROM ratings
+                    WHERE user_id = :user_id AND post_id = :post_id
+                """), {"user_id": user_id, "post_id": post_id}).fetchone()
+
+            if existing_rating:
+                return jsonify({"error": "User has already rated this recipe post"}), 400
+
+            # Insert the rating
+            rating_id = str(uuid.uuid4())
+            conn.execute(
+                text("""
+                    INSERT INTO ratings (id, user_id, post_id, rating, rated_at)
+                    VALUES (:id, :user_id, :post_id, :rating, CURRENT_DATE)
+                """), {
+                    "id": rating_id,
+                    "user_id": user_id,
+                    "post_id": post_id,
+                    "rating": rating
+                }
+            )
+
+            conn.commit()
+            return jsonify({"message": "Rating added successfully!", "rating_id": rating_id}), 201
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

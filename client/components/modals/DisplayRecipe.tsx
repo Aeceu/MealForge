@@ -1,8 +1,6 @@
-import { Image, Modal, ScrollView, View } from "react-native";
+import { Modal, ScrollView, View } from "react-native";
 import StyledText from "../StyledText";
 import StyledPressable from "../StyledPressable";
-import { useColorScheme } from "nativewind";
-import { icons } from "@/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { handleSaveRecipe } from "@/redux/actions/recipeAction";
@@ -29,7 +27,6 @@ type Props = {
 };
 
 const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
-	const { colorScheme } = useColorScheme();
 	const dispatch = useDispatch<AppDispatch>();
 	const { user } = useSelector((state: RootState) => state.user);
 
@@ -67,7 +64,10 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 					<ScrollView>
 						<View className="flex-row items-center justify-between p-4 rounded-t-3xl">
 							<StyledText type="subheading">Generated Recipe</StyledText>
-							<StyledPressable onPress={handleClose} className="ml-auto " size="text">
+							<StyledPressable
+								onPress={handleClose}
+								className="ml-auto "
+								size="text">
 								{/* <Image
 								source={
 									colorScheme === "light"
@@ -84,9 +84,7 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 						<View className="flex-col items-start justify-start">
 							{/* Header */}
 							<View className="flex-col items-start justify-start w-full px-4 py-2">
-								<StyledText
-									className="font-chunk"
-									type="subheading">
+								<StyledText className="font-chunk" type="subheading">
 									Recipe Name:
 								</StyledText>
 								<StyledText type="heading-3" className="px-3 font-chunk">
@@ -96,9 +94,7 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 
 							{/* Infos */}
 							<View className="flex-col w-full p-4">
-								<StyledText
-									className="font-chunk"
-									type="subheading">
+								<StyledText className="font-chunk" type="subheading">
 									Recipe Information:
 								</StyledText>
 								<View className="flex-col items-start justify-center w-full ">
@@ -131,9 +127,7 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 
 							{/* Ingredients */}
 							<View className="flex-col w-full p-4">
-								<StyledText
-									className="font-chunk"
-									type="subheading">
+								<StyledText className="font-chunk" type="subheading">
 									Ingredients:
 								</StyledText>
 								<View className="flex-col w-full px-3">
@@ -150,9 +144,7 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 
 							{/* Instructions */}
 							<View className="flex-col w-full p-4">
-								<StyledText
-									className="font-chunk"
-									type="subheading">
+								<StyledText className="font-chunk" type="subheading">
 									Instructions:
 								</StyledText>
 								<View className="flex-col w-full px-3">

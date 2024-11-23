@@ -59,7 +59,7 @@ const BookmarkButton: React.FC<Props> = ({ post_id, is_bookmarked }) => {
 							: icons.bookmarkDarkLight
 					}
 					resizeMode="contain"
-					className="w-6 h-6"
+					className="w-5 h-5"
 				/>
 			)}
 		</StyledPressable>

@@ -25,6 +25,7 @@ class User(Base):
     likes = relationship('Like', back_populates='user', cascade="all, delete-orphan")
     dislikes = relationship('Dislike', back_populates='user', cascade="all, delete-orphan")
     bookmarks = relationship('Bookmark', back_populates='user', cascade="all, delete-orphan")
+    ratings = relationship('Rating', back_populates='user', cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<User(firstName={self.firstName}, lastName={self.lastName}, email={self.email})>"
@@ -113,3 +114,19 @@ class Bookmark(Base):
 
     def __repr__(self):
         return f"<Bookmark(user_id={self.user_id}, post_id={self.post_id}, bookmarked_at={self.bookmarked_at})>"
+
+class Rating(Base):
+    __tablename__ = 'ratings'
+
+    id = Column(GUID(), primary_key=True, default=uuid.uuid4)
+    user_id = Column(GUID(), ForeignKey('users.id'), nullable=False)
+    post_id = Column(GUID(), ForeignKey('recipe_posts.id'), nullable=False)
+    rating = Column(Integer, nullable=False)  # Rating value (1 to 5)
+    rated_at = Column(String(20), nullable=False, default=func.current_date())
+
+    # Relationships
+    user = relationship("User", back_populates="ratings")
+    recipe_post = relationship("RecipePost", back_populates="ratings")
+
+    def __repr__(self):
+        return f"<Rating(user_id={self.user_id}, post_id={self.post_id}, rating={self.rating})>"
