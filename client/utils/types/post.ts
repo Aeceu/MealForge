@@ -21,4 +21,5 @@ export type RecipePost = {
 	total_likes: number;
 	is_disliked: boolean;
 	total_dislikes: number;
+	avg_rating: string;
 };

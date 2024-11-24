@@ -15,6 +15,7 @@ type TRecipePostCard = {
 const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 	const { colorScheme } = useColorScheme();
 	const { NewGradientColor } = useThemeColors();
+
 	return (
 		<View className="flex-1 w-full mt-4 overflow-hidden bg-white border border-light-border dark:bg-dark-light dark:border-dark-border rounded-xl">
 			{recipe.recipe_post_image && (
@@ -70,20 +71,19 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 			{/* Ratings */}
 			<View className="mt-4 ml-4  flex-row items-center">
 				{Array(5)
-					.fill(5)
+					.fill(parseFloat(parseFloat(recipe.avg_rating).toFixed(1)))
 					.map((item, i) => (
 						<Image
 							key={i}
-							source={i >= 3 ? icons.starLight : icons.starOrange}
+							source={i >= item ? icons.starLight : icons.starOrange}
 							resizeMode="contain"
 							className="w-4 h-4 mx-0.5"
 						/>
 					))}
 				<StyledText className="ml-1" type="xs">
-					(3.7 ratings)
+					{`(${recipe.avg_rating ? recipe.avg_rating : 0} ratings)`}
 				</StyledText>
 			</View>
-
 			{/* Footer */}
 			<View className="px-4 pb-3">
 				<LikeButton recipe={recipe} />

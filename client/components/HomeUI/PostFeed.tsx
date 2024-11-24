@@ -1,28 +1,126 @@
-import { RootState } from "@/redux/store";
-import { View } from "react-native";
-import { useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
+import { Image, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import RecipePostCard from "../RecipePostCard";
 import StyledText from "../StyledText";
 import Spin from "../animations/Spin";
+import { useEffect, useState } from "react";
+import { getFilteredPosts, getPosts } from "@/redux/actions/postAction";
+import StyledPressable from "../StyledPressable";
+import { icons } from "@/constants";
 
 const PostFeed = () => {
+	const [filter, setFilter] = useState("");
+	const dispatch = useDispatch<AppDispatch>();
+	const { user } = useSelector((state: RootState) => state.user);
 	const { post, status } = useSelector((state: RootState) => state.post);
+	const { pageLoading } = useSelector((state: RootState) => state.auth);
 
-	if (status === "pending")
-		return (
-			<View className="flex-col items-center flex-1 w-full h-full mt-4">
-				<Spin size={"md"} loading={status === "pending"} />
-			</View>
+	const handleFilter = (newFilter: string) => {
+		if (!user) return;
+		if (filter === newFilter) {
+			setFilter("");
+		} else {
+			setFilter(newFilter);
+		}
+	};
+
+	useEffect(() => {
+		if (!user) return;
+		dispatch(
+			getFilteredPosts({
+				userId: user.id,
+				filter: filter,
+			})
 		);
+	}, [filter, pageLoading]);
 
 	return (
-		<View className="flex-col flex-1 w-full h-full">
-			{post.length > 0 ? (
-				post.map((item, i) => <RecipePostCard recipe={item} key={i} />)
-			) : (
-				<StyledText>There is no Post available.</StyledText>
-			)}
-		</View>
+		<>
+			{/* Separator */}
+			<View className="flex-1 h-px mx-2 mt-4 rounded-full bg-light-border dark:bg-dark-border" />
+			{/* filter */}
+			<View className="flex-row items-center  my-1  w-full justify-evenly">
+				<StyledPressable
+					onPress={() => handleFilter("Ratings")}
+					className={`flex-1 px-2 py-1.5 relative rounded-md flex-row items-center w-full justify-between ${
+						filter === "Ratings" && "bg-main "
+					}`}
+					size="icon">
+					<StyledText
+						type="label"
+						className={`text-center w-full ${
+							filter === "Ratings" && "text-light"
+						}`}>
+						Ratings
+					</StyledText>
+					{filter === "Ratings" && (
+						<Image
+							source={icons.closeWhite}
+							resizeMode="contain"
+							className="absolute right-0 w-3 h-3 mr-2"
+						/>
+					)}
+				</StyledPressable>
+				<StyledPressable
+					onPress={() => handleFilter("Popular")}
+					className={`flex-1 px-2 py-1.5 relative rounded-md flex-row items-center w-full justify-between ${
+						filter === "Popular" && "bg-main "
+					}`}
+					size="icon">
+					<StyledText
+						type="label"
+						className={`text-center w-full ${
+							filter === "Popular" && "text-white"
+						}`}>
+						Popular
+					</StyledText>
+					{filter === "Popular" && (
+						<Image
+							source={icons.closeWhite}
+							resizeMode="contain"
+							className="absolute right-0 w-3 h-3 mr-2"
+						/>
+					)}
+				</StyledPressable>
+				<StyledPressable
+					onPress={() => handleFilter("Latest")}
+					className={`flex-1 px-2 py-1.5 relative rounded-md flex-row items-center w-full justify-between ${
+						filter === "Latest" && "bg-main "
+					}`}
+					size="icon">
+					<StyledText
+						type="label"
+						className={`text-center w-full ${
+							filter === "Latest" && "text-white"
+						}`}>
+						Latest
+					</StyledText>
+					{filter === "Latest" && (
+						<Image
+							source={icons.closeWhite}
+							resizeMode="contain"
+							className="absolute right-0 w-3 h-3 mr-2"
+						/>
+					)}
+				</StyledPressable>
+			</View>
+
+			{/* Separator */}
+			<View className="flex-1 h-px mx-2 rounded-full bg-light-border dark:bg-dark-border" />
+
+			<View className="flex-col flex-1 w-full h-full">
+				{status === "pending" ? (
+					<View className="flex-col items-center flex-1 w-full h-full mt-4">
+						<Spin size={"md"} loading={status === "pending"} />
+					</View>
+				) : post.length > 0 ? (
+					post.map((item, i) => <RecipePostCard recipe={item} key={i} />)
+				) : (
+					<StyledText>There is no Post available.</StyledText>
+				)}
+			</View>
+		</>
 	);
 };
 export default PostFeed;

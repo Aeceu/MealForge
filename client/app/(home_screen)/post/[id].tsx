@@ -1,4 +1,3 @@
-import BookmarkButton from "@/components/BookmarkButton";
 import DarkBgOverlay from "@/components/DarkBgOverlay";
 import LikeButton from "@/components/LikeButton";
 import Loading from "@/components/Loading";
@@ -7,6 +6,7 @@ import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
 import { icons } from "@/constants";
 import { getPostById } from "@/redux/actions/postAction";
+import axios from "@/redux/api/axios";
 import { AppDispatch, RootState } from "@/redux/store";
 import { RecipePost } from "@/utils/types/post";
 import { router, useLocalSearchParams } from "expo-router";
@@ -18,7 +18,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 const RecipePostPage = () => {
 	const { id } = useLocalSearchParams();
-	const [showDropdown, setShowDropdown] = useState(true);
 	const [post, setPost] = useState<RecipePost | null>(null);
 	const [darkbg, setDarkbg] = useState<boolean>(false);
 	const [showRate, setShowRate] = useState<boolean>(false);
@@ -63,24 +62,22 @@ const RecipePostPage = () => {
 	}
 	return (
 		<>
-			<ScrollView
-				// contentContainerStyle={{ flexGrow: 1 }}
-				className="w-full p-4 bg-light dark:bg-dark">
+			<ScrollView className="w-full p-4 bg-light dark:bg-dark">
 				<View className="mb-8">
 					<View className="mb-4 flex-row items-center justify-between ">
 						<View className=" flex-row items-center">
 							{Array(5)
-								.fill(5)
+								.fill(parseFloat(parseFloat(post.avg_rating).toFixed(1)))
 								.map((item, i) => (
 									<Image
 										key={i}
-										source={i >= 3 ? icons.starLight : icons.starOrange}
+										source={i >= item ? icons.starLight : icons.starOrange}
 										resizeMode="contain"
 										className="w-5 h-5 mx-0.5"
 									/>
 								))}
 							<StyledText className="ml-1" type="xs">
-								(3.7 ratings)
+								{`(${post.avg_rating ? post.avg_rating : 0} ratings)`}
 							</StyledText>
 						</View>
 						<StyledPressable size="icon" onPress={handleShowRate}>
@@ -253,7 +250,7 @@ const RecipePostPage = () => {
 			</ScrollView>
 			{darkbg && <DarkBgOverlay />}
 
-			<RateRecipe isVisible={showRate} onClose={onClose} />
+			<RateRecipe isVisible={showRate} onClose={onClose} post_id={post.id} />
 		</>
 	);
 };

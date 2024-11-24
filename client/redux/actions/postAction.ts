@@ -89,7 +89,7 @@ export const getPosts = createAsyncThunk(
 	"post/getPosts",
 	async (userId: string, { rejectWithValue }) => {
 		try {
-			const res = await axios.get(`/posts?user_id=${userId}`);
+			const res = await axios.get(`/posts?user_id=${userId}&limit=5`);
 			return res.data.posts;
 		} catch (error) {
 			const resError = handleError(error);

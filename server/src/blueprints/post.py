@@ -247,7 +247,7 @@ def get_post(post_id):
                 "SELECT COUNT(*) FROM dislikes WHERE post_id = :post_id"
             ), {"post_id": post_id}).scalar()
 
-            # Check if the current user has liked the post
+            # Check if the user has disliked the post
             is_disliked = conn.execute(text(
                 "SELECT 1 FROM dislikes WHERE user_id = :user_id AND post_id = :post_id"
             ), {"user_id": user_id, "post_id": post_id}).fetchone() is not None
@@ -257,12 +257,21 @@ def get_post(post_id):
                 "SELECT 1 FROM bookmarks WHERE user_id = :user_id AND post_id = :post_id"
             ), {"user_id": user_id, "post_id": post_id}).fetchone() is not None
 
-            # Construct the response
+            # Fetch the user's specific rating for the post
+            avg_rating = conn.execute(
+                text("""
+                    SELECT AVG(rating) AS average_rating
+                    FROM ratings
+                    WHERE post_id = :post_id
+                """), {"post_id": post_id}).scalar()
+
+            ratings = round(avg_rating, 1) if avg_rating else 0
+
             post = {
                 "id": result.post_id,
                 "user_id": result.post_user_id,
                 "posted_at": result.post_date,
-                "recipe_post_image":result.recipePostImage,
+                "recipe_post_image": result.recipePostImage,
                 "recipe": {
                     "id": result.recipe_id,
                     "name": result.recipe_name,
@@ -280,7 +289,8 @@ def get_post(post_id):
                 "total_likes": total_likes,
                 "is_liked": is_liked,
                 "total_dislikes": total_dislikes,
-                "is_disliked": is_disliked
+                "is_disliked": is_disliked,
+                "avg_rating": ratings
             }
             return jsonify({"post": post}), 200
 
@@ -290,7 +300,11 @@ def get_post(post_id):
 # Get all posts for the home page feed, including all recipe details and bookmark info for the current user
 @posts_bp.route("/posts", methods=["GET"])
 def get_all_posts():
-    user_id = request.args.get("user_id")  # Get the current user's ID from the request
+    user_id = request.args.get("user_id")
+    limit = int(request.args.get("limit", 10))  # Default limit to 10 posts
+    offset = int(request.args.get("offset", 3))  # Default offset to 0
+
+
     try:
         with engine.connect() as conn:
             result = conn.execute(text(
@@ -304,42 +318,47 @@ def get_all_posts():
                 FROM recipe_posts rp
                 JOIN recipes r ON rp.recipe_id = r.id
                 JOIN users u ON rp.user_id = u.id
-
+                ORDER BY rp.posted_at DESC
+                LIMIT :limit OFFSET :offset
                 """
-            ))
-# ORDER BY rp.posted_at DESC
+            ), {"limit": limit, "offset": offset})
+
             posts = []
             for row in result:
-                # Count total likes for each post
                 total_likes = conn.execute(text(
                     "SELECT COUNT(*) FROM likes WHERE post_id = :post_id"
                 ), {"post_id": row.post_id}).scalar()
 
-                # Check if the current user has liked the post
                 is_liked = conn.execute(text(
                     "SELECT 1 FROM likes WHERE user_id = :user_id AND post_id = :post_id"
                 ), {"user_id": user_id, "post_id": row.post_id}).fetchone() is not None
 
-                # Count total dislikes for each post
                 total_dislikes = conn.execute(text(
                     "SELECT COUNT(*) FROM dislikes WHERE post_id = :post_id"
                 ), {"post_id": row.post_id}).scalar()
 
-                # Check if the current user has liked the post
                 is_disliked = conn.execute(text(
                     "SELECT 1 FROM dislikes WHERE user_id = :user_id AND post_id = :post_id"
                 ), {"user_id": user_id, "post_id": row.post_id}).fetchone() is not None
 
-                # Check if the post is bookmarked by the current user
                 is_bookmarked = conn.execute(text(
                     "SELECT 1 FROM bookmarks WHERE user_id = :user_id AND post_id = :post_id"
                 ), {"user_id": user_id, "post_id": row.post_id}).fetchone() is not None
 
-                post = {
+                avg_rating = conn.execute(
+                text("""
+                    SELECT AVG(rating) AS average_rating
+                    FROM ratings
+                    WHERE post_id = :post_id
+                    """), {"post_id": row.post_id}).scalar()
+
+                ratings = round(avg_rating, 1) if avg_rating else 0
+
+                posts.append({
                     "id": row.post_id,
                     "user_id": row.post_user_id,
                     "posted_at": row.post_date,
-                    "recipe_post_image":row.recipePostImage,
+                    "recipe_post_image": row.recipePostImage,
                     "recipe": {
                         "id": row.recipe_id,
                         "name": row.recipe_name,
@@ -357,11 +376,11 @@ def get_all_posts():
                     "total_likes": total_likes,
                     "is_liked": is_liked,
                     "total_dislikes": total_dislikes,
-                    "is_disliked": is_disliked
-                }
-                posts.append(post)
+                    "is_disliked": is_disliked,
+                    "avg_rating": ratings
+                })
 
-            return jsonify({"posts": posts}), 200
+            return jsonify({"posts": posts }), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -394,6 +413,16 @@ def get_all_user_posts(user_id):
                 ), {"post_id": row.post_id}).fetchall()
                 bookmark_list = [bookmark.user_id for bookmark in bookmarks]
 
+                # Fetch the user's specific rating for the post
+                avg_rating = conn.execute(
+                text("""
+                    SELECT AVG(rating) AS average_rating
+                    FROM ratings
+                    WHERE post_id = :post_id
+                    """), {"post_id": row.post_id}).scalar()
+
+                ratings = round(avg_rating, 1) if avg_rating else 0
+
                 post = {
                     "id": row.post_id,
                     "user_id": row.user_id,
@@ -413,6 +442,7 @@ def get_all_user_posts(user_id):
                     },
                     "author": row.author,
                     "bookmarks": bookmark_list,
+                    "avg_rating":ratings
                 }
                 user_posts.append(post)
 
@@ -513,31 +543,40 @@ def get_user_bookmarked_posts(user_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Fetch all posts filtered by popularity or latest
+# Fetch all posts filtered by popularity or latest or ratings
 @posts_bp.route("/posts/filtered", methods=["GET"])
 def get_all_posts_filtered():
-    filter_type = request.args.get("filter", "Latest")  # Filter type: "Latest" or "Popular"
-    user_id = request.args.get("user_id")  # Current user's ID
+    filter_type = request.args.get("filter", "Latest")
+    user_id = request.args.get("user_id")
 
     try:
         with engine.connect() as conn:
-            # Define SQL order by clause based on filter type
-            order_by_clause = "ORDER BY posted_at DESC" if filter_type == "Latest" else "ORDER BY total_likes DESC"
-            print(order_by_clause)
-            # Query to get posts along with total likes and dislikes
+            if filter_type == "Latest":
+                order_by_clause = "ORDER BY rp.posted_at DESC"
+            elif filter_type == "Popular":
+                order_by_clause = "ORDER BY total_likes DESC"
+            elif filter_type == "Ratings":
+                order_by_clause = "ORDER BY avg_rating DESC"
+            else:
+                # Default case
+                order_by_clause = ""
+
+            # Query to get posts along with total likes, dislikes, and ratings
             result = conn.execute(text(
                 f"""
-                SELECT rp.id AS post_id, rp.user_id AS post_user_id, rp.posted_at AS post_date,rp.recipe_post_image AS recipePostImage,
+                SELECT rp.id AS post_id, rp.user_id AS post_user_id, rp.posted_at AS post_date, rp.recipe_post_image AS recipePostImage,
                 r.id AS recipe_id, r.name AS recipe_name, r.ingredients AS recipe_ingredients,
                 r.instruction AS recipe_instruction, r.type_of_cuisine AS recipe_cuisine,
                 r.nutrient_counts AS recipe_nutrients, r.serve_hot_or_cold AS recipe_serving_temp,
                 r.cooking_time AS recipe_cooking_time, r.benefits AS recipe_benefits,
                 r.serve_for AS recipe_servings, u.userName AS author_name,
                 (SELECT COUNT(*) FROM likes WHERE post_id = rp.id) AS total_likes,
-                (SELECT COUNT(*) FROM dislikes WHERE post_id = rp.id) AS total_dislikes
+                (SELECT COUNT(*) FROM dislikes WHERE post_id = rp.id) AS total_dislikes,
+                (SELECT AVG(rating) FROM ratings WHERE post_id = rp.id) AS avg_rating
                 FROM recipe_posts rp
                 JOIN recipes r ON rp.recipe_id = r.id
                 JOIN users u ON rp.user_id = u.id
+                GROUP BY rp.id, r.id, u.id
                 {order_by_clause}
                 """
             ))
@@ -556,6 +595,9 @@ def get_all_posts_filtered():
                 is_bookmarked = conn.execute(text(
                     "SELECT 1 FROM bookmarks WHERE user_id = :user_id AND post_id = :post_id"
                 ), {"user_id": user_id, "post_id": row.post_id}).fetchone() is not None
+
+                # Fetch the user's specific rating for the post
+                avg_rating = round(row.avg_rating, 1) if row.avg_rating else 0
 
                 # Construct post data with required fields
                 post = {
@@ -580,7 +622,8 @@ def get_all_posts_filtered():
                     "total_dislikes": row.total_dislikes,
                     "is_liked": is_liked,
                     "is_disliked": is_disliked,
-                    "is_bookmarked": is_bookmarked
+                    "is_bookmarked": is_bookmarked,
+                    "avg_rating": avg_rating
                 }
                 posts.append(post)
 
@@ -588,6 +631,7 @@ def get_all_posts_filtered():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 # Search recipe name or ingredients
 @posts_bp.route("/post/search", methods=["GET"])
@@ -648,19 +692,24 @@ def get_recipe_post_ratings(post_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Give post a rating
 @posts_bp.route("/post/<post_id>/rate", methods=["POST"])
 def rate_recipe_post(post_id):
     data = request.get_json()
     user_id = data.get("user_id")
     rating = data.get("rating")
 
-    if not (1 <= rating <= 5):
-        return jsonify({"error": "Rating must be between 1 and 5"}), 400
+    # Validate input
+    if not isinstance(rating, (int, float)) or not (1 <= rating <= 5):
+        return jsonify({"error": "Rating must be a number between 1 and 5"}), 400
 
     try:
         with engine.connect() as conn:
             # Check if the recipe post exists
-            post = conn.execute(text("SELECT id FROM recipe_posts WHERE id = :post_id"), {"post_id": post_id}).fetchone()
+            post = conn.execute(
+                text("SELECT id FROM recipe_posts WHERE id = :post_id"),
+                {"post_id": post_id}
+            ).fetchone()
             if not post:
                 return jsonify({"error": "Recipe post not found"}), 404
 
@@ -669,7 +718,8 @@ def rate_recipe_post(post_id):
                 text("""
                     SELECT id FROM ratings
                     WHERE user_id = :user_id AND post_id = :post_id
-                """), {"user_id": user_id, "post_id": post_id}).fetchone()
+                """), {"user_id": user_id, "post_id": post_id}
+            ).fetchone()
 
             if existing_rating:
                 return jsonify({"error": "User has already rated this recipe post"}), 400
@@ -688,8 +738,24 @@ def rate_recipe_post(post_id):
                 }
             )
 
+            # Calculate the new average rating
+            avg_rating = conn.execute(
+                text("""
+                    SELECT AVG(rating) AS average_rating
+                    FROM ratings
+                    WHERE post_id = :post_id
+                """), {"post_id": post_id}
+            ).scalar()
+
             conn.commit()
-            return jsonify({"message": "Rating added successfully!", "rating_id": rating_id}), 201
+
+            # Return success response
+            return jsonify({
+                "message": "Rating added successfully!",
+                "rating_id": rating_id,
+                "user_rating": rating,
+                "average_rating": round(avg_rating, 1)
+            }), 201
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
