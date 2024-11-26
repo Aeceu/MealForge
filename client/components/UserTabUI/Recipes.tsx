@@ -22,13 +22,15 @@ const Recipes = () => {
 				recipe.map((item, i) => (
 					<View
 						key={i}
-						className="w-full p-4 my-2 bg-white border rounded-lg dark:bg-dark-light border-light-border dark:border-dark-border">
+						// className="w-full p-4 my-2 bg-white border rounded-lg dark:bg-dark-light border-light-border dark:border-dark-border"
+						className="w-full py-4 my-2 bg-white border border-light-border dark:bg-dark-light dark:border-dark-border rounded-xl"
+					>
 						<StyledPressable
 							size="link"
 							onPress={() =>
 								router.push(`/(home_screen)/user_recipe/${item.id}`)
 							}>
-							<StyledText type="heading-4" className="font-chunk">
+							<StyledText type="heading-4" className="px-4 font-chunk">
 								{item.name}
 							</StyledText>
 						</StyledPressable>
@@ -36,7 +38,7 @@ const Recipes = () => {
 							horizontal
 							showsHorizontalScrollIndicator={false}
 							className="w-full">
-							<View className="flex-row items-start justify-center w-full mt-2 space-x-1.5">
+							<View className="flex-row items-start justify-center w-full mt-2 space-x-1.5 px-4">
 								{item.ingredients.split(",").map((item, i) => (
 									<StyledText
 										key={i}

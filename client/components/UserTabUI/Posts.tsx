@@ -27,18 +27,19 @@ const Posts = () => {
 							// Fix this
 							<View
 								key={i}
-								className="w-full p-4 my-2 overflow-hidden border rounded-lg bg-light dark:bg-dark-light border-light-border dark:border-dark-border">
+								className="w-full py-4 my-2 overflow-hidden bg-white border border-light-border dark:bg-dark-light dark:border-dark-border rounded-xl"
+							>
 								{item.recipe_post_image && (
 									<View className="absolute top-0 left-0 w-full h-full">
 										<Image
 											source={{ uri: item.recipe_post_image }}
 											resizeMode="cover"
 											className="absolute w-full aspect-square"
-											style={{ opacity: colorScheme === "dark" ? 0.2 : 0.4 }}
+											style={{ opacity: colorScheme === "dark" ? 0.4 : 0.4 }}
 										/>
 										<LinearGradient
-											start={{ x: 1, y: 0 }}
-											end={{ x: 0, y: 0 }}
+											start={{ x: 0.3, y: 1 }}
+											end={{ x: 1.5, y: 1 }}
 											colors={NewGradientColor}
 											className="absolute top-0 left-0 w-full aspect-square"
 										/>
@@ -47,6 +48,7 @@ const Posts = () => {
 
 								<StyledPressable
 									size="link"
+									className="px-4"
 									onPress={() =>
 										router.push(`/(home_screen)/user_post/${item.id}`)
 									}>
@@ -59,7 +61,7 @@ const Posts = () => {
 									horizontal
 									showsHorizontalScrollIndicator={false}
 									className="w-full">
-									<View className="flex-row items-start justify-center w-full mt-2 space-x-1.5">
+									<View className="flex-row items-start justify-center px-4 w-full mt-2 space-x-1.5">
 										{item.recipe.ingredients.split(",").map((ingredient, i) => (
 											<StyledText
 												key={i}
@@ -70,10 +72,8 @@ const Posts = () => {
 									</View>
 								</ScrollView>
 
-								<View className="flex-row items-center justify-between w-full px-2 pt-4 pb-0">
-									<StyledPressable
-										size="text"
-										className="flex-row items-center">
+								<View className="flex-row items-center w-full px-4 mt-2">
+									<View className="flex-row items-center">
 										<StyledText className="flex font-psemibold">
 											{item.total_likes}
 										</StyledText>
@@ -90,7 +90,7 @@ const Posts = () => {
 										<StyledText className="ml-1" type="xs" fontStyle="light">
 											Dislike
 										</StyledText>
-									</StyledPressable>
+									</View>
 								</View>
 							</View>
 						)

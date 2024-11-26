@@ -68,6 +68,8 @@ import starDark from "@/assets/icons/star-dark.png";
 import starOrange from "@/assets/icons/star-orange.png";
 import rateDark from "@/assets/icons/rate-icon-dark.png";
 import rateLight from "@/assets/icons/rate-icon-light.png";
+import diffDark from "@/assets/icons/diff-dark.png";
+import diffLight from "@/assets/icons/diff-light.png";
 
 export default {
 	logo_dark,
@@ -140,4 +142,6 @@ export default {
 	starOrange,
 	rateDark,
 	rateLight,
+	diffDark,
+	diffLight,
 };

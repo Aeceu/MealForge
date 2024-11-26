@@ -69,7 +69,7 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 			</ScrollView>
 
 			{/* Ratings */}
-			<View className="mt-4 ml-4  flex-row items-center">
+			<View className="flex-row items-center px-4 mt-4">
 				{Array(5)
 					.fill(parseFloat(parseFloat(recipe.avg_rating).toFixed(1)))
 					.map((item, i) => (
@@ -91,7 +91,7 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 				</StyledText>
 			</View>
 			{/* Footer */}
-			<View className="px-4 pb-3">
+			<View className="px-3 pb-3">
 				<LikeButton recipe={recipe} />
 			</View>
 		</View>

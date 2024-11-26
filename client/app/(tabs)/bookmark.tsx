@@ -28,7 +28,7 @@ const bookmark = () => {
 			refreshControl={
 				<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
 			}>
-			<View className=" p-4">
+			<View className="p-4 ">
 				{/* Header */}
 				<View className="flex-row items-center justify-between w-full mt-6 ">
 					<Image
@@ -63,13 +63,13 @@ const bookmark = () => {
 							className="w-6 h-6 mr-2"
 						/>
 						<StyledText className="flex-1 text-2xl font-chunk">
-							Post Bookmarks
+							My Bookmarks
 						</StyledText>
 					</View>
 				</View>
 
 				{/* Separator */}
-				<View className="flex-1 h-px  mt-1 rounded-full bg-light-border dark:bg-dark-border"></View>
+				<View className="flex-1 h-px mt-1 rounded-full bg-light-border dark:bg-dark-border"></View>
 
 				<BookmarkFeed />
 			</View>

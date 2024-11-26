@@ -131,7 +131,7 @@ const UserPreferences = () => {
 				refreshControl={
 					<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
 				}>
-				<View className="flex-col w-full h-full z-10 flex-1 p-4">
+				<View className="z-10 flex-col flex-1 w-full h-full p-4">
 					<View className="flex-1 pb-4 space-y-6">
 						<View className="space-y-4">
 							{/* Add main ingredients */}
@@ -149,9 +149,8 @@ const UserPreferences = () => {
 												.filter((item) => item.type === "main ingredient")
 												.map((item, i) => ({
 													key: i,
-													value: `${item.name} ${
-														item.is_expired ? "(expired)" : ""
-													}`,
+													value: `${item.name} ${item.is_expired ? "(expired)" : ""
+														}`,
 													type: "main ingredient",
 												}))}
 											save="value"
@@ -219,7 +218,7 @@ const UserPreferences = () => {
 								{errors.main_ingredients && (
 									<StyledText
 										fontStyle="default"
-										className="mt-2 ml-3  text-sm text-red-500">
+										className="mt-2 ml-3 text-sm text-red-500">
 										* {errors.main_ingredients.message}
 									</StyledText>
 								)}
@@ -238,9 +237,8 @@ const UserPreferences = () => {
 												.filter((item) => item.type === "seasoning")
 												.map((item, i) => ({
 													key: i,
-													value: `${item.name} ${
-														item.is_expired ? "(expired)" : ""
-													}`,
+													value: `${item.name} ${item.is_expired ? "(expired)" : ""
+														}`,
 													type: "seasonings",
 												}))}
 											save="value"
@@ -308,7 +306,7 @@ const UserPreferences = () => {
 								{errors.seasonings && (
 									<StyledText
 										fontStyle="default"
-										className="mt-2 ml-3  text-sm text-red-500">
+										className="mt-2 ml-3 text-sm text-red-500">
 										* {errors.seasonings.message}
 									</StyledText>
 								)}
@@ -323,7 +321,7 @@ const UserPreferences = () => {
 											{errors.servings && (
 												<StyledText
 													fontStyle="default"
-													className="ml-3  text-sm text-red-500">
+													className="ml-3 text-sm text-red-500">
 													* {errors.servings.message}
 												</StyledText>
 											)}
@@ -365,7 +363,7 @@ const UserPreferences = () => {
 											{errors.cuisine_type && (
 												<StyledText
 													fontStyle="default"
-													className="ml-3  text-sm text-red-500">
+													className="ml-3 text-sm text-red-500">
 													* {errors.cuisine_type.message}
 												</StyledText>
 											)}
@@ -384,7 +382,7 @@ const UserPreferences = () => {
 												control={control}
 												name="cuisine_type"
 												render={({ field: { onChange } }) => (
-													<View className="ml-2 w-full flex-1 ">
+													<View className="flex-1 w-full ml-2 ">
 														<SelectList
 															data={cuisineType}
 															save="value"
@@ -456,7 +454,7 @@ const UserPreferences = () => {
 											{errors.serve_hot_or_cold && (
 												<StyledText
 													fontStyle="default"
-													className="ml-3  text-sm text-red-500">
+													className="ml-3 text-sm text-red-500">
 													* {errors.serve_hot_or_cold.message}
 												</StyledText>
 											)}
@@ -475,7 +473,7 @@ const UserPreferences = () => {
 												control={control}
 												name="serve_hot_or_cold"
 												render={({ field: { onChange } }) => (
-													<View className="ml-3 flex-1 w-max">
+													<View className="flex-1 ml-3 w-max">
 														<SelectList
 															data={[
 																{ key: 1, value: "Hot" },
@@ -550,7 +548,7 @@ const UserPreferences = () => {
 											{errors.difficulty && (
 												<StyledText
 													fontStyle="default"
-													className="ml-3  text-sm text-red-500">
+													className="ml-3 text-sm text-red-500">
 													* {errors.difficulty.message}
 												</StyledText>
 											)}
@@ -569,12 +567,12 @@ const UserPreferences = () => {
 												control={control}
 												name="difficulty"
 												render={({ field: { onChange } }) => (
-													<View className="ml-3 flex-1 w-max">
+													<View className="flex-1 ml-3 w-max">
 														<SelectList
 															data={[
-																{ key: 1, value: "easy" },
-																{ key: 2, value: "medium" },
-																{ key: 3, value: "hard" },
+																{ key: 1, value: "Easy" },
+																{ key: 2, value: "Medium" },
+																{ key: 3, value: "Hard" },
 															]}
 															save="value"
 															setSelected={onChange}
@@ -640,7 +638,7 @@ const UserPreferences = () => {
 								</>
 							)}
 
-							<View className="w-full flex-row items-center justify-center">
+							<View className="flex-row items-center justify-center w-full">
 								<View className="flex-1 w-full h-[1px] bg-dark-border rounded-full" />
 								<StyledPressable
 									size="icon"

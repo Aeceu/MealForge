@@ -64,8 +64,8 @@ const RecipePostPage = () => {
 		<>
 			<ScrollView className="w-full p-4 bg-light dark:bg-dark">
 				<View className="mb-8">
-					<View className="mb-4 flex-row items-center justify-between ">
-						<View className=" flex-row items-center">
+					<View className="flex-row items-center justify-between mb-4 ">
+						<View className="flex-row items-center ">
 							{Array(5)
 								.fill(parseFloat(parseFloat(post.avg_rating).toFixed(1)))
 								.map((item, i) => (
@@ -114,7 +114,7 @@ const RecipePostPage = () => {
 					</View>
 
 					{/* like/dislike */}
-					<View className="mb-4 flex-row items-center">
+					<View className="flex-row items-center mb-4">
 						<LikeButton recipe={post} />
 					</View>
 
@@ -125,101 +125,104 @@ const RecipePostPage = () => {
 						<StyledText type="subheading" className="px-2 mb-2 font-chunk">
 							Recipe Information:
 						</StyledText>
-						<View className="flex-row flex-1 w-full px-4 py-4 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
-							<View className="flex-col justify-between flex-1 space-y-4">
-								{/* Servings */}
-								<View className="flex-row w-full">
-									<Image
-										source={
-											colorScheme === "light"
-												? icons.usersDark
-												: icons.usersLight
-										}
-										resizeMode="contain"
-										className="mt-1 w-7 h-7"
-									/>
-									<View className="flex-1 w-full ml-3">
-										<StyledText type="xs">Serve for: </StyledText>
-										<StyledText type="paragraph" className="">
-											{post.recipe?.serve_for}
-											{post.recipe?.serve_for === "1" ? " person" : " people"}
-										</StyledText>
+
+						<View className="flex-col flex-1 w-full px-4 py-4 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
+							<View className="flex-row flex-1">
+								<View className="flex-col justify-between flex-1 space-y-4">
+									{/* Servings */}
+									<View className="flex-row w-full">
+										<Image
+											source={
+												colorScheme === "light"
+													? icons.usersDark
+													: icons.usersLight
+											}
+											resizeMode="contain"
+											className="mt-1 w-7 h-7"
+										/>
+										<View className="flex-1 w-full ml-3">
+											<StyledText type="xs">Serve for: </StyledText>
+											<StyledText type="paragraph" className="">
+												{post.recipe?.serve_for}
+												{post.recipe?.serve_for === "1" ? " person" : " people"}
+											</StyledText>
+										</View>
+									</View>
+
+									{/* Cooking time */}
+									<View className="flex-row w-full">
+										<Image
+											source={
+												colorScheme === "light" ? icons.timeDark : icons.timeLight
+											}
+											resizeMode="contain"
+											className="mt-1 w-7 h-7"
+										/>
+										<View className="flex-1 w-full ml-3">
+											<StyledText type="xs">Cooking time: </StyledText>
+											<StyledText type="paragraph" className="">
+												{post.recipe?.cooking_time}
+												{post.recipe?.cooking_time === "1"
+													? " minute"
+													: " minutes"}
+											</StyledText>
+										</View>
 									</View>
 								</View>
 
-								{/* Cooking time */}
-								<View className="flex-row w-full">
-									<Image
-										source={
-											colorScheme === "light" ? icons.timeDark : icons.timeLight
-										}
-										resizeMode="contain"
-										className="mt-1 w-7 h-7"
-									/>
-									<View className="flex-1 w-full ml-3">
-										<StyledText type="xs">Cooking time: </StyledText>
-										<StyledText type="paragraph" className="">
-											{post.recipe?.cooking_time}
-											{post.recipe?.cooking_time === "1"
-												? " minute"
-												: " minutes"}
-										</StyledText>
+								<View className="flex-col justify-between flex-1 space-y-4">
+									{/* Serve hot or cold */}
+									<View className="flex-row w-full">
+										<Image
+											source={
+												colorScheme === "light" ? icons.tempDark : icons.tempLight
+											}
+											resizeMode="contain"
+											className="mt-1 w-7 h-7"
+										/>
+										<View className="flex-1 w-full ml-3">
+											<StyledText type="xs">Serve in: </StyledText>
+											<StyledText type="paragraph" className="">
+												{post?.recipe.serve_hot_or_cold}{" "}
+											</StyledText>
+										</View>
 									</View>
-								</View>
 
-								{/* Difficulty */}
-								<View className="flex-row w-full">
-									<Image
-										source={
-											colorScheme === "light" ? icons.tempDark : icons.tempLight
-										}
-										resizeMode="contain"
-										className="mt-1 w-7 h-7"
-									/>
-									<View className="flex-1 w-full ml-3">
-										<StyledText type="xs">Difficulty: </StyledText>
-										<StyledText type="paragraph" className="">
-											{post.recipe?.difficulty}{" "}
-										</StyledText>
+									{/* Cuisine type */}
+									<View className="flex-row w-full">
+										<Image
+											source={
+												colorScheme === "light"
+													? icons.cuisineTypeDark
+													: icons.cuisineTypeLight
+											}
+											resizeMode="contain"
+											className="mt-1 w-7 h-7"
+										/>
+										<View className="flex-1 w-full ml-3">
+											<StyledText type="xs">Cuisine type: </StyledText>
+											<StyledText type="paragraph" className="">
+												{post.recipe?.type_of_cuisine}
+											</StyledText>
+										</View>
 									</View>
 								</View>
 							</View>
 
-							<View className="flex-col justify-between flex-1 space-y-4">
-								{/* Serve hot or cold */}
-								<View className="flex-row w-full">
-									<Image
-										source={
-											colorScheme === "light" ? icons.tempDark : icons.tempLight
-										}
-										resizeMode="contain"
-										className="mt-1 w-7 h-7"
-									/>
-									<View className="flex-1 w-full ml-3">
-										<StyledText type="xs">Serve in: </StyledText>
-										<StyledText type="paragraph" className="">
-											{post?.recipe.serve_hot_or_cold}{" "}
-										</StyledText>
-									</View>
-								</View>
-
-								{/* Cuisine type */}
-								<View className="flex-row w-full">
-									<Image
-										source={
-											colorScheme === "light"
-												? icons.cuisineTypeDark
-												: icons.cuisineTypeLight
-										}
-										resizeMode="contain"
-										className="mt-1 w-7 h-7"
-									/>
-									<View className="flex-1 w-full ml-3">
-										<StyledText type="xs">Cuisine type: </StyledText>
-										<StyledText type="paragraph" className="">
-											{post.recipe?.type_of_cuisine}
-										</StyledText>
-									</View>
+							{/* Difficulty */}
+							<View className="flex-row flex-1 w-full pt-4">
+								<Image
+									source={
+										colorScheme === "light" ? icons.diffDark : icons.diffLight
+									}
+									resizeMode="contain"
+									className="w-5 h-5 mx-1 mt-1"
+								/>
+								<View className="flex-1 w-full ml-3">
+									<StyledText type="xs">Difficulty: </StyledText>
+									<StyledText type="paragraph" className="">
+										{post.recipe?.difficulty}{" "}
+									</StyledText>
 								</View>
 							</View>
 						</View>

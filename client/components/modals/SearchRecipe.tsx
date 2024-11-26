@@ -135,22 +135,23 @@ const SearchRecipe: React.FC<Props> = ({ isVisible, onClose }) => {
 					</View>
 				) : postRecipe.length > 0 ? (
 					<ScrollView>
-						<View className="flex-col w-full mt-4">
+						<View className="flex-col w-full my-4">
 							{postRecipe.map((item, i) => (
 								<View
 									key={i}
-									className="relative w-full p-4 mb-4 overflow-hidden border rounded-lg bg-light dark:bg-dark-light border-light-border dark:border-dark-border">
+									className="w-full py-4 my-2 overflow-hidden bg-white border border-light-border dark:bg-dark-light dark:border-dark-border rounded-xl"
+								>
 									{item.recipe_post_image && (
 										<View className="absolute top-0 left-0 w-full h-full">
 											<Image
 												source={{ uri: item.recipe_post_image }}
 												resizeMode="cover"
 												className="absolute w-full aspect-square"
-												style={{ opacity: colorScheme === "dark" ? 0.2 : 0.4 }}
+												style={{ opacity: colorScheme === "dark" ? 0.4 : 0.4 }}
 											/>
 											<LinearGradient
-												start={{ x: 1, y: 0 }}
-												end={{ x: 0, y: 0 }}
+												start={{ x: 0.3, y: 1 }}
+												end={{ x: 1.5, y: 1 }}
 												colors={NewGradientColor}
 												className="absolute top-0 left-0 w-full aspect-square"
 											/>
@@ -159,7 +160,7 @@ const SearchRecipe: React.FC<Props> = ({ isVisible, onClose }) => {
 									<StyledPressable
 										size="link"
 										onPress={() => handleClick(item.id)}>
-										<StyledText type="heading-4" className="font-chunk">
+										<StyledText type="heading-4" className="px-4 font-chunk">
 											{item.recipe_name}
 										</StyledText>
 									</StyledPressable>
@@ -167,7 +168,7 @@ const SearchRecipe: React.FC<Props> = ({ isVisible, onClose }) => {
 										horizontal
 										showsHorizontalScrollIndicator={false}
 										className="w-full">
-										<View className="flex-row items-start justify-center w-full mt-2 space-x-1.5">
+										<View className="flex-row items-start justify-center w-full mt-2 space-x-1.5 px-4">
 											{item.recipe_ingredients.split(",").map((item, i) => (
 												<StyledText
 													key={i}

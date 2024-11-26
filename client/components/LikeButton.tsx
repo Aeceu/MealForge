@@ -86,7 +86,7 @@ const LikeButton: React.FC<Props> = ({ recipe }) => {
 	return (
 		// <Link href={`/(home_screen)/post/${recipe.id}`} asChild>
 		// 	<TouchableOpacity>
-		<View className="flex-row items-center justify-between w-full px-2 pt-4 pb-0 ">
+		<View className="flex-row items-center justify-between w-full px-2 pt-4">
 			<View className="flex-row items-center">
 				<StyledText className="flex font-psemibold">{totalLikes}</StyledText>
 				<StyledText className="flex ml-1" type="xs" fontStyle="light">
@@ -117,8 +117,8 @@ const LikeButton: React.FC<Props> = ({ recipe }) => {
 										? icons.likeOrange
 										: icons.likesLightDark
 									: isLiked
-									? icons.likeOrange
-									: icons.likesDarkLight
+										? icons.likeOrange
+										: icons.likesDarkLight
 							}
 							resizeMode="contain"
 							className="w-6 h-6 ml-1"
@@ -139,8 +139,8 @@ const LikeButton: React.FC<Props> = ({ recipe }) => {
 										? icons.unlikeOrange
 										: icons.unlikesLightDark
 									: isDisliked
-									? icons.unlikeOrange
-									: icons.unlikesDarkLight
+										? icons.unlikeOrange
+										: icons.unlikesDarkLight
 							}
 							resizeMode="contain"
 							className="w-6 h-6"
