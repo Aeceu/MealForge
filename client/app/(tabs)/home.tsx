@@ -95,7 +95,7 @@ const HomeNav = () => {
 
 	return (
 		<>
-			<View className="flex-row items-center justify-between w-full my-4">
+			<View className="flex-row items-center justify-between w-full mt-6 mb-4">
 				<Image
 					source={
 						colorScheme === "dark"

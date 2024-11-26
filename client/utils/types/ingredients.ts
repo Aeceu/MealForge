@@ -2,6 +2,7 @@ import z from "zod";
 
 export const IngredientSchema = z.object({
 	name: z.string().min(1, "Required"),
+	type: z.string().min(1, "Required"),
 	measurements: z.string().min(1, "Required"),
 	expirationDate: z.date().optional(),
 });
@@ -15,4 +16,5 @@ export type TIngredients = {
 	measurements: string;
 	expirationDate: Date | null | undefined;
 	date_added: string;
+	is_expired: boolean;
 };

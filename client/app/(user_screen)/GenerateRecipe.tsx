@@ -18,6 +18,7 @@ import DisplayRecipe from "@/components/modals/DisplayRecipe";
 import { NewRecipeSchema, TNewRecipe } from "@/utils/types/recipe";
 import { SelectList } from "react-native-dropdown-select-list-expo";
 import { Image, RefreshControl, ScrollView, View } from "react-native";
+import Spin from "@/components/animations/Spin";
 
 type recipeProps = {
 	name: string;
@@ -29,11 +30,17 @@ type recipeProps = {
 	];
 	instructions: [string];
 	type_of_cuisine: string;
-	nutrient_counts: string;
+	nutrient_counts: [
+		{
+			name: string;
+			measurement: string;
+		}
+	];
 	serve_hot_or_cold: string;
 	cooking_time: string;
 	benefits: string;
 	serve_for: string;
+	difficulty: string;
 };
 
 const UserPreferences = () => {
@@ -44,9 +51,11 @@ const UserPreferences = () => {
 	const [darkbg, setdarkbg] = useState<boolean>(false);
 	const [showRecipe, setShowRecipe] = useState<boolean>(false);
 	const [showOption, setShowOption] = useState<boolean>(false);
+	const [loading, setLoading] = useState<boolean>(false);
 	const [recipeResult, setRecipeResult] = useState<recipeProps | null>(null);
 
 	const dispatch = useDispatch<AppDispatch>();
+	const { user } = useSelector((state: RootState) => state.user);
 	const { ingredients } = useSelector((state: RootState) => state.ingredients);
 	const { pageLoading, accessToken } = useSelector(
 		(state: RootState) => state.auth
@@ -72,12 +81,15 @@ const UserPreferences = () => {
 
 	const handleGenerate = async (data: TNewRecipe) => {
 		try {
+			setLoading(true);
 			const res = await axios.post("/generate/recipe", {
-				ingredients: [...data.main_ingredients, ...data.seasonings],
-				user_preference: "",
+				main_ingredients: data.main_ingredients,
+				seasonings: data.seasonings,
+				user_preference: user?.allergies,
 				servings: data.servings,
 				cuisine_type: data.cuisine_type,
 				serve_hot_or_cold: data.serve_hot_or_cold,
+				difficulty: data.difficulty,
 			});
 			console.log(res.data);
 			setShowRecipe(true);
@@ -86,6 +98,7 @@ const UserPreferences = () => {
 		} catch (error) {
 			console.log(error);
 		} finally {
+			setLoading(false);
 			reset();
 		}
 	};
@@ -136,13 +149,15 @@ const UserPreferences = () => {
 												.filter((item) => item.type === "main ingredient")
 												.map((item, i) => ({
 													key: i,
-													value: item.name,
+													value: `${item.name} ${
+														item.is_expired ? "(expired)" : ""
+													}`,
 													type: "main ingredient",
 												}))}
 											save="value"
 											setSelected={(selectedValue: string) => {
 												if (!value.includes(selectedValue)) {
-													onChange([...value, selectedValue]);
+													onChange([...value, selectedValue.split("(")[0]]);
 												}
 											}}
 											inputStyles={{
@@ -223,7 +238,9 @@ const UserPreferences = () => {
 												.filter((item) => item.type === "seasoning")
 												.map((item, i) => ({
 													key: i,
-													value: item.name,
+													value: `${item.name} ${
+														item.is_expired ? "(expired)" : ""
+													}`,
 													type: "seasonings",
 												}))}
 											save="value"
@@ -330,8 +347,8 @@ const UserPreferences = () => {
 														onChangeText={onChange}
 														placeholderTextColor={placeholderColor}
 														className={`
-                        w-full flex-1 ml-2 border border-light-border font-pregular dark:border-dark-border bg-white dark:bg-dark-light text-dark dark:text-main-50 rounded-lg px-6 py-2 text-sm
-                        `}
+                            w-full flex-1 ml-2 border border-light-border font-pregular dark:border-dark-border bg-white dark:bg-dark-light text-dark dark:text-main-50 rounded-lg px-6 py-2 text-sm
+                            `}
 														keyboardType="numeric" // Show numeric keyboard
 														maxLength={10} // Optional: Limit number of characters
 														placeholder="1, 2, 3..."
@@ -456,13 +473,108 @@ const UserPreferences = () => {
 											/>
 											<Controller
 												control={control}
-												name="servings"
+												name="serve_hot_or_cold"
 												render={({ field: { onChange } }) => (
 													<View className="ml-3 flex-1 w-max">
 														<SelectList
 															data={[
 																{ key: 1, value: "Hot" },
 																{ key: 2, value: "Cold" },
+															]}
+															save="value"
+															setSelected={onChange}
+															inputStyles={{
+																color: textColor,
+																fontSize: 14,
+																fontFamily: "Poppins-Regular",
+															}}
+															boxStyles={{
+																backgroundColor: inputBgColor,
+																borderColor: borderColor,
+																borderRadius: 8,
+															}}
+															dropdownStyles={{
+																backgroundColor: inputBgColor,
+																borderColor: borderColor,
+																borderRadius: 8,
+															}}
+															dropdownTextStyles={{
+																color: textColor,
+																fontSize: 14,
+																fontFamily: "Poppins-Regular",
+															}}
+															searchicon={
+																<Image
+																	source={
+																		colorScheme === "light"
+																			? icons.searchDarkLight
+																			: icons.searchLightDark
+																	}
+																	resizeMode="contain"
+																	className="w-4 h-4 mr-2"
+																/>
+															}
+															closeicon={
+																<Image
+																	source={
+																		colorScheme === "light"
+																			? icons.closeDarkLight
+																			: icons.closeLightDark
+																	}
+																	resizeMode="contain"
+																	className="w-5 h-5 ml-2"
+																/>
+															}
+															arrowicon={
+																<Image
+																	source={
+																		colorScheme === "dark"
+																			? icons.arrowDownLight
+																			: icons.arrowDownDark
+																	}
+																	resizeMode="contain"
+																	className="w-4 h-4"
+																/>
+															}
+														/>
+													</View>
+												)}
+											/>
+										</View>
+									</View>
+
+									{/* Difficulty level */}
+									<View className="mt-4">
+										<View className="flex-row items-center mb-2">
+											<StyledText className="">Difficulty level</StyledText>
+											{errors.difficulty && (
+												<StyledText
+													fontStyle="default"
+													className="ml-3  text-sm text-red-500">
+													* {errors.difficulty.message}
+												</StyledText>
+											)}
+										</View>
+										<View className="flex-row items-start w-full">
+											<Image
+												source={
+													colorScheme === "light"
+														? icons.tempDark
+														: icons.tempLight
+												}
+												resizeMode="contain"
+												className="mt-2 w-7 h-7"
+											/>
+											<Controller
+												control={control}
+												name="difficulty"
+												render={({ field: { onChange } }) => (
+													<View className="ml-3 flex-1 w-max">
+														<SelectList
+															data={[
+																{ key: 1, value: "easy" },
+																{ key: 2, value: "medium" },
+																{ key: 3, value: "hard" },
 															]}
 															save="value"
 															setSelected={onChange}
@@ -626,12 +738,19 @@ const UserPreferences = () => {
 
 						<View className="flex-row items-center justify-end w-full ">
 							<StyledPressable
+								disabled={loading}
 								onPress={handleSubmit(handleGenerate)}
 								size="xl"
 								className="bg-main">
-								<StyledText type="subheading" className="text-white">
-									Generate Recipe
-								</StyledText>
+								{loading ? (
+									<View className="flex items-center justify-center">
+										<Spin size="sm" loading={loading} />
+									</View>
+								) : (
+									<StyledText type="subheading" className="text-white">
+										Generate Recipe
+									</StyledText>
+								)}
 							</StyledPressable>
 						</View>
 					</View>

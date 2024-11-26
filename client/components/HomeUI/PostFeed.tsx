@@ -5,7 +5,7 @@ import RecipePostCard from "../RecipePostCard";
 import StyledText from "../StyledText";
 import Spin from "../animations/Spin";
 import { useEffect, useState } from "react";
-import { getFilteredPosts, getPosts } from "@/redux/actions/postAction";
+import { getFilteredPosts } from "@/redux/actions/postAction";
 import StyledPressable from "../StyledPressable";
 import { icons } from "@/constants";
 

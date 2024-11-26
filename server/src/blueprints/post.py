@@ -221,7 +221,7 @@ def get_post(post_id):
                 r.instruction AS recipe_instruction, r.type_of_cuisine AS recipe_cuisine,
                 r.nutrient_counts AS recipe_nutrients, r.serve_hot_or_cold AS recipe_serving_temp,
                 r.cooking_time AS recipe_cooking_time, r.benefits AS recipe_benefits,
-                r.serve_for AS recipe_servings, u.userName AS author_name
+                r.serve_for AS recipe_servings, r.difficulty as recipe_difficulty, u.userName AS author_name
                 FROM recipe_posts rp
                 JOIN recipes r ON rp.recipe_id = r.id
                 JOIN users u ON rp.user_id = u.id
@@ -283,6 +283,7 @@ def get_post(post_id):
                     "cooking_time": result.recipe_cooking_time,
                     "benefits": result.recipe_benefits,
                     "serve_for": result.recipe_servings,
+                    "difficulty": result.recipe_difficulty,
                 },
                 "author": result.author_name,
                 "is_bookmarked": is_bookmarked,
@@ -304,7 +305,6 @@ def get_all_posts():
     limit = int(request.args.get("limit", 10))  # Default limit to 10 posts
     offset = int(request.args.get("offset", 3))  # Default offset to 0
 
-
     try:
         with engine.connect() as conn:
             result = conn.execute(text(
@@ -314,7 +314,7 @@ def get_all_posts():
                 r.instruction AS recipe_instruction, r.type_of_cuisine AS recipe_cuisine,
                 r.nutrient_counts AS recipe_nutrients, r.serve_hot_or_cold AS recipe_serving_temp,
                 r.cooking_time AS recipe_cooking_time, r.benefits AS recipe_benefits,
-                r.serve_for AS recipe_servings, u.userName AS author_name
+                r.serve_for AS recipe_servings, r.difficulty as recipe_difficulty, u.userName AS author_name
                 FROM recipe_posts rp
                 JOIN recipes r ON rp.recipe_id = r.id
                 JOIN users u ON rp.user_id = u.id
@@ -369,7 +369,7 @@ def get_all_posts():
                         "serve_hot_or_cold": row.recipe_serving_temp,
                         "cooking_time": row.recipe_cooking_time,
                         "benefits": row.recipe_benefits,
-                        "serve_for": row.recipe_servings,
+                        "difficulty": row.recipe_difficulty,
                     },
                     "author": row.author_name,
                     "is_bookmarked": is_bookmarked,
@@ -396,7 +396,7 @@ def get_all_user_posts(user_id):
                 rp.recipe_post_image as recipePostImage,
                 r.id AS recipe_id, r.name, r.ingredients, r.instruction,
                 r.type_of_cuisine, r.nutrient_counts, r.serve_hot_or_cold,
-                r.cooking_time, r.benefits, r.serve_for,
+                r.cooking_time, r.benefits, r.serve_for, r.difficulty as recipe_difficulty,
                 u.userName AS author
                 FROM recipe_posts rp
                 JOIN recipes r ON rp.recipe_id = r.id
@@ -439,6 +439,7 @@ def get_all_user_posts(user_id):
                         "cooking_time": row.cooking_time,
                         "benefits": row.benefits,
                         "serve_for": row.serve_for,
+                        "difficulty": row.recipe_difficulty,
                     },
                     "author": row.author,
                     "bookmarks": bookmark_list,
@@ -569,7 +570,7 @@ def get_all_posts_filtered():
                 r.instruction AS recipe_instruction, r.type_of_cuisine AS recipe_cuisine,
                 r.nutrient_counts AS recipe_nutrients, r.serve_hot_or_cold AS recipe_serving_temp,
                 r.cooking_time AS recipe_cooking_time, r.benefits AS recipe_benefits,
-                r.serve_for AS recipe_servings, u.userName AS author_name,
+                r.serve_for AS recipe_servings, r.difficulty as recipe_difficulty, u.userName AS author_name,
                 (SELECT COUNT(*) FROM likes WHERE post_id = rp.id) AS total_likes,
                 (SELECT COUNT(*) FROM dislikes WHERE post_id = rp.id) AS total_dislikes,
                 (SELECT AVG(rating) FROM ratings WHERE post_id = rp.id) AS avg_rating
@@ -616,6 +617,7 @@ def get_all_posts_filtered():
                         "cooking_time": row.recipe_cooking_time,
                         "benefits": row.recipe_benefits,
                         "serve_for": row.recipe_servings,
+                        "difficulty": row.recipe_difficulty,
                     },
                     "author": row.author_name,
                     "total_likes": row.total_likes,
@@ -631,7 +633,6 @@ def get_all_posts_filtered():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 
 # Search recipe name or ingredients
 @posts_bp.route("/post/search", methods=["GET"])

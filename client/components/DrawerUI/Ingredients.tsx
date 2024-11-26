@@ -37,7 +37,6 @@ const Ingredients = () => {
 			</View>
 		);
 	}
-
 	return (
 		<ScrollView className="flex-1 w-full h-full p-4">
 			{ingredients.length > 0 ? (
@@ -48,11 +47,20 @@ const Ingredients = () => {
 								key={i}
 								className="flex-row items-center justify-between w-full p-4 mb-4 bg-white border border-light-border dark:bg-dark-light dark:border-dark-border rounded-xl">
 								<View className="flex-col items-start justify-center">
-									<StyledText type="label" className="mb-2 text-xs">
-										{item.type === "main ingredient"
-											? "Main Ingredient"
-											: item.type}
-									</StyledText>
+									<View className="flex-row items-center mb-2">
+										<StyledText type="label" className=" text-xs">
+											{item.type === "main ingredient"
+												? "Main Ingredient"
+												: item.type}
+										</StyledText>
+										{item.is_expired ? (
+											<StyledText
+												type="xs"
+												className="ml-2 bg-red-500 text-light px-3 py-0.5 rounded-full">
+												Expired!
+											</StyledText>
+										) : null}
+									</View>
 									<StyledText key={i} className="font-chunk " type="heading-2">
 										{item.name}
 									</StyledText>

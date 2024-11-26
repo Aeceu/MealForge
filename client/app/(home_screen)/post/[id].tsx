@@ -71,7 +71,13 @@ const RecipePostPage = () => {
 								.map((item, i) => (
 									<Image
 										key={i}
-										source={i >= item ? icons.starLight : icons.starOrange}
+										source={
+											i >= item
+												? colorScheme === "dark"
+													? icons.starLight
+													: icons.starDark
+												: icons.starOrange
+										}
 										resizeMode="contain"
 										className="w-5 h-5 mx-0.5"
 									/>
@@ -121,6 +127,7 @@ const RecipePostPage = () => {
 						</StyledText>
 						<View className="flex-row flex-1 w-full px-4 py-4 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
 							<View className="flex-col justify-between flex-1 space-y-4">
+								{/* Servings */}
 								<View className="flex-row w-full">
 									<Image
 										source={
@@ -134,12 +141,13 @@ const RecipePostPage = () => {
 									<View className="flex-1 w-full ml-3">
 										<StyledText type="xs">Serve for: </StyledText>
 										<StyledText type="paragraph" className="">
-											{post?.recipe.serve_for}
-											{post?.recipe.serve_for === "1" ? " person" : " people"}
+											{post.recipe?.serve_for}
+											{post.recipe?.serve_for === "1" ? " person" : " people"}
 										</StyledText>
 									</View>
 								</View>
 
+								{/* Cooking time */}
 								<View className="flex-row w-full">
 									<Image
 										source={
@@ -151,16 +159,34 @@ const RecipePostPage = () => {
 									<View className="flex-1 w-full ml-3">
 										<StyledText type="xs">Cooking time: </StyledText>
 										<StyledText type="paragraph" className="">
-											{post?.recipe.cooking_time}
-											{post?.recipe.cooking_time === "1"
+											{post.recipe?.cooking_time}
+											{post.recipe?.cooking_time === "1"
 												? " minute"
 												: " minutes"}
+										</StyledText>
+									</View>
+								</View>
+
+								{/* Difficulty */}
+								<View className="flex-row w-full">
+									<Image
+										source={
+											colorScheme === "light" ? icons.tempDark : icons.tempLight
+										}
+										resizeMode="contain"
+										className="mt-1 w-7 h-7"
+									/>
+									<View className="flex-1 w-full ml-3">
+										<StyledText type="xs">Difficulty: </StyledText>
+										<StyledText type="paragraph" className="">
+											{post.recipe?.difficulty}{" "}
 										</StyledText>
 									</View>
 								</View>
 							</View>
 
 							<View className="flex-col justify-between flex-1 space-y-4">
+								{/* Serve hot or cold */}
 								<View className="flex-row w-full">
 									<Image
 										source={
@@ -177,6 +203,7 @@ const RecipePostPage = () => {
 									</View>
 								</View>
 
+								{/* Cuisine type */}
 								<View className="flex-row w-full">
 									<Image
 										source={
@@ -190,7 +217,7 @@ const RecipePostPage = () => {
 									<View className="flex-1 w-full ml-3">
 										<StyledText type="xs">Cuisine type: </StyledText>
 										<StyledText type="paragraph" className="">
-											{post?.recipe.type_of_cuisine}
+											{post.recipe?.type_of_cuisine}
 										</StyledText>
 									</View>
 								</View>

@@ -75,7 +75,13 @@ const RecipePostCard: React.FC<TRecipePostCard> = ({ recipe }) => {
 					.map((item, i) => (
 						<Image
 							key={i}
-							source={i >= item ? icons.starLight : icons.starOrange}
+							source={
+								i >= item
+									? colorScheme === "dark"
+										? icons.starLight
+										: icons.starDark
+									: icons.starOrange
+							}
 							resizeMode="contain"
 							className="w-4 h-4 mx-0.5"
 						/>

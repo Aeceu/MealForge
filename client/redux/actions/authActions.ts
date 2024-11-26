@@ -14,7 +14,6 @@ export const handleLogin = createAsyncThunk(
 	async (data: TUserLogin, { rejectWithValue, dispatch }) => {
 		try {
 			const res = await axios.post("/signin", data);
-			console.log(Alert.alert("SUCCESS"));
 			dispatch(setUser(res.data.user));
 			router.push("/(tabs)/home");
 			return res.data;

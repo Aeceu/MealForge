@@ -18,11 +18,17 @@ type Props = {
 		];
 		instructions: [string];
 		type_of_cuisine: string;
-		nutrient_counts: string;
+		nutrient_counts: [
+			{
+				name: string;
+				measurement: string;
+			}
+		];
 		serve_hot_or_cold: string;
 		cooking_time: string;
 		benefits: string;
 		serve_for: string;
+		difficulty: string;
 	} | null;
 };
 
@@ -68,13 +74,6 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 								onPress={handleClose}
 								className="ml-auto "
 								size="text">
-								{/* <Image
-								source={
-									colorScheme === "light"
-										? icons.closeDarkLight
-										: icons.closeLightDark
-								}
-								className="w-8 h-8"></Image> */}
 								<StyledText type="xs" className="underline">
 									Close
 								</StyledText>
@@ -122,6 +121,12 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 											{recipe?.type_of_cuisine}{" "}
 										</StyledText>
 									</View>
+									<View className="flex-row items-center px-3 py-1.5 my-1 rounded-full w-max ">
+										<StyledText type="paragraph">Difficulty level: </StyledText>
+										<StyledText type="paragraph">
+											{recipe?.difficulty}{" "}
+										</StyledText>
+									</View>
 								</View>
 							</View>
 
@@ -136,7 +141,7 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 											key={i}
 											type="paragraph"
 											className="py-2 tracking-wide">
-											• {item.name}
+											• {`${item.measurement} ${item.name}`}
 										</StyledText>
 									))}
 								</View>
@@ -154,6 +159,23 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 											type="paragraph"
 											className="py-4 tracking-wide">
 											{item}
+										</StyledText>
+									))}
+								</View>
+							</View>
+
+							{/* Nutrients  */}
+							<View className="flex-col w-full p-4">
+								<StyledText className="font-chunk" type="subheading">
+									Nutrients:
+								</StyledText>
+								<View className="flex-col w-full px-3">
+									{recipe?.nutrient_counts.map((item, i) => (
+										<StyledText
+											key={i}
+											type="paragraph"
+											className="py-4 tracking-wide">
+											{`${item.measurement} ${item.name}`}
 										</StyledText>
 									))}
 								</View>

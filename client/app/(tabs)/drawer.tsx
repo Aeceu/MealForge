@@ -3,42 +3,38 @@ import Header from "@/components/DrawerUI/Header";
 import Ingredients from "@/components/DrawerUI/Ingredients";
 import Seasonings from "@/components/DrawerUI/Seasonings";
 import Loading from "@/components/Loading";
-import AddIngredients from "@/components/modals/AddIngredients";
+import ExpiredIngredients from "@/components/modals/ExpiredIngredients";
 import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
 import { icons } from "@/constants";
 import { handleRefresh } from "@/redux/actions/authActions";
 import { getIngredients } from "@/redux/actions/ingredientsAction";
 import { AppDispatch, RootState } from "@/redux/store";
+import { TIngredients } from "@/utils/types/ingredients";
+import { router } from "expo-router";
 import { useColorScheme } from "nativewind";
 import { useEffect, useState } from "react";
 import { Image, RefreshControl, ScrollView, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
-const drawer = () => {
-	const dispatch = useDispatch<AppDispatch>();
-	const [selectedTab, setSelectedTab] = useState<
-		"main ingredient" | "seasoning"
-	>("main ingredient");
-	const { user } = useSelector((state: RootState) => state.user);
-	const [showTestModal, setShowTestModal] = useState<boolean>(false);
-	const [darkbg, setdarkbg] = useState<boolean>(false);
-	const { colorScheme } = useColorScheme();
+type selectedTabProps = "main ingredient" | "seasoning";
 
+const drawer = () => {
+	const { colorScheme } = useColorScheme();
+	const [expiredIngredientsModal, setExpiredIngredientsModal] =
+		useState<boolean>(false);
+	const [selectedTab, setSelectedTab] =
+		useState<selectedTabProps>("main ingredient");
+	const [expiredIngredients, setExpiredIngredients] = useState<TIngredients[]>(
+		[]
+	);
+
+	const dispatch = useDispatch<AppDispatch>();
+	const { user } = useSelector((state: RootState) => state.user);
 	const { ingredients } = useSelector((state: RootState) => state.ingredients);
 	const { pageLoading, accessToken } = useSelector(
 		(state: RootState) => state.auth
 	);
-
-	const onClose = () => {
-		setShowTestModal(false);
-		setdarkbg(false);
-	};
-
-	const handleAddBtn = () => {
-		setShowTestModal(true);
-		setdarkbg(true);
-	};
 
 	const onRefresh = async () => {
 		dispatch(handleRefresh(accessToken)).then((res) => {
@@ -51,6 +47,10 @@ const drawer = () => {
 		});
 	};
 
+	const onClose = () => {
+		setExpiredIngredientsModal(false);
+	};
+
 	useEffect(() => {
 		if (!user?.id) return console.log("no userid");
 		if (pageLoading || ingredients.length <= 0) {
@@ -58,12 +58,19 @@ const drawer = () => {
 		}
 	}, [pageLoading]);
 
+	useEffect(() => {
+		const expired = ingredients.filter((item) => item.is_expired);
+		console.log(expired);
+		setExpiredIngredients(expired);
+		setExpiredIngredientsModal(expired.length > 0);
+	}, []);
+
 	if (pageLoading) return <Loading />;
 
 	return (
 		<>
 			<ScrollView
-				className="w-full bg-light dark:bg-dark"
+				className="w-full bg-light dark:bg-dark "
 				refreshControl={
 					<RefreshControl refreshing={pageLoading} onRefresh={onRefresh} />
 				}>
@@ -94,26 +101,24 @@ const drawer = () => {
 
 					{selectedTab === "main ingredient" && <Ingredients />}
 					{selectedTab === "seasoning" && <Seasonings />}
-
-					<AddIngredients
-						type={selectedTab}
-						isVisible={showTestModal}
-						onClose={onClose}
-					/>
 				</View>
 			</ScrollView>
-			{darkbg && <DarkBgOverlay />}
-			{/* ADD button */}
 			<StyledPressable
 				size="icon"
 				className="absolute rounded-full bottom-5 right-5 bg-main"
-				onPress={handleAddBtn}>
+				onPress={() => router.push("/(user_screen)/AddIngredients")}>
 				<Image
 					source={colorScheme === "light" ? icons.plusWhite : icons.plus}
 					resizeMode="contain"
 					className="w-12 h-12 rounded-full"
 				/>
 			</StyledPressable>
+			{expiredIngredientsModal && <DarkBgOverlay />}
+			<ExpiredIngredients
+				isVisible={expiredIngredientsModal}
+				onClose={onClose}
+				expiredIngredients={expiredIngredients}
+			/>
 		</>
 	);
 };

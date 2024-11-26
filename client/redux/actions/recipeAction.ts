@@ -39,7 +39,12 @@ type handleSaveRecipeProps = {
 		];
 		instructions: [string];
 		type_of_cuisine: string;
-		nutrient_counts: string;
+		nutrient_counts: [
+			{
+				name: string;
+				measurement: string;
+			}
+		];
 		serve_hot_or_cold: string;
 		cooking_time: string;
 		benefits: string;
@@ -86,6 +91,20 @@ export const getUserRecipe = createAsyncThunk(
 		try {
 			const res = await axios.get(`/user/recipe/${recipeId}`);
 			return res.data.recipe;
+		} catch (error) {
+			const resError = handleError(error);
+			console.log("resError:", resError);
+			return rejectWithValue(resError);
+		}
+	}
+);
+
+export const deleteRecipe = createAsyncThunk(
+	"recipe/deleteRecipe",
+	async (recipeId: string | string[], { rejectWithValue }) => {
+		try {
+			const res = await axios.delete(`/user/recipe/${recipeId}`);
+			return res.data;
 		} catch (error) {
 			const resError = handleError(error);
 			console.log("resError:", resError);

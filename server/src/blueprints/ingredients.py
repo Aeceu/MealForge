@@ -1,9 +1,14 @@
-from flask import Blueprint, jsonify,request
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy import text
+import json
+import os
 import uuid
-from utils.database import engine
 from datetime import datetime
+
+from flask import Blueprint, jsonify, request
+
+# from model.GNN import get_similar_ingredients
+from sqlalchemy import text
+from sqlalchemy.exc import IntegrityError
+from utils.database import engine
 
 ingredients_bp = Blueprint("ingredients", __name__)
 
@@ -12,10 +17,16 @@ def get_ingredients(userId):
     try:
       with engine.connect() as conn:
         query = """
-            SELECT * FROM ingredients
+            SELECT
+              id, name, type, measurements, expirationDate, date_added,
+                CASE
+                    WHEN expirationDate IS NOT NULL AND expirationDate < :current_date THEN TRUE
+                    ELSE FALSE
+                END AS is_expired
+            FROM ingredients
             WHERE user_id = :userId
         """
-        result = conn.execute(text(query),{"userId":userId})
+        result = conn.execute(text(query),{"userId":userId,"current_date": datetime.now().strftime("%Y-%m-%d")})
         ingredients = result.fetchall()
 
         if not ingredients:
@@ -29,7 +40,8 @@ def get_ingredients(userId):
                   "type": ingredient.type,
                   "measurements": ingredient.measurements,
                   "expirationDate": ingredient.expirationDate,
-                  "date_added": ingredient.date_added
+                  "date_added": ingredient.date_added,
+                  "is_expired": ingredient.is_expired
               })
 
         return jsonify({"ingredients": ingredients_list}), 200
@@ -114,5 +126,47 @@ def delete_ingredients(ingredientsId):
                 """),{"ingredientsId":ingredientsId})
             conn.commit()
             return jsonify({"message":"ingredients deleted successfully!"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# @ingredients_bp.route("/user/ingredients/recommend/<ingredient>",methods=["GET"])
+# def recommend_ingredients(ingredient):
+#   try:
+#       result = get_similar_ingredients(ingredient)
+#       return jsonify({"recommended_ingredients":result}),200
+#   except Exception as e:
+#       return jsonify({"error":str(e)}), 500
+
+@ingredients_bp.route("/insert-ingredients", methods=["POST"])
+def insert_ingredients():
+    try:
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+        # Load the JSON file
+        with open(os.path.join(base_dir,'data','new_unique_ner.json'), "r") as file:
+            ingredients = json.load(file)
+
+        # Prepare the insert query
+        query = text("INSERT INTO dataset_ingredients (value) VALUES (:value)")
+
+        # Batch insertion
+        batch_size = 1000
+        batch = []
+
+        with engine.connect() as conn:
+            for ingredient in ingredients:
+                batch.append({"value": ingredient})
+
+                # Insert batch into the database
+                if len(batch) == batch_size:
+                    conn.execute(query, batch)
+                    batch = []
+
+            # Insert any remaining records
+            if batch:
+                conn.execute(query, batch)
+
+        return jsonify({"message": f"Inserted {len(ingredients)} ingredients successfully!"}), 201
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
