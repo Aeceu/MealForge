@@ -136,6 +136,18 @@ const AuthLayout = () => {
 						headerShadowVisible: false,
 					}}
 				/>
+				<Stack.Screen
+					name="AddIngredients"
+					options={{
+						headerShown: true,
+						title: "Add new ingredient",
+						headerStyle: {
+							backgroundColor: tabColor,
+						},
+						headerTintColor: textColor,
+						headerShadowVisible: false,
+					}}
+				/>
 			</Stack>
 		</>
 	);

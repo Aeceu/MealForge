@@ -14,6 +14,7 @@ export type RecipePost = {
 		cooking_time: string;
 		benefits: string;
 		serve_for: string;
+		difficulty: string;
 	};
 	author: string;
 	is_bookmarked: boolean;
@@ -21,4 +22,5 @@ export type RecipePost = {
 	total_likes: number;
 	is_disliked: boolean;
 	total_dislikes: number;
+	avg_rating: string;
 };

@@ -2,23 +2,15 @@ import { configureStore } from "@reduxjs/toolkit";
 import userSlice from "./slices/userSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { persistReducer, persistStore, createTransform } from "redux-persist";
-import authSlice, { TInitialState } from "./slices/authSlice";
+import authSlice, { resetPageLoading, TInitialState } from "./slices/authSlice";
 import ingredientSlice from "./slices/ingredientsSlice";
 import recipeSlice from "./slices/recipeSlice";
 import postSlice from "./slices/postSlice";
 
 const authTransform = createTransform<TInitialState, TInitialState>(
-	(inboundState: TInitialState): TInitialState => {
-		return {
-			...inboundState,
-			pageLoading: false,
-		};
-	},
-	(outboundState: TInitialState): TInitialState => {
-		return {
-			...outboundState,
-			pageLoading: false,
-		};
+	(inboundState) => inboundState, // No changes during persistence
+	(outboundState) => {
+		return { ...outboundState, pageLoading: false }; // Reset only on rehydration
 	},
 	{ whitelist: ["auth"] }
 );
@@ -44,6 +36,15 @@ export const store = configureStore({
 			serializableCheck: false,
 		}),
 });
+
+const initializeStore = () => {
+	const state = store.getState();
+	if (state.auth.pageLoading) {
+		store.dispatch(resetPageLoading());
+	}
+};
+
+initializeStore();
 
 export const persistor = persistStore(store);
 

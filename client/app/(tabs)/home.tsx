@@ -12,6 +12,7 @@ import CreatePost from "@/components/modals/CreatePost";
 import PostFeed from "@/components/HomeUI/PostFeed";
 import { getFilteredPosts, getPosts } from "@/redux/actions/postAction";
 import SearchRecipe from "@/components/modals/SearchRecipe";
+import DarkBgOverlay from "@/components/DarkBgOverlay";
 
 const Home = () => {
 	const [filter, setFilter] = useState("");
@@ -30,22 +31,6 @@ const Home = () => {
 		await dispatch(handleRefresh(accessToken));
 	};
 
-	const handleFilter = (newFilter: string) => {
-		if (!user) return;
-		if (filter === newFilter) {
-			setFilter("");
-			dispatch(getPosts(user?.id));
-		} else {
-			setFilter(newFilter);
-			dispatch(
-				getFilteredPosts({
-					userId: user.id,
-					filter: newFilter,
-				})
-			);
-		}
-	};
-
 	const onOpenModal = () => {
 		setShowModal(true);
 		setDarkBg(true);
@@ -55,13 +40,6 @@ const Home = () => {
 		setShowModal(false);
 		setDarkBg(false);
 	};
-
-	useEffect(() => {
-		if (!user) return;
-		if (pageLoading || post.length <= 0) {
-			dispatch(getPosts(user.id));
-		}
-	}, [user?.id, pageLoading]);
 
 	if (pageLoading) return <Loading />;
 
@@ -96,62 +74,10 @@ const Home = () => {
 						</StyledPressable>
 					</View>
 
-					{/* <StyledText type="xs" className="mx-2 mt-4">
-						Filter by:
-					</StyledText> */}
-
-					{/* Separator */}
-					<View className="flex-1 h-px mx-2 mt-4 rounded-full bg-light-border dark:bg-dark-border" />
-
-					{/* filter */}
-					<View className="flex-row items-center flex-1 my-1">
-						<View className="flex-row w-full justify-evenly">
-							<StyledPressable
-								onPress={() => handleFilter("Popular")}
-								className={`px-2 py-1.5 relative rounded-md flex-row items-center w-1/2 justify-between ${filter === "Popular" && "bg-main "
-									}`}
-								size="icon">
-								<StyledText
-									type="label"
-									className={`text-center w-full ${filter === "Popular" && "text-white"}`}>
-									Popular
-								</StyledText>
-								{filter === "Popular" && (
-									<Image
-										source={icons.closeWhite}
-										resizeMode="contain"
-										className="absolute right-0 w-3 h-3 mr-2"
-									/>
-								)}
-							</StyledPressable>
-							<StyledPressable
-								onPress={() => handleFilter("Latest")}
-								className={`px-2 py-1.5 relative rounded-md flex-row items-center w-1/2 justify-between ${filter === "Latest" && "bg-main "
-									}`}
-								size="icon">
-								<StyledText
-									type="label"
-									className={`text-center w-full ${filter === "Latest" && "text-white"}`}>
-									Latest
-								</StyledText>
-								{filter === "Latest" && (
-									<Image
-										source={icons.closeWhite}
-										resizeMode="contain"
-										className="absolute right-0 w-3 h-3 mr-2"
-									/>
-								)}
-							</StyledPressable>
-						</View>
-					</View>
-
-					{/* Separator */}
-					<View className="flex-1 h-px mx-2 rounded-full bg-light-border dark:bg-dark-border" />
-
 					<PostFeed />
 				</View>
 			</ScrollView>
-			{darkbg && <View className="absolute w-full h-full bg-black/50 z-[9]" />}
+			{darkbg && <DarkBgOverlay />}
 			<CreatePost isVisible={showModal} onClose={onClose} />
 		</>
 	);
@@ -169,7 +95,7 @@ const HomeNav = () => {
 
 	return (
 		<>
-			<View className="flex-row items-center justify-between w-full my-4">
+			<View className="flex-row items-center justify-between w-full mt-6 mb-4">
 				<Image
 					source={
 						colorScheme === "dark"

@@ -13,6 +13,7 @@ import Spin from "./animations/Spin";
 import { Link } from "expo-router";
 import StyledText from "./StyledText";
 import { RecipePost } from "@/utils/types/post";
+import BookmarkButton from "./BookmarkButton";
 
 type Props = {
 	recipe: RecipePost;
@@ -87,9 +88,7 @@ const LikeButton: React.FC<Props> = ({ recipe }) => {
 		// 	<TouchableOpacity>
 		<View className="flex-row items-center justify-between w-full px-2 pt-4 pb-0 ">
 			<View className="flex-row items-center">
-				<StyledText className="flex font-psemibold">
-					{totalLikes}
-				</StyledText>
+				<StyledText className="flex font-psemibold">{totalLikes}</StyledText>
 				<StyledText className="flex ml-1" type="xs" fontStyle="light">
 					{totalLikes <= 1 ? "Like" : "Likes"}
 				</StyledText>
@@ -103,10 +102,11 @@ const LikeButton: React.FC<Props> = ({ recipe }) => {
 			</View>
 
 			<View className="flex-row items-center space-x-2">
-				<StyledPressable
-					disabled={loading}
-					onPress={onLikeButton}
-					size="icon">
+				<BookmarkButton
+					post_id={recipe.id}
+					is_bookmarked={recipe.is_bookmarked}
+				/>
+				<StyledPressable disabled={loading} onPress={onLikeButton} size="icon">
 					{loading ? (
 						<Spin size="sm" loading={loading} />
 					) : (
@@ -117,11 +117,11 @@ const LikeButton: React.FC<Props> = ({ recipe }) => {
 										? icons.likeOrange
 										: icons.likesLightDark
 									: isLiked
-										? icons.likeOrange
-										: icons.likesDarkLight
+									? icons.likeOrange
+									: icons.likesDarkLight
 							}
 							resizeMode="contain"
-							className="w-6 h-6"
+							className="w-6 h-6 ml-1"
 						/>
 					)}
 				</StyledPressable>
@@ -139,8 +139,8 @@ const LikeButton: React.FC<Props> = ({ recipe }) => {
 										? icons.unlikeOrange
 										: icons.unlikesLightDark
 									: isDisliked
-										? icons.unlikeOrange
-										: icons.unlikesDarkLight
+									? icons.unlikeOrange
+									: icons.unlikesDarkLight
 							}
 							resizeMode="contain"
 							className="w-6 h-6"

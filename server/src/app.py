@@ -1,7 +1,6 @@
 import os
 
 from blueprints.auth import auth_bp
-
 from blueprints.generate import generate_bp
 from blueprints.ingredients import ingredients_bp
 from blueprints.post import posts_bp

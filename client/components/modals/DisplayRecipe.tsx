@@ -1,8 +1,6 @@
-import { Image, Modal, ScrollView, View } from "react-native";
+import { Modal, ScrollView, View } from "react-native";
 import StyledText from "../StyledText";
 import StyledPressable from "../StyledPressable";
-import { useColorScheme } from "nativewind";
-import { icons } from "@/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { handleSaveRecipe } from "@/redux/actions/recipeAction";
@@ -20,16 +18,21 @@ type Props = {
 		];
 		instructions: [string];
 		type_of_cuisine: string;
-		nutrient_counts: string;
+		nutrient_counts: [
+			{
+				name: string;
+				measurement: string;
+			}
+		];
 		serve_hot_or_cold: string;
 		cooking_time: string;
 		benefits: string;
 		serve_for: string;
+		difficulty: string;
 	} | null;
 };
 
 const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
-	const { colorScheme } = useColorScheme();
 	const dispatch = useDispatch<AppDispatch>();
 	const { user } = useSelector((state: RootState) => state.user);
 
@@ -67,14 +70,10 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 					<ScrollView>
 						<View className="flex-row items-center justify-between p-4 rounded-t-3xl">
 							<StyledText type="subheading">Generated Recipe</StyledText>
-							<StyledPressable onPress={handleClose} className="ml-auto " size="text">
-								{/* <Image
-								source={
-									colorScheme === "light"
-										? icons.closeDarkLight
-										: icons.closeLightDark
-								}
-								className="w-8 h-8"></Image> */}
+							<StyledPressable
+								onPress={handleClose}
+								className="ml-auto "
+								size="text">
 								<StyledText type="xs" className="underline">
 									Close
 								</StyledText>
@@ -84,9 +83,7 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 						<View className="flex-col items-start justify-start">
 							{/* Header */}
 							<View className="flex-col items-start justify-start w-full px-4 py-2">
-								<StyledText
-									className="font-chunk"
-									type="subheading">
+								<StyledText className="font-chunk" type="subheading">
 									Recipe Name:
 								</StyledText>
 								<StyledText type="heading-3" className="px-3 font-chunk">
@@ -96,9 +93,7 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 
 							{/* Infos */}
 							<View className="flex-col w-full p-4">
-								<StyledText
-									className="font-chunk"
-									type="subheading">
+								<StyledText className="font-chunk" type="subheading">
 									Recipe Information:
 								</StyledText>
 								<View className="flex-col items-start justify-center w-full ">
@@ -126,14 +121,18 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 											{recipe?.type_of_cuisine}{" "}
 										</StyledText>
 									</View>
+									<View className="flex-row items-center px-3 py-1.5 my-1 rounded-full w-max ">
+										<StyledText type="paragraph">Difficulty level: </StyledText>
+										<StyledText type="paragraph">
+											{recipe?.difficulty}{" "}
+										</StyledText>
+									</View>
 								</View>
 							</View>
 
 							{/* Ingredients */}
 							<View className="flex-col w-full p-4">
-								<StyledText
-									className="font-chunk"
-									type="subheading">
+								<StyledText className="font-chunk" type="subheading">
 									Ingredients:
 								</StyledText>
 								<View className="flex-col w-full px-3">
@@ -142,7 +141,7 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 											key={i}
 											type="paragraph"
 											className="py-2 tracking-wide">
-											• {item.name}
+											• {`${item.measurement} ${item.name}`}
 										</StyledText>
 									))}
 								</View>
@@ -150,9 +149,7 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 
 							{/* Instructions */}
 							<View className="flex-col w-full p-4">
-								<StyledText
-									className="font-chunk"
-									type="subheading">
+								<StyledText className="font-chunk" type="subheading">
 									Instructions:
 								</StyledText>
 								<View className="flex-col w-full px-3">
@@ -162,6 +159,23 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 											type="paragraph"
 											className="py-4 tracking-wide">
 											{item}
+										</StyledText>
+									))}
+								</View>
+							</View>
+
+							{/* Nutrients  */}
+							<View className="flex-col w-full p-4">
+								<StyledText className="font-chunk" type="subheading">
+									Nutrients:
+								</StyledText>
+								<View className="flex-col w-full px-3">
+									{recipe?.nutrient_counts.map((item, i) => (
+										<StyledText
+											key={i}
+											type="paragraph"
+											className="py-4 tracking-wide">
+											{`${item.measurement} ${item.name}`}
 										</StyledText>
 									))}
 								</View>

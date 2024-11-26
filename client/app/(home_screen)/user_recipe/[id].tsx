@@ -1,24 +1,28 @@
+import Spin from "@/components/animations/Spin";
 import Loading from "@/components/Loading";
 import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
 import { icons, images } from "@/constants";
-import { getUserRecipe } from "@/redux/actions/recipeAction";
+import { deleteRecipe, getUserRecipe } from "@/redux/actions/recipeAction";
 import { AppDispatch, RootState } from "@/redux/store";
 import { TRecipe } from "@/utils/types/recipe";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useColorScheme } from "nativewind";
 import { useEffect, useState } from "react";
-import { Image } from "react-native";
+import { Alert, Image } from "react-native";
 import { ScrollView, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 const RecipePostPage = () => {
 	const { id } = useLocalSearchParams();
-	const [recipe, setRecipe] = useState<TRecipe | null>(null);
 	const { colorScheme } = useColorScheme();
+
+	const [loading, setLoading] = useState(false);
+	const [recipe, setRecipe] = useState<TRecipe | null>(null);
 
 	const dispatch = useDispatch<AppDispatch>();
 	const { status } = useSelector((state: RootState) => state.recipe);
+
 	useEffect(() => {
 		dispatch(getUserRecipe(id)).then((res) => {
 			if (res.meta.requestStatus === "fulfilled") {
@@ -26,6 +30,20 @@ const RecipePostPage = () => {
 			}
 		});
 	}, []);
+
+	const handleDeleteRecipe = () => {
+		setLoading(true);
+		dispatch(deleteRecipe(id))
+			.then((res) => {
+				if (res.meta.requestStatus === "fulfilled") {
+					Alert.alert(res.payload.message);
+					router.back();
+				}
+			})
+			.finally(() => {
+				setLoading(false);
+			});
+	};
 
 	if (status === "pending") return <Loading />;
 
@@ -35,9 +53,7 @@ const RecipePostPage = () => {
 				{/* Header */}
 				<View className="mx-2 mb-4">
 					<View className="flex-row justify-between flex-1 w-full">
-						<StyledText
-							type="heading-4"
-							className="flex-1 text-2xl font-chunk">
+						<StyledText type="heading-4" className="flex-1 text-2xl font-chunk">
 							{recipe?.name}
 						</StyledText>
 					</View>
@@ -52,11 +68,13 @@ const RecipePostPage = () => {
 						Recipe Information:
 					</StyledText>
 					<View className="flex-row flex-1 w-full px-4 py-4 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
-
 						<View className="flex-col justify-between flex-1 space-y-4">
+							{/* Servings */}
 							<View className="flex-row w-full">
 								<Image
-									source={colorScheme === "light" ? icons.usersDark : icons.usersLight}
+									source={
+										colorScheme === "light" ? icons.usersDark : icons.usersLight
+									}
 									resizeMode="contain"
 									className="mt-1 w-7 h-7"
 								/>
@@ -69,9 +87,12 @@ const RecipePostPage = () => {
 								</View>
 							</View>
 
+							{/* Cooking time */}
 							<View className="flex-row w-full">
 								<Image
-									source={colorScheme === "light" ? icons.timeDark : icons.timeLight}
+									source={
+										colorScheme === "light" ? icons.timeDark : icons.timeLight
+									}
 									resizeMode="contain"
 									className="mt-1 w-7 h-7"
 								/>
@@ -83,12 +104,32 @@ const RecipePostPage = () => {
 									</StyledText>
 								</View>
 							</View>
+
+							{/* Difficulty */}
+							<View className="flex-row w-full">
+								<Image
+									source={
+										colorScheme === "light" ? icons.tempDark : icons.tempLight
+									}
+									resizeMode="contain"
+									className="mt-1 w-7 h-7"
+								/>
+								<View className="flex-1 w-full ml-3">
+									<StyledText type="xs">Difficulty: </StyledText>
+									<StyledText type="paragraph" className="">
+										{recipe?.difficulty}{" "}
+									</StyledText>
+								</View>
+							</View>
 						</View>
 
 						<View className="flex-col justify-between flex-1 space-y-4">
+							{/* Serve hot or cold */}
 							<View className="flex-row w-full">
 								<Image
-									source={colorScheme === "light" ? icons.tempDark : icons.tempLight}
+									source={
+										colorScheme === "light" ? icons.tempDark : icons.tempLight
+									}
 									resizeMode="contain"
 									className="mt-1 w-7 h-7"
 								/>
@@ -100,9 +141,14 @@ const RecipePostPage = () => {
 								</View>
 							</View>
 
+							{/* Cuisine type */}
 							<View className="flex-row w-full">
 								<Image
-									source={colorScheme === "light" ? icons.cuisineTypeDark : icons.cuisineTypeLight}
+									source={
+										colorScheme === "light"
+											? icons.cuisineTypeDark
+											: icons.cuisineTypeLight
+									}
 									resizeMode="contain"
 									className="mt-1 w-7 h-7"
 								/>
@@ -148,12 +194,29 @@ const RecipePostPage = () => {
 					</View>
 				</View>
 
-				{/* <StyledPressable
+				{/* Nutrients */}
+				<View className="mb-4">
+					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
+						Nutrients:
+					</StyledText>
+					<View className="w-full px-6 py-4 space-y-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
+						<StyledText type="paragraph" className="">
+							• {recipe?.nutrient_counts}
+						</StyledText>
+					</View>
+				</View>
+
+				<StyledPressable
+					disabled={loading}
 					size="xl"
-					className="w-full mt-2 bg-main"
-				>
-					<StyledText type="subheading" className="text-white">Post Recipe</StyledText>
-				</StyledPressable> */}
+					className="w-full mt-4 bg-red-500"
+					onPress={handleDeleteRecipe}>
+					{loading ? (
+						<Spin size="sm" loading={loading} />
+					) : (
+						<StyledText className="text-white">Delete Post</StyledText>
+					)}
+				</StyledPressable>
 			</View>
 		</ScrollView>
 	);
