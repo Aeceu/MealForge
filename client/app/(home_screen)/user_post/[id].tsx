@@ -103,13 +103,14 @@ const UserRecipePost = () => {
 
 					<View className="flex-col flex-1 w-full px-4 py-4 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
 						<View className="flex-row flex-1">
-
 							<View className="flex-col justify-between flex-1 space-y-4">
 								{/* Servings */}
 								<View className="flex-row w-full">
 									<Image
 										source={
-											colorScheme === "light" ? icons.usersDark : icons.usersLight
+											colorScheme === "light"
+												? icons.usersDark
+												: icons.usersLight
 										}
 										resizeMode="contain"
 										className="mt-1 w-7 h-7"
@@ -136,7 +137,9 @@ const UserRecipePost = () => {
 										<StyledText type="xs">Cooking time: </StyledText>
 										<StyledText type="paragraph" className="">
 											{post?.recipe.cooking_time}
-											{post?.recipe.cooking_time === "1" ? " minute" : " minutes"}
+											{post?.recipe.cooking_time === "1"
+												? " minute"
+												: " minutes"}
 										</StyledText>
 									</View>
 								</View>
@@ -197,7 +200,6 @@ const UserRecipePost = () => {
 								</StyledText>
 							</View>
 						</View>
-
 					</View>
 				</View>
 
@@ -229,6 +231,18 @@ const UserRecipePost = () => {
 									</StyledText>
 								)
 						)}
+					</View>
+				</View>
+
+				{/* Benefits */}
+				<View className="mb-4">
+					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
+						Benefits:
+					</StyledText>
+					<View className="w-full px-6 py-4 space-y-6 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
+						<StyledText type="paragraph" className="text-center">
+							{post.recipe.benefits}
+						</StyledText>
 					</View>
 				</View>
 

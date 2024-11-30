@@ -24,44 +24,6 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { handleLogin } from "@/redux/actions/authActions";
 import Spin from "@/components/animations/Spin";
 
-export const print = () => {
-	const auth = useSelector((state: RootState) => state.auth);
-	const user = useSelector((state: RootState) => state.user);
-	const ingredients = useSelector((state: RootState) => state.ingredients);
-	const post = useSelector((state: RootState) => state.post);
-	const recipe = useSelector((state: RootState) => state.recipe);
-	console.log("*** A U T H ***");
-	console.log("PageLoading:", auth.pageLoading);
-	console.log("status:", auth.status);
-	console.log(
-		"TOKEN:",
-		auth.accessToken ? true : false,
-		auth.refreshToken ? true : false
-	);
-
-	console.log("*** U S E R ***");
-	console.log("PageLoading:", user.pageLoading);
-	console.log("status:", user.status);
-	console.log("user:", user.user);
-
-	console.log("*** I N G R E D I E N T S ***");
-	console.log("PageLoading:", ingredients.pageLoading);
-	console.log("status:", ingredients.status);
-	console.log(
-		"ingredients:",
-		ingredients.ingredients && ingredients.ingredients
-	);
-
-	console.log("*** R E C I P E S ***");
-	console.log("PageLoading:", recipe.pageLoading);
-	console.log("status:", recipe.status);
-	console.log("recipe:", recipe.recipe && recipe.recipe.length);
-
-	console.log("*** P O S T S ***");
-	console.log("PageLoading:", post.pageLoading);
-	console.log("status:", post.status);
-	console.log("post:", post.post && post.post.length);
-};
 const Login = () => {
 	const { colorScheme } = useColorScheme();
 	const { gradientColor, logoImage } = useThemeColors();
@@ -184,8 +146,9 @@ const Login = () => {
 
 						<StyledPressable
 							size="xl"
-							className={`mt-4 bg-main flex-row items-center ${auth.status === "pending" && "bg-main/20"
-								}`}
+							className={`mt-4 bg-main flex-row items-center ${
+								auth.status === "pending" && "bg-main/20"
+							}`}
 							disabled={auth.status === "pending"}
 							onPress={handleSubmit(onSubmit)}>
 							{auth.status === "pending" && (

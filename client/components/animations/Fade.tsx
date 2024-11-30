@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { View, Animated, Easing } from "react-native";
+import { Animated, Easing } from "react-native";
 
 interface FadeAnimationProps {
 	children: React.ReactNode;

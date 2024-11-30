@@ -1,25 +1,64 @@
 import os
 import pickle
 
+import numpy as np
 import torch
 import torch.nn.functional as F
+from flask import jsonify
+from sklearn.metrics.pairwise import cosine_similarity
+from torch_geometric.nn import GATConv
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-with open(os.path.join(base_dir,'dataset','ingredient_graph.pkl'),'rb') as f:
-    G = pickle.load(f)
 
-embeddings = torch.load(os.path.join(base_dir,'dataset','ingredient_embeddings.pt'))
+model_path = os.path.join(base_dir,'dataset','gnn_model.pth')
+ingredients_path = os.path.join(base_dir,'dataset','ingredients_list.pkl')
+embeddings_path = os.path.join(base_dir,'dataset','node_embeddings.npy')
+
+# Load the model
+class IngredientGNN(torch.nn.Module):
+    def __init__(self, in_channels, out_channels):
+        super(IngredientGNN, self).__init__()
+        self.conv1 = GATConv(in_channels, 32, heads=4, concat=True)
+        self.conv2 = GATConv(32 * 4, out_channels, heads=1, concat=False)
+
+    def forward(self, data):
+        x, edge_index = data.x, data.edge_index
+        x = self.conv1(x, edge_index)
+        x = torch.relu(x)
+        x = self.conv2(x, edge_index)
+        return x
+
+# Load the model architecture and weights
+model = IngredientGNN(in_channels=384, out_channels=16)  # Adjust channels as per your model
+model.load_state_dict(torch.load(model_path))
+model.eval()
+
+# Load ingredients list and embeddings
+with open(ingredients_path, 'rb') as f:
+    ingredients_list = pickle.load(f)
+
+embeddings = np.load(embeddings_path)
+
 
 # Function to get similar ingredients
 def get_similar_ingredients(ingredient, k=5):
-    try:
-        idx = list(G.nodes).index(ingredient)
-    except ValueError:
-        return {"error": f"{ingredient} not found in graph."}
+    # Check if the ingredient is in the list
+    if ingredient not in ingredients_list:
+        return jsonify({'error': f"Ingredient '{ingredient}' not found"}), 404
 
-    ingredient_embedding = embeddings[idx]
-    similarities = F.cosine_similarity(ingredient_embedding, embeddings)
-    # Get the top-k similar ingredients (excluding itself)
-    top_k = similarities.argsort(descending=True)[1:k+1]
-    return [list(G.nodes)[i] for i in top_k]
+    # Get the index of the query ingredient
+    query_index = ingredients_list.index(ingredient)
+
+    # Compute similarities
+    query_embedding = embeddings[query_index].reshape(1, -1)
+    similarities = cosine_similarity(query_embedding, embeddings)[0]
+
+    # Get top recommendations
+    top_k = 5
+    recommendation_indices = np.argsort(similarities)[::-1]
+    recommendations = [
+        ingredients_list[i] for i in recommendation_indices[:top_k] if i != query_index
+    ]
+
+    return recommendations

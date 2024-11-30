@@ -60,7 +60,6 @@ const drawer = () => {
 
 	useEffect(() => {
 		const expired = ingredients.filter((item) => item.is_expired);
-		console.log(expired);
 		setExpiredIngredients(expired);
 		setExpiredIngredientsModal(expired.length > 0);
 	}, []);
@@ -81,18 +80,20 @@ const drawer = () => {
 					<View className="flex-row px-8 space-x-4">
 						<StyledPressable
 							onPress={() => setSelectedTab("main ingredient")}
-							className={`rounded-none pt-0 mt-0 ${selectedTab === "main ingredient"
-								? "border-b  border-main opacity-100"
-								: "opacity-60"
-								}`}>
+							className={`rounded-none pt-0 mt-0 ${
+								selectedTab === "main ingredient"
+									? "border-b  border-main opacity-100"
+									: "opacity-60"
+							}`}>
 							<StyledText>My Ingredients</StyledText>
 						</StyledPressable>
 						<StyledPressable
 							onPress={() => setSelectedTab("seasoning")}
-							className={`rounded-none pt-0 mt-0 ${selectedTab === "seasoning"
-								? "border-b  border-main opacity-100"
-								: "opacity-60"
-								}`}>
+							className={`rounded-none pt-0 mt-0 ${
+								selectedTab === "seasoning"
+									? "border-b  border-main opacity-100"
+									: "opacity-60"
+							}`}>
 							<StyledText>My Seasonings</StyledText>
 						</StyledPressable>
 					</View>

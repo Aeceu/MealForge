@@ -6,7 +6,6 @@ import StyledPressable from "@/components/StyledPressable";
 import StyledText from "@/components/StyledText";
 import { icons } from "@/constants";
 import { getPostById } from "@/redux/actions/postAction";
-import axios from "@/redux/api/axios";
 import { AppDispatch, RootState } from "@/redux/store";
 import { RecipePost } from "@/utils/types/post";
 import { router, useLocalSearchParams } from "expo-router";
@@ -153,7 +152,9 @@ const RecipePostPage = () => {
 									<View className="flex-row w-full">
 										<Image
 											source={
-												colorScheme === "light" ? icons.timeDark : icons.timeLight
+												colorScheme === "light"
+													? icons.timeDark
+													: icons.timeLight
 											}
 											resizeMode="contain"
 											className="mt-1 w-7 h-7"
@@ -175,7 +176,9 @@ const RecipePostPage = () => {
 									<View className="flex-row w-full">
 										<Image
 											source={
-												colorScheme === "light" ? icons.tempDark : icons.tempLight
+												colorScheme === "light"
+													? icons.tempDark
+													: icons.tempLight
 											}
 											resizeMode="contain"
 											className="mt-1 w-7 h-7"
@@ -256,6 +259,32 @@ const RecipePostPage = () => {
 										</StyledText>
 									)
 							)}
+						</View>
+					</View>
+
+					{/* Nutrients */}
+					<View className="mb-4">
+						<StyledText type="subheading" className="px-2 mb-2 font-chunk">
+							Nutrients:
+						</StyledText>
+						<View className="w-full px-6 py-4 space-y-6 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
+							{post.recipe.nutrient_counts.split(",").map((item, i) => (
+								<StyledText key={i} type="paragraph">
+									• {item}
+								</StyledText>
+							))}
+						</View>
+					</View>
+
+					{/* Benefits */}
+					<View className="mb-4">
+						<StyledText type="subheading" className="px-2 mb-2 font-chunk">
+							Benefits:
+						</StyledText>
+						<View className="w-full px-6 py-4 space-y-6 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
+							<StyledText type="paragraph" className="text-center">
+								{post.recipe.benefits}
+							</StyledText>
 						</View>
 					</View>
 

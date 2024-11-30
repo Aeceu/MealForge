@@ -1,7 +1,8 @@
 import os
 
 from blueprints.auth import auth_bp
-from blueprints.generate import generate_bp
+
+# from blueprints.generate import generate_bp
 from blueprints.ingredients import ingredients_bp
 from blueprints.post import posts_bp
 from blueprints.recipe import recipes_bp
@@ -16,7 +17,7 @@ app = Flask(__name__)
 jwt = JWTManager(app)
 
 # CORS Configuration
-CORS(app, supports_credentials=True,origin=os.getenv("CLIENT_ORIGIN"))
+CORS(app, supports_credentials=True,origin="*")
 
 # Configuration
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -31,7 +32,7 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(user_bp)
 app.register_blueprint(posts_bp)
 app.register_blueprint(recipes_bp)
-app.register_blueprint(generate_bp)
+# app.register_blueprint(generate_bp)
 app.register_blueprint(ingredients_bp)
 
 if __name__ == "__main__":

@@ -4,8 +4,7 @@ import uuid
 from datetime import datetime
 
 from flask import Blueprint, jsonify, request
-
-# from model.GNN import get_similar_ingredients
+from model.GNN import get_similar_ingredients
 from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
 from utils.database import engine
@@ -129,13 +128,14 @@ def delete_ingredients(ingredientsId):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# @ingredients_bp.route("/user/ingredients/recommend/<ingredient>",methods=["GET"])
-# def recommend_ingredients(ingredient):
-#   try:
-#       result = get_similar_ingredients(ingredient)
-#       return jsonify({"recommended_ingredients":result}),200
-#   except Exception as e:
-#       return jsonify({"error":str(e)}), 500
+@ingredients_bp.route("/user/ingredients/recommend/<ingredient>",methods=["GET"])
+def recommend_ingredients(ingredient):
+  try:
+      result = get_similar_ingredients(ingredient)
+      print(result)
+      return jsonify({"recommendations":result}),200
+  except Exception as e:
+      return jsonify({"error":str(e)}), 500
 
 @ingredients_bp.route("/insert-ingredients", methods=["POST"])
 def insert_ingredients():

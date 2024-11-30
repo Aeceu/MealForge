@@ -24,7 +24,7 @@ const ExpiredIngredients: React.FC<Props> = ({
 		<Modal visible={isVisible} transparent={true} animationType="fade">
 			<View className="w-full h-full flex-col items-center justify-center">
 				<Popup animate={isVisible} duration={300}>
-					<View className="w-[300px] h-[300px]  bg-light dark:bg-dark border border-dark-border rounded-xl p-4">
+					<View className="w-[300px] h-[400px]  bg-light dark:bg-dark border border-dark-border rounded-xl p-4">
 						<View className="mb-4 w-full flex-row items-center justify-between ">
 							<StyledText type="heading-3" className=" font-chunk">
 								Expired Ingredients:
@@ -41,19 +41,43 @@ const ExpiredIngredients: React.FC<Props> = ({
 							</StyledPressable>
 						</View>
 
-						<ScrollView className="mb-4 flex-col max-h-[250px]">
+						<ScrollView className="mb-4 flex-col max-h-[300px]">
+							<StyledText type="heading-3" className="font-chunk text-main">
+								Main Ingredients:
+							</StyledText>
 							{expiredIngredients &&
 								expiredIngredients.length > 0 &&
-								expiredIngredients.map((item, i) => (
-									<View
-										key={i}
-										className="my-1 w-full flex-row items-center justify-between">
-										<StyledText>{item.name}</StyledText>
-										<StyledText>
-											{item.expirationDate?.toString().split("T")[0]}
-										</StyledText>
-									</View>
-								))}
+								expiredIngredients.map(
+									(item, i) =>
+										item.type === "main ingredient" && (
+											<View
+												key={i}
+												className="w-full flex-row items-center justify-between">
+												<StyledText className="ml-2">• {item.name}</StyledText>
+												<StyledText>
+													{item.expirationDate?.toString().split("T")[0]}
+												</StyledText>
+											</View>
+										)
+								)}
+							<StyledText type="heading-3" className="font-chunk text-main">
+								Seasonings:
+							</StyledText>
+							{expiredIngredients &&
+								expiredIngredients.length > 0 &&
+								expiredIngredients.map(
+									(item, i) =>
+										item.type === "seasoning" && (
+											<View
+												key={i}
+												className="w-full flex-row items-center justify-between">
+												<StyledText className="ml-2">• {item.name}</StyledText>
+												<StyledText>
+													{item.expirationDate?.toString().split("T")[0]}
+												</StyledText>
+											</View>
+										)
+								)}
 						</ScrollView>
 					</View>
 				</Popup>

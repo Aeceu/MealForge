@@ -53,26 +53,24 @@ const Settings = () => {
 				<StyledText type="heading-3" className="pt-4 pb-4">
 					General
 				</StyledText>
-
 				<General />
 
 				<StyledText type="heading-3" className="pt-8 pb-4">
 					UI Preferences
 				</StyledText>
-
 				<Preference />
 
 				<StyledText type="heading-3" className="pt-8 pb-4">
 					Privacy & Security
 				</StyledText>
-
 				<SecurityPrivacy />
 
 				<StyledPressable
 					onPress={logout}
 					size="xl"
-					className={`flex-row items-center justify-start w-full mt-16 px-6 h-max ${status === "pending" ? "bg-red-600/50" : "bg-red-600"
-						}`}>
+					className={`flex-row items-center justify-start w-full mt-16 px-6 h-max ${
+						status === "pending" ? "bg-red-600/50" : "bg-red-600"
+					}`}>
 					{status === "pending" ? (
 						<Spin loading={status === "pending"} size="md" />
 					) : (

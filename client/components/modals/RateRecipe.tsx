@@ -7,6 +7,7 @@ import axios from "@/redux/api/axios";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import Spin from "../animations/Spin";
+import { useColorScheme } from "nativewind";
 
 type Props = {
 	isVisible: boolean;
@@ -17,6 +18,8 @@ type Props = {
 const RateRecipe: React.FC<Props> = ({ isVisible, onClose, post_id }) => {
 	const [rate, setRate] = useState(0);
 	const [loading, setLoading] = useState(false);
+
+	const { colorScheme } = useColorScheme();
 
 	const { user } = useSelector((state: RootState) => state.user);
 
@@ -52,7 +55,11 @@ const RateRecipe: React.FC<Props> = ({ isVisible, onClose, post_id }) => {
 							size="icon"
 							className="w-max">
 							<Image
-								source={icons.closeLightDark}
+								source={
+									colorScheme === "dark"
+										? icons.closeLightDark
+										: icons.closeDarkLight
+								}
 								className="w-7 h-7"
 								resizeMode="contain"
 							/>
@@ -73,7 +80,13 @@ const RateRecipe: React.FC<Props> = ({ isVisible, onClose, post_id }) => {
 										key={i}
 										onPress={() => setRate(i + 1)}>
 										<Image
-											source={rate <= i ? icons.starLight : icons.starOrange}
+											source={
+												rate <= i
+													? colorScheme === "dark"
+														? icons.starLight
+														: icons.starDark
+													: icons.starOrange
+											}
 											className="w-6 h-6 mx-1"
 											resizeMode="contain"
 										/>
@@ -91,7 +104,7 @@ const RateRecipe: React.FC<Props> = ({ isVisible, onClose, post_id }) => {
 							{loading ? (
 								<Spin size="sm" loading={loading} />
 							) : (
-								<StyledText>Rate</StyledText>
+								<StyledText className="text-light">Rate</StyledText>
 							)}
 						</StyledPressable>
 					</View>

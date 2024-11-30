@@ -1,5 +1,5 @@
-import { View, RefreshControl, Image, ScrollView, Alert } from "react-native";
-import React, { useEffect, useState } from "react";
+import { View, RefreshControl, Image, ScrollView } from "react-native";
+import React, { useState } from "react";
 import Loading from "@/components/Loading";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
