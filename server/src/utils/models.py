@@ -26,6 +26,7 @@ class User(Base):
     dislikes = relationship('Dislike', back_populates='user', cascade="all, delete-orphan")
     bookmarks = relationship('Bookmark', back_populates='user', cascade="all, delete-orphan")
     ratings = relationship('Rating', back_populates='user', cascade="all, delete-orphan")
+    comments = relationship('Comment', back_populates='user', cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<User(firstName={self.firstName}, lastName={self.lastName}, email={self.email})>"
@@ -45,7 +46,7 @@ class Recipe(Base):
     serve_for = Column(Integer, nullable=False)
     difficulty = Column(String(250), nullable=False)
 
-    user_id = Column(GUID(), ForeignKey('users.id'), nullable=False)
+    user_id = Column(GUID(), ForeignKey('users.id',ondelete="CASCADE"), nullable=False)
     user = relationship('User', back_populates='recipes')
 
     recipe_posts = relationship('RecipePost', back_populates='recipe', cascade="all, delete-orphan")
@@ -57,16 +58,18 @@ class RecipePost(Base):
     __tablename__ = 'recipe_posts'
 
     id = Column(GUID(), primary_key=True, default=uuid.uuid4)
-    user_id = Column(GUID(), ForeignKey('users.id'), nullable=False)
-    recipe_id = Column(GUID(), ForeignKey('recipes.id'), nullable=False)
+    user_id = Column(GUID(), ForeignKey('users.id',ondelete="CASCADE"), nullable=False)
+    recipe_id = Column(GUID(), ForeignKey('recipes.id',ondelete="CASCADE"), nullable=False)
     posted_at = Column(String(20), nullable=False, default=func.current_date())
     recipe_post_image  = Column(String(500), nullable=True)
+
     # Relationships
     user = relationship("User", back_populates="recipe_posts")
     recipe = relationship("Recipe", back_populates="recipe_posts")
     likes = relationship("Like", back_populates="recipe_post", cascade="all, delete-orphan")
     dislikes = relationship("Dislike", back_populates="recipe_post", cascade="all, delete-orphan")
     bookmarks = relationship("Bookmark", back_populates="recipe_post", cascade="all, delete-orphan")
+    comments = relationship("Comment", back_populates="recipe_post", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<RecipePost(user_id={self.user_id}, recipe_id={self.recipe_id}, posted_at={self.posted_at})>"
@@ -75,8 +78,8 @@ class Like(Base):
     __tablename__ = 'likes'
 
     id = Column(GUID(), primary_key=True, default=uuid.uuid4)
-    user_id = Column(GUID(), ForeignKey('users.id'), nullable=False)
-    post_id = Column(GUID(), ForeignKey('recipe_posts.id'), nullable=False)
+    user_id = Column(GUID(), ForeignKey('users.id',ondelete="CASCADE"), nullable=False)
+    post_id = Column(GUID(), ForeignKey('recipe_posts.id',ondelete="CASCADE"), nullable=False)
     liked_at = Column(String(20), nullable=False, default=func.current_date())
 
     # Relationships
@@ -90,8 +93,8 @@ class Dislike(Base):
     __tablename__ = 'dislikes'
 
     id = Column(GUID(), primary_key=True, default=uuid.uuid4)
-    user_id = Column(GUID(), ForeignKey('users.id'), nullable=False)
-    post_id = Column(GUID(), ForeignKey('recipe_posts.id'), nullable=False)
+    user_id = Column(GUID(), ForeignKey('users.id',ondelete="CASCADE"), nullable=False)
+    post_id = Column(GUID(), ForeignKey('recipe_posts.id',ondelete="CASCADE"), nullable=False)
     disliked_at = Column(String(20), nullable=False, default=func.current_date())
 
     # Relationships
@@ -105,8 +108,8 @@ class Bookmark(Base):
     __tablename__ = 'bookmarks'
 
     id = Column(GUID(), primary_key=True, default=uuid.uuid4)
-    user_id = Column(GUID(), ForeignKey('users.id'), nullable=False)
-    post_id = Column(GUID(), ForeignKey('recipe_posts.id'), nullable=False)
+    user_id = Column(GUID(), ForeignKey('users.id',ondelete="CASCADE"), nullable=False)
+    post_id = Column(GUID(), ForeignKey('recipe_posts.id',ondelete="CASCADE"), nullable=False)
     bookmarked_at = Column(String(20), nullable=False, default=func.current_date())
 
     # Relationships
@@ -120,9 +123,9 @@ class Rating(Base):
     __tablename__ = 'ratings'
 
     id = Column(GUID(), primary_key=True, default=uuid.uuid4)
-    user_id = Column(GUID(), ForeignKey('users.id'), nullable=False)
-    post_id = Column(GUID(), ForeignKey('recipe_posts.id'), nullable=False)
-    rating = Column(Integer, nullable=False)  # Rating value (1 to 5)
+    user_id = Column(GUID(), ForeignKey('users.id',ondelete="CASCADE"), nullable=False)
+    post_id = Column(GUID(), ForeignKey('recipe_posts.id',ondelete="CASCADE"), nullable=False)
+    rating = Column(Integer, nullable=False)
     rated_at = Column(String(20), nullable=False, default=func.current_date())
 
     # Relationships
@@ -131,3 +134,19 @@ class Rating(Base):
 
     def __repr__(self):
         return f"<Rating(user_id={self.user_id}, post_id={self.post_id}, rating={self.rating})>"
+
+class Comment(Base):
+    __tablename__ = 'comments'
+
+    id = Column(GUID(), primary_key=True, default=uuid.uuid4)
+    user_id = Column(GUID(), ForeignKey('users.id', ondelete="CASCADE"), nullable=False)
+    post_id = Column(GUID(), ForeignKey('recipe_posts.id', ondelete="CASCADE"), nullable=False)
+    content = Column(Text, nullable=False)
+    created_at = Column(String(20), nullable=False, default=func.current_date())
+
+    # Relationships
+    user = relationship("User", back_populates="comments")
+    recipe_post = relationship("RecipePost", back_populates="comments")
+
+    def __repr__(self):
+        return f"<Comment(user_id={self.user_id}, post_id={self.post_id}, created_at={self.created_at}, content={self.content[:20]}...)>"
