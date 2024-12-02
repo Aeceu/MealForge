@@ -31,6 +31,23 @@ class User(Base):
     def __repr__(self):
         return f"<User(firstName={self.firstName}, lastName={self.lastName}, email={self.email})>"
 
+class Ingredient(Base):
+    __tablename__ = 'ingredients'
+
+    id = Column(GUID(), primary_key=True, default=uuid.uuid4)
+    name = Column(String(250), nullable=False)
+    type = Column(String(250), nullable=False)
+    measurements = Column(String(100), nullable=False)
+    expirationDate = Column(String(250), nullable=True)
+    date_added = Column(String(250), nullable=False, default=func.current_date())
+
+    user_id = Column(GUID(), ForeignKey('users.id',ondelete="CASCADE"), nullable=False)
+    user = relationship("User", backref="ingredients")
+
+    def __repr__(self):
+        return f"<Ingredient(name={self.name}, measurements={self.measurements})>"
+
+
 class Recipe(Base):
     __tablename__ = 'recipes'
 
