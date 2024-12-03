@@ -153,7 +153,7 @@ const RecipePostPage = () => {
 						<View className="flex-row flex-1 w-full pt-4">
 							<Image
 								source={
-									colorScheme === "light" ? icons.tempDark : icons.tempLight
+									colorScheme === "light" ? icons.diffDark : icons.diffLight
 								}
 								resizeMode="contain"
 								className="w-5 h-5 mx-1 mt-1"
