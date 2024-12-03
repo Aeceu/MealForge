@@ -4,6 +4,7 @@ import { icons } from "@/constants";
 import Popup from "../animations/Popup";
 import { TIngredients } from "@/utils/types/ingredients";
 import StyledText from "../StyledText";
+import { useColorScheme } from "nativewind";
 
 type Props = {
 	isVisible: boolean;
@@ -19,13 +20,18 @@ const ExpiredIngredients: React.FC<Props> = ({
 	const handleClose = () => {
 		onClose();
 	};
+	const { colorScheme } = useColorScheme();
 
 	return (
 		<Modal visible={isVisible} transparent={true} animationType="fade">
-			<View className="w-full h-full flex-col items-center justify-center">
+
+			{/*<View className="flex-col items-center justify-center w-full h-full">*/}
+			<View className="flex-col items-center justify-center w-full h-full">
 				<Popup animate={isVisible} duration={300}>
 					<View className="w-[300px] h-[400px]  bg-light dark:bg-dark border border-dark-border rounded-xl p-4">
-						<View className="mb-4 w-full flex-row items-center justify-between ">
+
+						{/* <View className="flex-row items-center justify-between w-full mb-4 "> */}
+						<View className="flex-row items-center justify-between w-full mb-4 ">
 							<StyledText type="heading-3" className=" font-chunk">
 								Expired Ingredients:
 							</StyledText>
@@ -34,7 +40,11 @@ const ExpiredIngredients: React.FC<Props> = ({
 								size="icon"
 								className="w-max">
 								<Image
-									source={icons.closeLightDark}
+									source={
+										colorScheme === "light"
+											? icons.closeDarkLight
+											: icons.closeLightDark
+									}
 									className="w-8 h-8"
 									resizeMode="contain"
 								/>
@@ -52,7 +62,7 @@ const ExpiredIngredients: React.FC<Props> = ({
 										item.type === "main ingredient" && (
 											<View
 												key={i}
-												className="w-full flex-row items-center justify-between">
+												className="flex-row items-center justify-between w-full my-1">
 												<StyledText className="ml-2">• {item.name}</StyledText>
 												<StyledText>
 													{item.expirationDate?.toString().split("T")[0]}
@@ -70,7 +80,7 @@ const ExpiredIngredients: React.FC<Props> = ({
 										item.type === "seasoning" && (
 											<View
 												key={i}
-												className="w-full flex-row items-center justify-between">
+												className="flex-row items-center justify-between w-full my-1">
 												<StyledText className="ml-2">• {item.name}</StyledText>
 												<StyledText>
 													{item.expirationDate?.toString().split("T")[0]}

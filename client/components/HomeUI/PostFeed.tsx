@@ -40,18 +40,16 @@ const PostFeed = () => {
 			{/* Separator */}
 			<View className="flex-1 h-px mx-2 mt-4 rounded-full bg-light-border dark:bg-dark-border" />
 			{/* filter */}
-			<View className="flex-row items-center  my-1  w-full justify-evenly">
+			<View className="flex-row items-center w-full my-1 justify-evenly">
 				<StyledPressable
 					onPress={() => handleFilter("Ratings")}
-					className={`flex-1 px-2 py-1.5 relative rounded-md flex-row items-center w-full justify-between ${
-						filter === "Ratings" && "bg-main "
-					}`}
+					className={`flex-1 px-2 py-1.5 relative rounded-md flex-row items-center w-full ${filter === "Ratings" && "bg-main"
+						}`}
 					size="icon">
 					<StyledText
 						type="label"
-						className={`text-center w-full ${
-							filter === "Ratings" && "text-light"
-						}`}>
+						className={`w-full ${filter === "Ratings" ? "text-start text-light" : "text-center"
+							}`}>
 						Ratings
 					</StyledText>
 					{filter === "Ratings" && (
@@ -64,15 +62,13 @@ const PostFeed = () => {
 				</StyledPressable>
 				<StyledPressable
 					onPress={() => handleFilter("Popular")}
-					className={`flex-1 px-2 py-1.5 relative rounded-md flex-row items-center w-full justify-between ${
-						filter === "Popular" && "bg-main "
-					}`}
+					className={`flex-1 px-2 py-1.5 relative rounded-md flex-row items-center w-full ${filter === "Popular" && "bg-main"
+						}`}
 					size="icon">
 					<StyledText
 						type="label"
-						className={`text-center w-full ${
-							filter === "Popular" && "text-white"
-						}`}>
+						className={`w-full ${filter === "Popular" ? "text-start text-light" : "text-center"
+							}`}>
 						Popular
 					</StyledText>
 					{filter === "Popular" && (
@@ -85,15 +81,13 @@ const PostFeed = () => {
 				</StyledPressable>
 				<StyledPressable
 					onPress={() => handleFilter("Latest")}
-					className={`flex-1 px-2 py-1.5 relative rounded-md flex-row items-center w-full justify-between ${
-						filter === "Latest" && "bg-main "
-					}`}
+					className={`flex-1 px-2 py-1.5 relative rounded-md flex-row items-center w-full ${filter === "Latest" && "bg-main"
+						}`}
 					size="icon">
 					<StyledText
 						type="label"
-						className={`text-center w-full ${
-							filter === "Latest" && "text-white"
-						}`}>
+						className={`w-full ${filter === "Latest" ? "text-start text-light" : "text-center"
+							}`}>
 						Latest
 					</StyledText>
 					{filter === "Latest" && (

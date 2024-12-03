@@ -47,9 +47,9 @@ const RateRecipe: React.FC<Props> = ({ isVisible, onClose, post_id }) => {
 
 	return (
 		<Modal visible={isVisible} transparent={true} animationType="fade">
-			<View className="w-full h-full flex-col items-center justify-center">
-				<View className="w-[300px] h-[250px] bg-light dark:bg-dark border border-dark-border rounded-xl p-4">
-					<View className="w-full flex-row items-center justify-end ">
+			<View className="flex-col items-center justify-center w-full h-full">
+				<View className="w-[300px] h-[250px] bg-white dark:bg-dark border border-dark-border rounded-xl p-4">
+					<View className="flex-row items-center justify-end w-full ">
 						<StyledPressable
 							onPress={handleClose}
 							size="icon"
@@ -66,12 +66,12 @@ const RateRecipe: React.FC<Props> = ({ isVisible, onClose, post_id }) => {
 						</StyledPressable>
 					</View>
 
-					<View className="py-2 flex-1 flex-col items-center justify-center w-full h-full">
+					<View className="flex-col items-center justify-center flex-1 w-full h-full space-y-4">
 						<StyledText type="heading-4" className="text-center">
 							How would you rate this posted recipe ?
 						</StyledText>
 
-						<View className=" flex-row items-center mt-6">
+						<View className="flex-row items-center">
 							{Array(5)
 								.fill(5)
 								.map((_, i) => (
@@ -104,7 +104,7 @@ const RateRecipe: React.FC<Props> = ({ isVisible, onClose, post_id }) => {
 							{loading ? (
 								<Spin size="sm" loading={loading} />
 							) : (
-								<StyledText className="text-light">Rate</StyledText>
+								<StyledText className="text-white">Rate</StyledText>
 							)}
 						</StyledPressable>
 					</View>

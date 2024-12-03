@@ -559,8 +559,8 @@ const UserPreferences = () => {
 											<Image
 												source={
 													colorScheme === "light"
-														? icons.tempDark
-														: icons.tempLight
+														? icons.diffDark
+														: icons.diffLight
 												}
 												resizeMode="contain"
 												className="mt-2 w-7 h-7"
