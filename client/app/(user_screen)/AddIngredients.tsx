@@ -13,7 +13,7 @@ import { useColorScheme } from "nativewind";
 import Spin from "@/components/animations/Spin";
 import StyledText from "@/components/StyledText";
 import StyledPressable from "@/components/StyledPressable";
-import { ingredients } from "@/constants/new_unique_ner";
+import { new_unique_ingredients } from "@/constants/processed_unique_ingredients";
 import { SelectList } from "react-native-dropdown-select-list-expo";
 import axios from "@/redux/api/axios";
 
@@ -84,7 +84,7 @@ const AddIngredients = () => {
 			setRecommendedIngredients([]);
 			setIngredientResult([]);
 			debounceTimeout = setTimeout(() => {
-				const filtered = ingredients.filter(
+				const filtered = new_unique_ingredients.filter(
 					(item) =>
 						item.toString().toLowerCase().trim() ===
 						selectedIngredients.toLowerCase().trim()

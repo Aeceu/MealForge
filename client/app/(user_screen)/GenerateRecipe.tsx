@@ -85,7 +85,7 @@ const UserPreferences = () => {
 			const res = await axios.post("/generate/recipe", {
 				main_ingredients: data.main_ingredients,
 				seasonings: data.seasonings,
-				user_preference: user?.allergies,
+				user_preference: user?.allergies || "",
 				servings: data.servings,
 				cuisine_type: data.cuisine_type,
 				serve_hot_or_cold: data.serve_hot_or_cold,
@@ -149,8 +149,9 @@ const UserPreferences = () => {
 												.filter((item) => item.type === "main ingredient")
 												.map((item, i) => ({
 													key: i,
-													value: `${item.name} ${item.is_expired ? "(expired)" : ""
-														}`,
+													value: `${item.name} ${
+														item.is_expired ? "(expired)" : ""
+													}`,
 													type: "main ingredient",
 												}))}
 											save="value"
@@ -237,8 +238,9 @@ const UserPreferences = () => {
 												.filter((item) => item.type === "seasoning")
 												.map((item, i) => ({
 													key: i,
-													value: `${item.name} ${item.is_expired ? "(expired)" : ""
-														}`,
+													value: `${item.name} ${
+														item.is_expired ? "(expired)" : ""
+													}`,
 													type: "seasonings",
 												}))}
 											save="value"
