@@ -143,7 +143,7 @@ const RecipePostPage = () => {
 											<StyledText type="xs">Serve for: </StyledText>
 											<StyledText type="paragraph" className="">
 												{post.recipe?.serve_for}
-												{post.recipe?.serve_for === "1" ? " person" : " people"}
+												{post.recipe?.serve_for === 1 ? " person" : " people"}
 											</StyledText>
 										</View>
 									</View>
@@ -163,7 +163,7 @@ const RecipePostPage = () => {
 											<StyledText type="xs">Cooking time: </StyledText>
 											<StyledText type="paragraph" className="">
 												{post.recipe?.cooking_time}
-												{post.recipe?.cooking_time === "1"
+												{post.recipe?.cooking_time === 1
 													? " minute"
 													: " minutes"}
 											</StyledText>
@@ -277,7 +277,7 @@ const RecipePostPage = () => {
 					</View>
 
 					{/* Benefits */}
-					<View className="mb-4">
+					<View className="">
 						<StyledText type="subheading" className="px-2 mb-2 font-chunk">
 							Benefits:
 						</StyledText>
@@ -292,10 +292,10 @@ const RecipePostPage = () => {
 					{/* remove "mb-4" sa last component*/}
 
 					{/* Separator */}
-					<View className="flex-1 h-px mx-2 mt-2 mb-4 rounded-full bg-light-border dark:bg-dark-border" />
+					{/* <View className="flex-1 h-px mx-2 mt-2 mb-4 rounded-full bg-light-border dark:bg-dark-border" /> */}
 
 					{/* Comments */}
-					<View className="">
+					{/* <View className="">
 						<StyledText type="subheading" className="px-2 mb-2 font-chunk">
 							Comments
 						</StyledText>
@@ -304,7 +304,7 @@ const RecipePostPage = () => {
 								Type comment...
 							</StyledText>
 						</View>
-					</View>
+					</View> */}
 				</View>
 			</ScrollView>
 			{darkbg && <DarkBgOverlay />}

@@ -11,20 +11,20 @@ const BookmarkFeed = () => {
 
 	if (pageLoading)
 		return (
-			<View className="w-full h-full flex-1 flex-col items-center">
+			<View className="flex-col items-center flex-1 w-full h-full">
 				<Spin size={"md"} loading={pageLoading} />
 			</View>
 		);
 
 	return (
-		<View className="w-full h-full flex-1 flex-col">
+		<View className="flex-col flex-1 w-full h-full">
 			{post.length > 0 ? (
 				post.map(
 					(item, i) =>
 						item.is_bookmarked && <RecipePostCard recipe={item} key={i} />
 				)
 			) : (
-				<StyledText>There is no Post available.</StyledText>
+				<StyledText className="mx-auto my-4">You have no bookmarks yet.</StyledText>
 			)}
 		</View>
 	);

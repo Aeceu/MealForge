@@ -119,7 +119,7 @@ const UserRecipePost = () => {
 										<StyledText type="xs">Serve for: </StyledText>
 										<StyledText type="paragraph" className="">
 											{post?.recipe.serve_for}
-											{post?.recipe.serve_for === "1" ? " person" : " people"}
+											{post?.recipe.serve_for === 1 ? " person" : " people"}
 										</StyledText>
 									</View>
 								</View>
@@ -137,7 +137,7 @@ const UserRecipePost = () => {
 										<StyledText type="xs">Cooking time: </StyledText>
 										<StyledText type="paragraph" className="">
 											{post?.recipe.cooking_time}
-											{post?.recipe.cooking_time === "1"
+											{post?.recipe.cooking_time === 1
 												? " minute"
 												: " minutes"}
 										</StyledText>
@@ -234,6 +234,20 @@ const UserRecipePost = () => {
 					</View>
 				</View>
 
+				{/* Nutrients */}
+				<View className="mb-4">
+					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
+						Nutrients:
+					</StyledText>
+					<View className="w-full px-6 py-4 space-y-6 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
+						{post.recipe.nutrient_counts.split(",").map((item, i) => (
+							<StyledText key={i} type="paragraph">
+								• {item}
+							</StyledText>
+						))}
+					</View>
+				</View>
+
 				{/* Benefits */}
 				<View className="mb-4">
 					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
@@ -247,10 +261,10 @@ const UserRecipePost = () => {
 				</View>
 
 				{/* Separator */}
-				<View className="flex-1 h-px mx-2 mt-2 mb-4 rounded-full bg-light-border dark:bg-dark-border" />
+				{/* <View className="flex-1 h-px mx-2 mt-2 mb-4 rounded-full bg-light-border dark:bg-dark-border" /> */}
 
 				{/* Comments */}
-				<View className="">
+				{/* <View className="">
 					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
 						Comments
 					</StyledText>
@@ -259,7 +273,7 @@ const UserRecipePost = () => {
 							Type comment...
 						</StyledText>
 					</View>
-				</View>
+				</View> */}
 
 				<StyledPressable
 					disabled={deleteLoading}

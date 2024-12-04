@@ -11,9 +11,9 @@ export type RecipePost = {
 		type_of_cuisine: string;
 		nutrient_counts: string;
 		serve_hot_or_cold: string;
-		cooking_time: string;
+		cooking_time: string | number;
 		benefits: string;
-		serve_for: string;
+		serve_for: string | number;
 		difficulty: string;
 	};
 	author: string;

@@ -46,9 +46,9 @@ const Ingredients = () => {
 							<View
 								key={i}
 								className="flex-row items-center justify-between w-full p-4 mb-4 bg-white border border-light-border dark:bg-dark-light dark:border-dark-border rounded-xl">
-								<View className="flex-col items-start justify-center">
-									<View className="flex-row items-center mb-2">
-										<StyledText type="label" className=" text-xs">
+								<View className="flex-col items-start justify-center flex-1">
+									<View className="flex-row items-center flex-1 mb-2">
+										<StyledText type="label" className="text-xs">
 											{item.type === "main ingredient"
 												? "Main Ingredient"
 												: item.type}
@@ -87,7 +87,7 @@ const Ingredients = () => {
 						)
 				)
 			) : (
-				<StyledText>No Ingredients is added!</StyledText>
+				<StyledText className="mx-auto my-4">No ingredients are added yet!</StyledText>
 			)}
 		</ScrollView>
 	);

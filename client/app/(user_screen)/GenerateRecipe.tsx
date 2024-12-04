@@ -116,6 +116,7 @@ const UserPreferences = () => {
 			servings: "1",
 			serve_hot_or_cold: "",
 			cuisine_type: "",
+			difficulty: "Easy",
 			main_ingredients: [],
 			seasonings: [],
 		},
@@ -149,9 +150,8 @@ const UserPreferences = () => {
 												.filter((item) => item.type === "main ingredient")
 												.map((item, i) => ({
 													key: i,
-													value: `${item.name} ${
-														item.is_expired ? "(expired)" : ""
-													}`,
+													value: `${item.name} ${item.is_expired ? "(expired)" : ""
+														}`,
 													type: "main ingredient",
 												}))}
 											save="value"
@@ -238,9 +238,8 @@ const UserPreferences = () => {
 												.filter((item) => item.type === "seasoning")
 												.map((item, i) => ({
 													key: i,
-													value: `${item.name} ${
-														item.is_expired ? "(expired)" : ""
-													}`,
+													value: `${item.name} ${item.is_expired ? "(expired)" : ""
+														}`,
 													type: "seasonings",
 												}))}
 											save="value"

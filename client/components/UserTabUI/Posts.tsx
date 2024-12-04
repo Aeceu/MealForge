@@ -96,7 +96,7 @@ const Posts = () => {
 						)
 				)
 			) : (
-				<StyledText>No recipe added yet!</StyledText>
+				<StyledText className="mx-auto my-4">No recipes added yet!</StyledText>
 			)}
 		</View>
 	);
