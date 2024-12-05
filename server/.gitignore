@@ -6,4 +6,6 @@
 *.npy
 *.pth
 *.csv
+*.pt
 __pycache__/
+dataset
