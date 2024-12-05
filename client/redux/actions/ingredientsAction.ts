@@ -1,6 +1,7 @@
 import { handleError } from "@/utils/errorHandler";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../api/axios";
+import { clearIngredients } from "../slices/ingredientsSlice";
 
 type addIngredientsProps = {
 	userId: string;

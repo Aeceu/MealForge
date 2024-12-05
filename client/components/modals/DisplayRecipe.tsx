@@ -100,7 +100,8 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 									<View className="flex-row items-center px-3 py-1.5 my-1 rounded-full w-max ">
 										<StyledText type="paragraph">Serve for: </StyledText>
 										<StyledText type="paragraph">
-											{recipe?.serve_for} people{" "}
+											{recipe?.serve_for}
+											{recipe?.serve_for === "1" ? " person" : " people"}
 										</StyledText>
 									</View>
 									<View className="flex-row items-center px-3 py-1.5 my-1 rounded-full w-max ">
@@ -112,7 +113,10 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 									<View className="flex-row items-center px-3 py-1.5 my-1 rounded-full w-max ">
 										<StyledText type="paragraph">Cooking time: </StyledText>
 										<StyledText type="paragraph">
-											{recipe?.cooking_time} minutes{" "}
+											{recipe?.cooking_time}
+											{recipe?.cooking_time === "1"
+												? " minute"
+												: " minutes"}
 										</StyledText>
 									</View>
 									<View className="flex-row items-center px-3 py-1.5 my-1 rounded-full w-max ">

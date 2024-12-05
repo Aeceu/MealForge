@@ -13,9 +13,10 @@ import { useColorScheme } from "nativewind";
 import Spin from "@/components/animations/Spin";
 import StyledText from "@/components/StyledText";
 import StyledPressable from "@/components/StyledPressable";
-import { new_unique_ingredients } from "@/constants/processed_unique_ingredients";
+import { new_unique_ingredients } from "@/constants/unique_ingredients";
 import { SelectList } from "react-native-dropdown-select-list-expo";
 import axios from "@/redux/api/axios";
+import { filteredWords } from "@/constants/filter_words";
 
 const AddIngredients = () => {
 	const [showDate, setShowDate] = useState(false);
@@ -84,12 +85,16 @@ const AddIngredients = () => {
 			setRecommendedIngredients([]);
 			setIngredientResult([]);
 			debounceTimeout = setTimeout(() => {
-				const filtered = new_unique_ingredients.filter(
-					(item) =>
-						item.toString().toLowerCase().trim() ===
-						selectedIngredients.toLowerCase().trim()
-				);
-				setIngredientResult(filtered);
+				if (filteredWords.includes(selectedIngredients.toLowerCase())) {
+					setIngredientResult([]);
+				} else {
+					const filtered = new_unique_ingredients.filter(
+						(item) =>
+							item.toString().toLowerCase().trim() ===
+							selectedIngredients.toLowerCase().trim()
+					);
+					setIngredientResult(filtered);
+				}
 				setLoading(false);
 			}, 500);
 		} else {
@@ -103,7 +108,7 @@ const AddIngredients = () => {
 
 	return (
 		<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-			<View className="bg-light  dark:bg-dark p-4  w-full h-full">
+			<View className="w-full h-full p-4 bg-light dark:bg-dark">
 				{/* body */}
 				<View className="">
 					<View className="">
@@ -127,7 +132,7 @@ const AddIngredients = () => {
 									horizontal
 									showsHorizontalScrollIndicator={false}
 									className="w-full mt-4">
-									<View className="flex-row items-center justify-center w-full  space-x-2">
+									<View className="flex-row items-center justify-center w-full space-x-2">
 										<StyledText type="xs">Recommended:</StyledText>
 										{recommendedIngredients.map((item, i) => (
 											<StyledPressable
@@ -162,12 +167,12 @@ const AddIngredients = () => {
 								</View>
 							) : (
 								ingredientResult.length > 0 && (
-									<View className="w-full h-full flex-col mt-2">
+									<View className="flex-col w-full h-full mt-2">
 										{ingredientResult.map((item, i) => (
 											<StyledPressable
 												key={i}
 												size="text"
-												className="my-2 rounded-lg border border-light-border dark:border-dark-border bg-light dark:bg-dark p-4"
+												className="p-4 my-2 border rounded-lg border-light-border dark:border-dark-border bg-light dark:bg-dark"
 												onPress={() => handleSetValue(item)}>
 												<StyledText>{item}</StyledText>
 											</StyledPressable>
@@ -266,7 +271,7 @@ const AddIngredients = () => {
 										Measurements
 									</StyledText>
 
-									<View className="w-full flex-row items-start justify-center">
+									<View className="flex-row items-start justify-center w-full">
 										<Controller
 											control={control}
 											name="measurements"

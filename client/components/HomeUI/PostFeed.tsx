@@ -111,7 +111,7 @@ const PostFeed = () => {
 				) : post.length > 0 ? (
 					post.map((item, i) => <RecipePostCard recipe={item} key={i} />)
 				) : (
-					<StyledText>There is no Post available.</StyledText>
+					<StyledText className="mx-auto my-4">There are no posts available yet.</StyledText>
 				)}
 			</View>
 		</>

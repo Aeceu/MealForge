@@ -2,4 +2,8 @@
 .venv
 *.pkl
 *.csv
+*.pth
+*.npy
+*.pth
+*.csv
 __pycache__/

@@ -86,7 +86,7 @@ const RecipePostPage = () => {
 										<StyledText type="xs">Serve for: </StyledText>
 										<StyledText type="paragraph" className="">
 											{recipe?.serve_for}
-											{recipe?.serve_for === "1" ? " person" : " people"}
+											{recipe?.serve_for === 1 ? " person" : " people"}
 										</StyledText>
 									</View>
 								</View>
@@ -104,7 +104,7 @@ const RecipePostPage = () => {
 										<StyledText type="xs">Cooking time: </StyledText>
 										<StyledText type="paragraph" className="">
 											{recipe?.cooking_time}
-											{recipe?.cooking_time === "1" ? " minute" : " minutes"}
+											{recipe?.cooking_time === 1 ? " minute" : " minutes"}
 										</StyledText>
 									</View>
 								</View>
@@ -205,9 +205,11 @@ const RecipePostPage = () => {
 						Nutrients:
 					</StyledText>
 					<View className="w-full px-6 py-4 space-y-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
-						<StyledText type="paragraph" className="">
-							• {recipe?.nutrient_counts}
-						</StyledText>
+						{recipe?.nutrient_counts.split(",").map((item, i) => (
+							<StyledText key={i} type="paragraph" className="">
+								• {item}
+							</StyledText>
+						))}
 					</View>
 				</View>
 

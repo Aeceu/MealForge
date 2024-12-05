@@ -17,7 +17,7 @@ const Recipes = () => {
 	return (
 		<View className="flex-col w-full h-full p-2">
 			{!recipe || recipe.length <= 0 ? (
-				<StyledText>No recipe added yet!</StyledText>
+				<StyledText className="mx-auto my-4">No recipes added yet!</StyledText>
 			) : (
 				recipe.map((item, i) => (
 					<View
