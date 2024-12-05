@@ -34,27 +34,45 @@ segment_mapping = {
 
 
 def get_similar_top5(segment_data, vectorizer, tfidf_matrix, user_input):
+    if segment_data.empty:
+        return pd.DataFrame()  # Handle empty segment data gracefully
+
+    # Vectorize user input
     user_input_vector = vectorizer.transform([' '.join(user_input)])
 
+    # Calculate cosine similarities
     cosine_similarities = np.dot(user_input_vector, tfidf_matrix.T).toarray()[0]
     top_indices = cosine_similarities.argsort()[-5:][::-1]
 
+    # Select top recommendations
     recommended_recipes = segment_data.iloc[top_indices]
-    print(recommended_recipes.columns)
 
-    available_columns = recommended_recipes.columns
-    selected_columns = [col for col in ["name", 'ingredients',"steps","minutes","calories","sugar","sodium","protein","saturated","carbohydrates"] if col in available_columns]
+    # Handle selected columns
+    selected_columns = [
+        col for col in [
+            "name", "ingredients", "steps", "minutes",
+            "calories", "sugar", "sodium", "protein",
+            "saturated", "carbohydrates"
+        ] if col in recommended_recipes.columns
+    ]
+    return recommended_recipes[selected_columns] if not recommended_recipes.empty else pd.DataFrame()
 
-    return recommended_recipes[selected_columns]
+def recommend(segment, user_input):
+    if segment not in segment_mapping:
+        return pd.DataFrame()  # Handle invalid segment gracefully
 
-def recommend(segment,user_input):
     segment_data = segment_mapping[segment]
 
+    # Extract data, vectorizer, and TF-IDF matrix
     data = segment_data["data"]
     vectorizer = segment_data["vectorizer"]
     tfidf_matrix = segment_data["tfidf"]
 
-    recommendations = get_similar_top5(data, vectorizer, tfidf_matrix, user_input)
-    # recommendations_json = recommendations.to_dict(orient='records')
+    # Check for empty DataFrame before processing
+    if data.empty:
+        return []
 
-    return recommendations
+    recommendations = get_similar_top5(data, vectorizer, tfidf_matrix, user_input)
+
+    # Return list of recommendations or empty list
+    return recommendations.to_dict(orient='records') if not recommendations.empty else []

@@ -25,14 +25,16 @@ def generate():
     user_preference = data.get("user_preference", [])
     difficulty = data.get("difficulty")
     segment = random.choice(["seg1","seg2","seg3","seg4"])
-
+    print(segment)
     recommended_recipes = recommend(segment, ingredients)
+    print(recommended_recipes)
 
     if not recommended_recipes:
         return jsonify({"error": "No matching recipes found for the provided ingredients."}), 404
 
-
     top_recipe = random.choice(recommended_recipes)
+    print(f"Segment: {segment}, User Input: {ingredients}")
+    print(f"Recommended Recipes: {recommended_recipes}")
 
     print(top_recipe)
 
