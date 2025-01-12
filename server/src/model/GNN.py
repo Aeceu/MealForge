@@ -10,10 +10,9 @@ from torch_geometric.nn import GATConv
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
-model_path = os.path.join(base_dir,'dataset','gnn_model.pth')
-ingredients_path = os.path.join(base_dir,'dataset','ingredients_list.pkl')
-embeddings_path = os.path.join(base_dir,'dataset','node_embeddings.npy')
+model_path = os.path.join(base_dir,'dataset','GNN','gnn_model.pth')
+ingredients_path = os.path.join(base_dir,'dataset','GNN','ingredients_list.pkl')
+embeddings_path = os.path.join(base_dir,'dataset','GNN','node_embeddings.npy')
 
 # Load the model
 class IngredientGNN(torch.nn.Module):

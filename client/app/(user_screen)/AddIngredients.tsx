@@ -13,7 +13,7 @@ import { useColorScheme } from "nativewind";
 import Spin from "@/components/animations/Spin";
 import StyledText from "@/components/StyledText";
 import StyledPressable from "@/components/StyledPressable";
-import { new_unique_ingredients } from "@/constants/processed_unique_ingredients";
+import { new_unique_ingredients } from "@/constants/unique_ingredients";
 import { SelectList } from "react-native-dropdown-select-list-expo";
 import axios from "@/redux/api/axios";
 import { filteredWords } from "@/constants/filter_words";

@@ -21,6 +21,7 @@ def create_recipe(userId):
     benefits = recipe_data.get("benefits")
     serve_for = recipe_data.get("serve_for")
     difficulty = recipe_data.get("difficulty")
+    tags = recipe_data.get("tags")
 
     try:
         with engine.connect() as conn:
@@ -37,11 +38,11 @@ def create_recipe(userId):
                 """
                 INSERT INTO recipes (
                     id, name, ingredients, instruction, type_of_cuisine, nutrient_counts,
-                    serve_hot_or_cold, cooking_time, benefits, serve_for, difficulty, user_id
+                    serve_hot_or_cold, cooking_time, benefits, serve_for, difficulty, tags, user_id
                 )
                 VALUES (
                     :id, :name, :ingredients, :instruction, :type_of_cuisine, :nutrient_counts,
-                    :serve_hot_or_cold, :cooking_time, :benefits, :serve_for, :difficulty, :user_id
+                    :serve_hot_or_cold, :cooking_time, :benefits, :serve_for, :difficulty,:tags,:user_id
                 )
                 """
             )
@@ -61,6 +62,7 @@ def create_recipe(userId):
                 "benefits": benefits,
                 "serve_for": serve_for,
                 "difficulty": difficulty,
+                "tags": tags,
                 "user_id": userId
             })
 
@@ -97,6 +99,7 @@ def get_user_recipes(user_id):
                     "benefits":recipe.benefits,
                     "serve_for":recipe.serve_for,
                     "difficulty":recipe.difficulty,
+                    "tags":recipe.tags,
                     "ingredients":recipe.ingredients,
                     "user_id":recipe.user_id,
                 })
@@ -131,6 +134,7 @@ def get_user_recipe(recipe_id):
           "serve_for":recipe.serve_for,
           "difficulty":recipe.difficulty,
           "ingredients":recipe.ingredients,
+          "tags":recipe.tags,
           "user_id":recipe.user_id,
         }
 

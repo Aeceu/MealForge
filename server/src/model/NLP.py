@@ -1,23 +1,39 @@
-from sklearn.metrics.pairwise import cosine_similarity
+import os
 
+from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
-# Function to get the top 5 similar recipes based on user input
-def get_similar_top5(vectorizer, tfidf_matrix, user_input):
-    # Combine user input ingredients into a single string
-    user_input_combined = ' '.join(user_input)
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+print(base_dir)
 
-    # Transform the combined user input using the fitted vectorizer
-    user_input_tfidf = vectorizer.transform([user_input_combined])
+model_path = os.path.join(base_dir, "FINAL_MODEL","MODEL")
 
-    # Compute the cosine similarity between the user input and recipe corpus
-    cosine_sim = cosine_similarity(user_input_tfidf, tfidf_matrix)
+tokenizer = GPT2Tokenizer.from_pretrained(model_path)
+model = GPT2LMHeadModel.from_pretrained(model_path)
+tokenizer.pad_token = tokenizer.eos_token
 
-    # Get the indices of the top 5 similar recipes
-    similar_top5 = list(cosine_sim.argsort()[0][-5:])
+def generateRecipe(input_prompt):
+  # Tokenize the input with padding and attention mask
+  inputs = tokenizer(
+      input_prompt,
+      return_tensors="pt",
+      padding=True,
+      truncation=True,
+      add_special_tokens=True,
+  )
 
-    return similar_top5
+  # Generate text with better parameters
+  output_ids = model.generate(
+      inputs['input_ids'],
+      attention_mask=inputs['attention_mask'],  # Provide attention mask for reliability
+      max_length=500,
+      num_return_sequences=1,
+      temperature=0.7,
+      top_k=50,
+      top_p=0.9,
+      pad_token_id=tokenizer.eos_token_id,  # Set pad token id
+      do_sample=True
+  )
 
-# Function to get full recipe details for top 5 similar recipes
-def get_recipe_details_top5(dataframe, similar_top5):
-    recommended_recipes = dataframe.iloc[similar_top5][['title', 'ingredients', 'directions', "NER"]]
-    return recommended_recipes
+  # Decode the output to text
+  generated_text = tokenizer.decode(output_ids[0], skip_special_tokens=True)
+  return generated_text

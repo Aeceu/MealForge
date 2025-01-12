@@ -49,6 +49,7 @@ type handleSaveRecipeProps = {
 		cooking_time: string;
 		benefits: string;
 		serve_for: string;
+		tags: string;
 	};
 };
 
