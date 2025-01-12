@@ -221,7 +221,7 @@ def get_post(post_id):
                 r.instruction AS recipe_instruction, r.type_of_cuisine AS recipe_cuisine,
                 r.nutrient_counts AS recipe_nutrients, r.serve_hot_or_cold AS recipe_serving_temp,
                 r.cooking_time AS recipe_cooking_time, r.benefits AS recipe_benefits,
-                r.serve_for AS recipe_servings, r.difficulty as recipe_difficulty, u.userName AS author_name
+                r.serve_for AS recipe_servings, r.difficulty as recipe_difficulty, r.tags as recipe_tags, u.userName AS author_name
                 FROM recipe_posts rp
                 JOIN recipes r ON rp.recipe_id = r.id
                 JOIN users u ON rp.user_id = u.id
@@ -284,6 +284,7 @@ def get_post(post_id):
                     "benefits": result.recipe_benefits,
                     "serve_for": result.recipe_servings,
                     "difficulty": result.recipe_difficulty,
+                    "tags": result.recipe_tags,
                 },
                 "author": result.author_name,
                 "is_bookmarked": is_bookmarked,
@@ -314,7 +315,8 @@ def get_all_posts():
                 r.instruction AS recipe_instruction, r.type_of_cuisine AS recipe_cuisine,
                 r.nutrient_counts AS recipe_nutrients, r.serve_hot_or_cold AS recipe_serving_temp,
                 r.cooking_time AS recipe_cooking_time, r.benefits AS recipe_benefits,
-                r.serve_for AS recipe_servings, r.difficulty as recipe_difficulty, u.userName AS author_name
+                r.serve_for AS recipe_servings, r.difficulty as recipe_difficulty, r.tags as recipe_tags,
+                u.userName AS author_name
                 FROM recipe_posts rp
                 JOIN recipes r ON rp.recipe_id = r.id
                 JOIN users u ON rp.user_id = u.id
@@ -370,6 +372,7 @@ def get_all_posts():
                         "cooking_time": row.recipe_cooking_time,
                         "benefits": row.recipe_benefits,
                         "difficulty": row.recipe_difficulty,
+                        "tags": row.recipe_tags,
                     },
                     "author": row.author_name,
                     "is_bookmarked": is_bookmarked,
@@ -396,7 +399,7 @@ def get_all_user_posts(user_id):
                 rp.recipe_post_image as recipePostImage,
                 r.id AS recipe_id, r.name, r.ingredients, r.instruction,
                 r.type_of_cuisine, r.nutrient_counts, r.serve_hot_or_cold,
-                r.cooking_time, r.benefits, r.serve_for, r.difficulty as recipe_difficulty,
+                r.cooking_time, r.benefits, r.serve_for, r.difficulty as recipe_difficulty, r.tags, as recipe_tags,
                 u.userName AS author
                 FROM recipe_posts rp
                 JOIN recipes r ON rp.recipe_id = r.id
@@ -440,6 +443,7 @@ def get_all_user_posts(user_id):
                         "benefits": row.benefits,
                         "serve_for": row.serve_for,
                         "difficulty": row.recipe_difficulty,
+                        "tags": row.recipe_tags,
                     },
                     "author": row.author,
                     "bookmarks": bookmark_list,
@@ -570,7 +574,8 @@ def get_all_posts_filtered():
                 r.instruction AS recipe_instruction, r.type_of_cuisine AS recipe_cuisine,
                 r.nutrient_counts AS recipe_nutrients, r.serve_hot_or_cold AS recipe_serving_temp,
                 r.cooking_time AS recipe_cooking_time, r.benefits AS recipe_benefits,
-                r.serve_for AS recipe_servings, r.difficulty as recipe_difficulty, u.userName AS author_name,
+                r.serve_for AS recipe_servings, r.difficulty as recipe_difficulty, r.tags as recipe_tags,
+                u.userName AS author_name,
                 (SELECT COUNT(*) FROM likes WHERE post_id = rp.id) AS total_likes,
                 (SELECT COUNT(*) FROM dislikes WHERE post_id = rp.id) AS total_dislikes,
                 (SELECT AVG(rating) FROM ratings WHERE post_id = rp.id) AS avg_rating
@@ -618,6 +623,7 @@ def get_all_posts_filtered():
                         "benefits": row.recipe_benefits,
                         "serve_for": row.recipe_servings,
                         "difficulty": row.recipe_difficulty,
+                        "tags": row.recipe_tags,
                     },
                     "author": row.author_name,
                     "total_likes": row.total_likes,

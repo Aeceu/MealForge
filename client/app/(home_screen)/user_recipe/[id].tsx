@@ -168,6 +168,23 @@ const RecipePostPage = () => {
 					</View>
 				</View>
 
+				{/* Tags */}
+				<View className="mb-4">
+					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
+						Tags:
+					</StyledText>
+					<View className="flex-row flex-wrap w-full p-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
+						{recipe?.tags.split(",").map((itemIngredients, i) => (
+							<StyledText
+								key={i}
+								type="xs"
+								className="px-3 bg-light border border-light-border dark:border-dark-border dark:bg-dark py-1.5 rounded-full m-1">
+								{itemIngredients}
+							</StyledText>
+						))}
+					</View>
+				</View>
+
 				{/* Ingredients */}
 				<View className="mb-4">
 					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
@@ -210,18 +227,6 @@ const RecipePostPage = () => {
 								• {item}
 							</StyledText>
 						))}
-					</View>
-				</View>
-
-				{/* Benefits */}
-				<View className="mb-4">
-					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
-						Benefits:
-					</StyledText>
-					<View className="w-full px-6 py-4 space-y-6 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
-						<StyledText type="paragraph" className="text-center">
-							{recipe?.benefits}
-						</StyledText>
 					</View>
 				</View>
 

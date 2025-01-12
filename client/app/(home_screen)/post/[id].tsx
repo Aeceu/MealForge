@@ -10,7 +10,7 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { RecipePost } from "@/utils/types/post";
 import { router, useLocalSearchParams } from "expo-router";
 import { useColorScheme } from "nativewind";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Alert, Image } from "react-native";
 import { ScrollView, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -60,7 +60,7 @@ const RecipePostPage = () => {
 		);
 	}
 	return (
-		<>
+		<Fragment>
 			<ScrollView className="w-full p-4 bg-light dark:bg-dark">
 				<View className="mb-8">
 					<View className="flex-row items-center justify-between mb-4 ">
@@ -100,6 +100,7 @@ const RecipePostPage = () => {
 						</View>
 					)}
 
+					{/* Recipe name */}
 					<View className="mx-2">
 						<View className="flex-row justify-between flex-1 w-full">
 							<StyledText type="heading-4" className="flex-1 font-chunk">
@@ -120,6 +121,7 @@ const RecipePostPage = () => {
 					{/* Separator */}
 					<View className="flex-1 h-px mx-2 mb-6 rounded-full bg-light-border dark:bg-dark-border"></View>
 
+					{/* Recipe Information */}
 					<View className="mb-4">
 						<StyledText type="subheading" className="px-2 mb-2 font-chunk">
 							Recipe Information:
@@ -231,6 +233,23 @@ const RecipePostPage = () => {
 						</View>
 					</View>
 
+					{/* Tags */}
+					<View className="mb-4">
+						<StyledText type="subheading" className="px-2 mb-2 font-chunk">
+							Tags:
+						</StyledText>
+						<View className="flex-row flex-wrap w-full p-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
+							{post.recipe?.tags.split(",").map((itemIngredients, i) => (
+								<StyledText
+									key={i}
+									type="xs"
+									className="px-3 bg-light border border-light-border dark:border-dark-border dark:bg-dark py-1.5 rounded-full m-1">
+									{itemIngredients}
+								</StyledText>
+							))}
+						</View>
+					</View>
+
 					{/* Ingredients */}
 					<View className="mb-4">
 						<StyledText type="subheading" className="px-2 mb-2 font-chunk">
@@ -275,42 +294,12 @@ const RecipePostPage = () => {
 							))}
 						</View>
 					</View>
-
-					{/* Benefits */}
-					<View className="">
-						<StyledText type="subheading" className="px-2 mb-2 font-chunk">
-							Benefits:
-						</StyledText>
-						<View className="w-full px-6 py-4 space-y-6 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
-							<StyledText type="paragraph" className="text-center">
-								{post.recipe.benefits}
-							</StyledText>
-						</View>
-					</View>
-
-					{/* vvv optional vvv */}
-					{/* remove "mb-4" sa last component*/}
-
-					{/* Separator */}
-					{/* <View className="flex-1 h-px mx-2 mt-2 mb-4 rounded-full bg-light-border dark:bg-dark-border" /> */}
-
-					{/* Comments */}
-					{/* <View className="">
-						<StyledText type="subheading" className="px-2 mb-2 font-chunk">
-							Comments
-						</StyledText>
-						<View className="w-full px-6 py-4 space-y-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
-							<StyledText type="paragraph" className="">
-								Type comment...
-							</StyledText>
-						</View>
-					</View> */}
 				</View>
 			</ScrollView>
 			{darkbg && <DarkBgOverlay />}
 
 			<RateRecipe isVisible={showRate} onClose={onClose} post_id={post.id} />
-		</>
+		</Fragment>
 	);
 };
 

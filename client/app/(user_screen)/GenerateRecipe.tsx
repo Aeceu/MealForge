@@ -1,5 +1,5 @@
 import { icons } from "@/constants";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import axios from "@/redux/api/axios";
 import { TextInput } from "react-native";
 import Loading from "@/components/Loading";
@@ -41,6 +41,7 @@ type recipeProps = {
 	benefits: string;
 	serve_for: string;
 	difficulty: string;
+	tags: string;
 };
 
 const UserPreferences = () => {
@@ -50,9 +51,8 @@ const UserPreferences = () => {
 
 	const [darkbg, setdarkbg] = useState<boolean>(false);
 	const [showRecipe, setShowRecipe] = useState<boolean>(false);
-	const [showOption, setShowOption] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
-	const [recipeResult, setRecipeResult] = useState<recipeProps | null>(null);
+	const [recipeResult, setRecipeResult] = useState<recipeProps[]>([]);
 
 	const dispatch = useDispatch<AppDispatch>();
 	const { user } = useSelector((state: RootState) => state.user);
@@ -66,7 +66,7 @@ const UserPreferences = () => {
 	};
 
 	const onClose = () => {
-		setRecipeResult(null);
+		setRecipeResult([]);
 		setdarkbg(false);
 		setShowRecipe(false);
 	};
@@ -86,12 +86,8 @@ const UserPreferences = () => {
 				main_ingredients: data.main_ingredients,
 				seasonings: data.seasonings,
 				user_preference: user?.allergies || "",
-				servings: data.servings,
-				cuisine_type: data.cuisine_type,
-				serve_hot_or_cold: data.serve_hot_or_cold,
-				difficulty: data.difficulty,
 			});
-			console.log(res.data);
+			console.dir(res.data, { depth: null });
 			setShowRecipe(true);
 			setRecipeResult(res.data);
 			setdarkbg(true);
@@ -113,10 +109,6 @@ const UserPreferences = () => {
 	} = useForm<TNewRecipe>({
 		resolver: zodResolver(NewRecipeSchema),
 		defaultValues: {
-			servings: "1",
-			serve_hot_or_cold: "",
-			cuisine_type: "",
-			difficulty: "Easy",
 			main_ingredients: [],
 			seasonings: [],
 		},
@@ -125,7 +117,7 @@ const UserPreferences = () => {
 	if (pageLoading) return <Loading />;
 
 	return (
-		<>
+		<Fragment>
 			<ScrollView
 				contentContainerStyle={{ flexGrow: 1 }}
 				className="w-full h-screen bg-light dark:bg-dark"
@@ -150,8 +142,9 @@ const UserPreferences = () => {
 												.filter((item) => item.type === "main ingredient")
 												.map((item, i) => ({
 													key: i,
-													value: `${item.name} ${item.is_expired ? "(expired)" : ""
-														}`,
+													value: `${item.name} ${
+														item.is_expired ? "(expired)" : ""
+													}`,
 													type: "main ingredient",
 												}))}
 											save="value"
@@ -238,8 +231,9 @@ const UserPreferences = () => {
 												.filter((item) => item.type === "seasoning")
 												.map((item, i) => ({
 													key: i,
-													value: `${item.name} ${item.is_expired ? "(expired)" : ""
-														}`,
+													value: `${item.name} ${
+														item.is_expired ? "(expired)" : ""
+													}`,
 													type: "seasonings",
 												}))}
 											save="value"
@@ -311,344 +305,6 @@ const UserPreferences = () => {
 										* {errors.seasonings.message}
 									</StyledText>
 								)}
-							</View>
-
-							{showOption && (
-								<>
-									{/* Serve for how many people */}
-									<View className="mt-4">
-										<View className="flex-row items-center mb-2">
-											<StyledText className="">Servings</StyledText>
-											{errors.servings && (
-												<StyledText
-													fontStyle="default"
-													className="ml-3 text-sm text-red-500">
-													* {errors.servings.message}
-												</StyledText>
-											)}
-										</View>
-										<View className="flex-row items-center w-full">
-											<Image
-												source={
-													colorScheme === "light"
-														? icons.usersDark
-														: icons.usersLight
-												}
-												resizeMode="contain"
-												className="mt-1 w-7 h-7"
-											/>
-											<Controller
-												control={control}
-												name="servings"
-												render={({ field: { value, onChange } }) => (
-													<TextInput
-														value={value}
-														onChangeText={onChange}
-														placeholderTextColor={placeholderColor}
-														className={`
-                            w-full flex-1 ml-2 border border-light-border font-pregular dark:border-dark-border bg-white dark:bg-dark-light text-dark dark:text-main-50 rounded-lg px-6 py-2 text-sm
-                            `}
-														keyboardType="numeric" // Show numeric keyboard
-														maxLength={10} // Optional: Limit number of characters
-														placeholder="1, 2, 3..."
-													/>
-												)}
-											/>
-										</View>
-									</View>
-
-									{/* Cuisine type */}
-									<View className="mt-4">
-										<View className="flex-row items-center mb-2">
-											<StyledText className="">Cuisine type</StyledText>
-											{errors.cuisine_type && (
-												<StyledText
-													fontStyle="default"
-													className="ml-3 text-sm text-red-500">
-													* {errors.cuisine_type.message}
-												</StyledText>
-											)}
-										</View>
-										<View className="flex-row items-start w-full">
-											<Image
-												source={
-													colorScheme === "light"
-														? icons.cuisineTypeDark
-														: icons.cuisineTypeLight
-												}
-												resizeMode="contain"
-												className="mt-2 w-7 h-7"
-											/>
-											<Controller
-												control={control}
-												name="cuisine_type"
-												render={({ field: { onChange } }) => (
-													<View className="flex-1 w-full ml-2 ">
-														<SelectList
-															data={cuisineType}
-															save="value"
-															setSelected={onChange}
-															inputStyles={{
-																color: textColor,
-																fontSize: 14,
-																fontFamily: "Poppins-Regular",
-															}}
-															boxStyles={{
-																backgroundColor: inputBgColor,
-																borderColor: borderColor,
-																borderRadius: 8,
-															}}
-															dropdownStyles={{
-																backgroundColor: inputBgColor,
-																borderColor: borderColor,
-																borderRadius: 8,
-															}}
-															dropdownTextStyles={{
-																color: textColor,
-																fontSize: 14,
-																fontFamily: "Poppins-Regular",
-															}}
-															searchicon={
-																<Image
-																	source={
-																		colorScheme === "light"
-																			? icons.searchDarkLight
-																			: icons.searchLightDark
-																	}
-																	resizeMode="contain"
-																	className="w-4 h-4 mr-2"
-																/>
-															}
-															closeicon={
-																<Image
-																	source={
-																		colorScheme === "light"
-																			? icons.closeDarkLight
-																			: icons.closeLightDark
-																	}
-																	resizeMode="contain"
-																	className="w-5 h-5 ml-2"
-																/>
-															}
-															arrowicon={
-																<Image
-																	source={
-																		colorScheme === "dark"
-																			? icons.arrowDownLight
-																			: icons.arrowDownDark
-																	}
-																	resizeMode="contain"
-																	className="w-4 h-4"
-																/>
-															}
-														/>
-													</View>
-												)}
-											/>
-										</View>
-									</View>
-
-									{/* Serve hot or cold */}
-									<View className="mt-4">
-										<View className="flex-row items-center mb-2">
-											<StyledText className="">Serve hot or cold</StyledText>
-											{errors.serve_hot_or_cold && (
-												<StyledText
-													fontStyle="default"
-													className="ml-3 text-sm text-red-500">
-													* {errors.serve_hot_or_cold.message}
-												</StyledText>
-											)}
-										</View>
-										<View className="flex-row items-start w-full">
-											<Image
-												source={
-													colorScheme === "light"
-														? icons.tempDark
-														: icons.tempLight
-												}
-												resizeMode="contain"
-												className="mt-2 w-7 h-7"
-											/>
-											<Controller
-												control={control}
-												name="serve_hot_or_cold"
-												render={({ field: { onChange } }) => (
-													<View className="flex-1 ml-3 w-max">
-														<SelectList
-															data={[
-																{ key: 1, value: "Hot" },
-																{ key: 2, value: "Cold" },
-															]}
-															save="value"
-															setSelected={onChange}
-															inputStyles={{
-																color: textColor,
-																fontSize: 14,
-																fontFamily: "Poppins-Regular",
-															}}
-															boxStyles={{
-																backgroundColor: inputBgColor,
-																borderColor: borderColor,
-																borderRadius: 8,
-															}}
-															dropdownStyles={{
-																backgroundColor: inputBgColor,
-																borderColor: borderColor,
-																borderRadius: 8,
-															}}
-															dropdownTextStyles={{
-																color: textColor,
-																fontSize: 14,
-																fontFamily: "Poppins-Regular",
-															}}
-															searchicon={
-																<Image
-																	source={
-																		colorScheme === "light"
-																			? icons.searchDarkLight
-																			: icons.searchLightDark
-																	}
-																	resizeMode="contain"
-																	className="w-4 h-4 mr-2"
-																/>
-															}
-															closeicon={
-																<Image
-																	source={
-																		colorScheme === "light"
-																			? icons.closeDarkLight
-																			: icons.closeLightDark
-																	}
-																	resizeMode="contain"
-																	className="w-5 h-5 ml-2"
-																/>
-															}
-															arrowicon={
-																<Image
-																	source={
-																		colorScheme === "dark"
-																			? icons.arrowDownLight
-																			: icons.arrowDownDark
-																	}
-																	resizeMode="contain"
-																	className="w-4 h-4"
-																/>
-															}
-														/>
-													</View>
-												)}
-											/>
-										</View>
-									</View>
-
-									{/* Difficulty level */}
-									<View className="mt-4">
-										<View className="flex-row items-center mb-2">
-											<StyledText className="">Difficulty level</StyledText>
-											{errors.difficulty && (
-												<StyledText
-													fontStyle="default"
-													className="ml-3 text-sm text-red-500">
-													* {errors.difficulty.message}
-												</StyledText>
-											)}
-										</View>
-										<View className="flex-row items-start w-full">
-											<Image
-												source={
-													colorScheme === "light"
-														? icons.diffDark
-														: icons.diffLight
-												}
-												resizeMode="contain"
-												className="mt-2 w-7 h-7"
-											/>
-											<Controller
-												control={control}
-												name="difficulty"
-												render={({ field: { onChange } }) => (
-													<View className="flex-1 ml-3 w-max">
-														<SelectList
-															data={[
-																{ key: 1, value: "Easy" },
-																{ key: 2, value: "Medium" },
-																{ key: 3, value: "Hard" },
-															]}
-															save="value"
-															setSelected={onChange}
-															inputStyles={{
-																color: textColor,
-																fontSize: 14,
-																fontFamily: "Poppins-Regular",
-															}}
-															boxStyles={{
-																backgroundColor: inputBgColor,
-																borderColor: borderColor,
-																borderRadius: 8,
-															}}
-															dropdownStyles={{
-																backgroundColor: inputBgColor,
-																borderColor: borderColor,
-																borderRadius: 8,
-															}}
-															dropdownTextStyles={{
-																color: textColor,
-																fontSize: 14,
-																fontFamily: "Poppins-Regular",
-															}}
-															searchicon={
-																<Image
-																	source={
-																		colorScheme === "light"
-																			? icons.searchDarkLight
-																			: icons.searchLightDark
-																	}
-																	resizeMode="contain"
-																	className="w-4 h-4 mr-2"
-																/>
-															}
-															closeicon={
-																<Image
-																	source={
-																		colorScheme === "light"
-																			? icons.closeDarkLight
-																			: icons.closeLightDark
-																	}
-																	resizeMode="contain"
-																	className="w-5 h-5 ml-2"
-																/>
-															}
-															arrowicon={
-																<Image
-																	source={
-																		colorScheme === "dark"
-																			? icons.arrowDownLight
-																			: icons.arrowDownDark
-																	}
-																	resizeMode="contain"
-																	className="w-4 h-4"
-																/>
-															}
-														/>
-													</View>
-												)}
-											/>
-										</View>
-									</View>
-								</>
-							)}
-
-							<View className="flex-row items-center justify-center w-full">
-								<View className="flex-1 w-full h-[1px] bg-dark-border rounded-full" />
-								<StyledPressable
-									size="icon"
-									onPress={() => setShowOption((prev) => !prev)}>
-									<StyledText className="mx-4" type="xs">
-										{showOption ? "Hide options" : "More options"}
-									</StyledText>
-								</StyledPressable>
-								<View className="flex-1 w-full h-[1px] bg-dark-border rounded-full" />
 							</View>
 						</View>
 
@@ -763,7 +419,7 @@ const UserPreferences = () => {
 				onClose={onClose}
 				recipe={recipeResult}
 			/>
-		</>
+		</Fragment>
 	);
 };
 export default UserPreferences;

@@ -4,6 +4,8 @@ import StyledPressable from "../StyledPressable";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { handleSaveRecipe } from "@/redux/actions/recipeAction";
+import { useState } from "react";
+import RecipeCard from "../RecipeCard";
 
 type Props = {
 	isVisible: boolean;
@@ -29,12 +31,40 @@ type Props = {
 		benefits: string;
 		serve_for: string;
 		difficulty: string;
-	} | null;
+		tags: string;
+	}[];
+};
+
+type RecipeProps = {
+	name: string;
+	ingredients: [
+		{
+			name: string;
+			measurement: string;
+		}
+	];
+	instructions: [string];
+	type_of_cuisine: string;
+	nutrient_counts: [
+		{
+			name: string;
+			measurement: string;
+		}
+	];
+	serve_hot_or_cold: string;
+	cooking_time: string;
+	benefits: string;
+	serve_for: string;
+	difficulty: string;
+	tags: string;
 };
 
 const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 	const dispatch = useDispatch<AppDispatch>();
 	const { user } = useSelector((state: RootState) => state.user);
+	const [selectedRecipe, setSelectedRecipe] = useState<RecipeProps | null>(
+		null
+	);
 
 	const handleClose = () => {
 		onClose();
@@ -45,11 +75,11 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 	};
 
 	const handleSave = async () => {
-		if (recipe) {
+		if (selectedRecipe) {
 			dispatch(
 				handleSaveRecipe({
 					userId: user?.id,
-					recipe,
+					recipe: selectedRecipe,
 				})
 			).then((res) => {
 				if (res.meta.requestStatus === "fulfilled") {
@@ -68,7 +98,7 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 			<View className="z-10 flex-1">
 				<View className="absolute bottom-0 w-full  border bg-light h-[90%] rounded-t-3xl border-light-dark dark:border-dark-light dark:bg-dark">
 					<ScrollView>
-						<View className="flex-row items-center justify-between p-4 rounded-t-3xl">
+						<View className="flex-row items-center justify-between p-4 rounded-t-3xl bg-main">
 							<StyledText type="subheading">Generated Recipe</StyledText>
 							<StyledPressable
 								onPress={handleClose}
@@ -80,125 +110,37 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 							</StyledPressable>
 						</View>
 
-						<View className="flex-col items-start justify-start">
-							{/* Header */}
-							<View className="flex-col items-start justify-start w-full px-4 py-2">
-								<StyledText className="font-chunk" type="subheading">
-									Recipe Name:
-								</StyledText>
-								<StyledText type="heading-3" className="px-3 font-chunk">
-									{recipe?.name}
-								</StyledText>
-							</View>
+						<View className="flex-col items-start justify-start p-4">
+							<StyledText type="heading-3" className="font-chunk">
+								Which one do you prefer?
+							</StyledText>
 
-							{/* Infos */}
-							<View className="flex-col w-full p-4">
-								<StyledText className="font-chunk" type="subheading">
-									Recipe Information:
-								</StyledText>
-								<View className="flex-col items-start justify-center w-full ">
-									<View className="flex-row items-center px-3 py-1.5 my-1 rounded-full w-max ">
-										<StyledText type="paragraph">Serve for: </StyledText>
-										<StyledText type="paragraph">
-											{recipe?.serve_for}
-											{recipe?.serve_for === "1" ? " person" : " people"}
-										</StyledText>
-									</View>
-									<View className="flex-row items-center px-3 py-1.5 my-1 rounded-full w-max ">
-										<StyledText type="paragraph">Serve in: </StyledText>
-										<StyledText type="paragraph">
-											{recipe?.serve_hot_or_cold}{" "}
-										</StyledText>
-									</View>
-									<View className="flex-row items-center px-3 py-1.5 my-1 rounded-full w-max ">
-										<StyledText type="paragraph">Cooking time: </StyledText>
-										<StyledText type="paragraph">
-											{recipe?.cooking_time}
-											{recipe?.cooking_time === "1"
-												? " minute"
-												: " minutes"}
-										</StyledText>
-									</View>
-									<View className="flex-row items-center px-3 py-1.5 my-1 rounded-full w-max ">
-										<StyledText type="paragraph">Cuisine type: </StyledText>
-										<StyledText type="paragraph">
-											{recipe?.type_of_cuisine}{" "}
-										</StyledText>
-									</View>
-									<View className="flex-row items-center px-3 py-1.5 my-1 rounded-full w-max ">
-										<StyledText type="paragraph">Difficulty level: </StyledText>
-										<StyledText type="paragraph">
-											{recipe?.difficulty}{" "}
-										</StyledText>
-									</View>
+							{recipe.length > 0 &&
+								recipe.map((item, i) => (
+									<RecipeCard
+										key={i}
+										item={item}
+										selectedRecipe={selectedRecipe}
+										setSelectedRecipe={setSelectedRecipe}
+									/>
+								))}
+
+							{selectedRecipe && (
+								<View className="flex-row items-center justify-end w-full p-4">
+									<StyledPressable
+										onPress={handleSave}
+										className="mx-1 rounded-md bg-main"
+										size="sm">
+										<StyledText className="text-white">Save</StyledText>
+									</StyledPressable>
+									<StyledPressable
+										onPress={handleDelete}
+										className="mx-1 bg-red-500 rounded-md"
+										size="sm">
+										<StyledText className="text-white">Delete</StyledText>
+									</StyledPressable>
 								</View>
-							</View>
-
-							{/* Ingredients */}
-							<View className="flex-col w-full p-4">
-								<StyledText className="font-chunk" type="subheading">
-									Ingredients:
-								</StyledText>
-								<View className="flex-col w-full px-3">
-									{recipe?.ingredients.map((item, i) => (
-										<StyledText
-											key={i}
-											type="paragraph"
-											className="py-2 tracking-wide">
-											• {`${item.measurement} ${item.name}`}
-										</StyledText>
-									))}
-								</View>
-							</View>
-
-							{/* Instructions */}
-							<View className="flex-col w-full p-4">
-								<StyledText className="font-chunk" type="subheading">
-									Instructions:
-								</StyledText>
-								<View className="flex-col w-full px-3">
-									{recipe?.instructions.map((item, i) => (
-										<StyledText
-											key={i}
-											type="paragraph"
-											className="py-4 tracking-wide">
-											{item}
-										</StyledText>
-									))}
-								</View>
-							</View>
-
-							{/* Nutrients  */}
-							<View className="flex-col w-full p-4">
-								<StyledText className="font-chunk" type="subheading">
-									Nutrients:
-								</StyledText>
-								<View className="flex-col w-full px-3">
-									{recipe?.nutrient_counts.map((item, i) => (
-										<StyledText
-											key={i}
-											type="paragraph"
-											className="py-4 tracking-wide">
-											{`${item.measurement} ${item.name}`}
-										</StyledText>
-									))}
-								</View>
-							</View>
-
-							<View className="flex-row items-center justify-end w-full p-4">
-								<StyledPressable
-									onPress={handleSave}
-									className="mx-1 rounded-md bg-main"
-									size="sm">
-									<StyledText className="text-white">Save</StyledText>
-								</StyledPressable>
-								<StyledPressable
-									onPress={handleDelete}
-									className="mx-1 bg-red-500 rounded-md"
-									size="sm">
-									<StyledText className="text-white">Delete</StyledText>
-								</StyledPressable>
-							</View>
+							)}
 						</View>
 					</ScrollView>
 				</View>

@@ -13,7 +13,7 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { TIngredients } from "@/utils/types/ingredients";
 import { router } from "expo-router";
 import { useColorScheme } from "nativewind";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Image, RefreshControl, ScrollView, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -67,7 +67,7 @@ const drawer = () => {
 	if (pageLoading) return <Loading />;
 
 	return (
-		<>
+		<Fragment>
 			<ScrollView
 				className="w-full bg-light dark:bg-dark "
 				refreshControl={
@@ -80,18 +80,20 @@ const drawer = () => {
 					<View className="flex-row px-8 space-x-4">
 						<StyledPressable
 							onPress={() => setSelectedTab("main ingredient")}
-							className={`rounded-none pt-0 mt-0 ${selectedTab === "main ingredient"
+							className={`rounded-none pt-0 mt-0 ${
+								selectedTab === "main ingredient"
 									? "border-b  border-main opacity-100"
 									: "opacity-60"
-								}`}>
+							}`}>
 							<StyledText>My Ingredients</StyledText>
 						</StyledPressable>
 						<StyledPressable
 							onPress={() => setSelectedTab("seasoning")}
-							className={`rounded-none pt-0 mt-0 ${selectedTab === "seasoning"
+							className={`rounded-none pt-0 mt-0 ${
+								selectedTab === "seasoning"
 									? "border-b  border-main opacity-100"
 									: "opacity-60"
-								}`}>
+							}`}>
 							<StyledText>My Seasonings</StyledText>
 						</StyledPressable>
 					</View>
@@ -116,7 +118,7 @@ const drawer = () => {
 				onClose={onClose}
 				expiredIngredients={expiredIngredients}
 			/>
-		</>
+		</Fragment>
 	);
 };
 export default drawer;

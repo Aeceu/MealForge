@@ -15,6 +15,7 @@ export type RecipePost = {
 		benefits: string;
 		serve_for: string | number;
 		difficulty: string;
+		tags: string;
 	};
 	author: string;
 	is_bookmarked: boolean;
