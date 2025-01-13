@@ -47,7 +47,6 @@ class Ingredient(Base):
     def __repr__(self):
         return f"<Ingredient(name={self.name}, measurements={self.measurements})>"
 
-
 class Recipe(Base):
     __tablename__ = 'recipes'
 
@@ -62,6 +61,7 @@ class Recipe(Base):
     benefits = Column(Text, nullable=True)
     serve_for = Column(Integer, nullable=False)
     difficulty = Column(String(250), nullable=False)
+    tags = Column(String(250), nullable=False)
 
     user_id = Column(GUID(), ForeignKey('users.id',ondelete="CASCADE"), nullable=False)
     user = relationship('User', back_populates='recipes')
