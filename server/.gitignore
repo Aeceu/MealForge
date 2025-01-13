@@ -1,7 +1,6 @@
 .env
 .venv
 *.csv
-*.pth
 *.csv
 *.pt
 __pycache__/
