@@ -32,6 +32,7 @@ type Props = {
 		serve_for: string;
 		difficulty: string;
 		tags: string;
+		allergens: string;
 	}[];
 };
 
@@ -57,6 +58,7 @@ type RecipeProps = {
 	serve_for: string;
 	difficulty: string;
 	tags: string;
+	allergens: string;
 };
 
 const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {

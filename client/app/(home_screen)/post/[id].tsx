@@ -294,6 +294,20 @@ const RecipePostPage = () => {
 							))}
 						</View>
 					</View>
+
+					{/* Allergens */}
+					<View>
+						<StyledText type="subheading" className="px-2 mb-2 font-chunk">
+							Allergens:
+						</StyledText>
+						<View className="w-full px-6 py-4 space-y-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
+							{post.recipe?.allergens.split(",").map((item, i) => (
+								<StyledText key={i} type="paragraph" className="">
+									• {item}
+								</StyledText>
+							))}
+						</View>
+					</View>
 				</View>
 			</ScrollView>
 			{darkbg && <DarkBgOverlay />}

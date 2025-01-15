@@ -42,6 +42,7 @@ type recipeProps = {
 	serve_for: string;
 	difficulty: string;
 	tags: string;
+	allergens: string;
 };
 
 const UserPreferences = () => {
@@ -87,7 +88,9 @@ const UserPreferences = () => {
 				seasonings: data.seasonings,
 				user_preference: user?.allergies || "",
 			});
+			// Print the response data to the console formatted as a tree
 			console.dir(res.data, { depth: null });
+
 			setShowRecipe(true);
 			setRecipeResult(res.data);
 			setdarkbg(true);
@@ -104,6 +107,7 @@ const UserPreferences = () => {
 		control,
 		handleSubmit,
 		setValue,
+		register,
 		formState: { errors },
 		reset,
 	} = useForm<TNewRecipe>({
@@ -111,6 +115,7 @@ const UserPreferences = () => {
 		defaultValues: {
 			main_ingredients: [],
 			seasonings: [],
+			server_for: "1",
 		},
 	});
 
@@ -142,7 +147,7 @@ const UserPreferences = () => {
 												.filter((item) => item.type === "main ingredient")
 												.map((item, i) => ({
 													key: i,
-													value: `${item.name} ${
+													value: `${item.measurements} ${item.name} ${
 														item.is_expired ? "(expired)" : ""
 													}`,
 													type: "main ingredient",
@@ -231,7 +236,7 @@ const UserPreferences = () => {
 												.filter((item) => item.type === "seasoning")
 												.map((item, i) => ({
 													key: i,
-													value: `${item.name} ${
+													value: `${item.measurements} ${item.name} ${
 														item.is_expired ? "(expired)" : ""
 													}`,
 													type: "seasonings",
@@ -306,6 +311,34 @@ const UserPreferences = () => {
 									</StyledText>
 								)}
 							</View>
+
+							{/* Servings */}
+							<View>
+								<StyledText className="mb-2">Servings</StyledText>
+								<Controller
+									control={control}
+									name="server_for"
+									render={({ field: { onChange, value } }) => (
+										<TextInput
+											onChangeText={onChange}
+											value={value}
+											className={`
+                      border border-light-border font-pregular dark:border-dark-border bg-white dark:bg-dark-light text-dark dark:text-main-50 rounded-lg px-6 py-2 text-sm
+                      `}
+											placeholderTextColor={placeholderColor}
+											placeholder="Enter number of servings"
+											keyboardType="numeric"
+										/>
+									)}
+								/>
+							</View>
+							{errors.server_for && (
+								<StyledText
+									fontStyle="default"
+									className="mt-2 ml-3 text-sm text-red-500">
+									* {errors.server_for.message}
+								</StyledText>
+							)}
 						</View>
 
 						{/* Display all selected ingredients and seasonings */}

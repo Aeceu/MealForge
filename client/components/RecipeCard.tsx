@@ -26,6 +26,7 @@ type RecipeProps = {
 	serve_for: string;
 	difficulty: string;
 	tags: string;
+	allergens: string;
 };
 
 type RecipeCardProps = {
@@ -40,7 +41,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 	setSelectedRecipe,
 }) => {
 	const [showInstructions, setShowInstructions] = useState<
-		"nutrients" | "instruction" | "none"
+		"nutrients" | "instruction" | "allergens" | "none"
 	>("none");
 	const { colorScheme } = useColorScheme();
 
@@ -190,11 +191,11 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 							prev === "instruction" ? "none" : "instruction"
 						)
 					}
-					className={`flex-row items-center justify-center bg-light dark:bg-dark border border-light-border dark:border-dark-border rounded-md px-3 py-1.5 mx-2 w-full flex-1 ${
+					className={`flex-row items-center justify-center bg-light dark:bg-dark border border-light-border dark:border-dark-border rounded-md px-2 py-1.5 mx-1 w-full flex-1 ${
 						showInstructions === "instruction" ? "bg-main" : ""
 					}`}>
 					<StyledText type="xs" className="text-dark dark:text-white">
-						Show Instructions
+						Instructions
 					</StyledText>
 				</TouchableOpacity>
 				<TouchableOpacity
@@ -203,11 +204,24 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 							prev === "nutrients" ? "none" : "nutrients"
 						)
 					}
-					className={`flex-row items-center justify-center bg-light dark:bg-dark border border-light-border dark:border-dark-border rounded-md px-3 py-1.5 mx-2 w-full flex-1 ${
+					className={`flex-row items-center justify-center bg-light dark:bg-dark border border-light-border dark:border-dark-border rounded-md px-2 py-1.5 mx-1 w-full flex-1 ${
 						showInstructions === "nutrients" ? "bg-main" : ""
 					}`}>
 					<StyledText type="xs" className="text-dark dark:text-white">
-						Show Nutrients
+						Nutrients
+					</StyledText>
+				</TouchableOpacity>
+				<TouchableOpacity
+					onPress={() =>
+						setShowInstructions((prev) =>
+							prev === "allergens" ? "none" : "allergens"
+						)
+					}
+					className={`flex-row items-center justify-center bg-light dark:bg-dark border border-light-border dark:border-dark-border rounded-md px-2 py-1.5 mx-1 w-full flex-1 ${
+						showInstructions === "allergens" ? "bg-main" : ""
+					}`}>
+					<StyledText type="xs" className="text-dark dark:text-white">
+						Allergens
 					</StyledText>
 				</TouchableOpacity>
 			</View>
@@ -237,6 +251,21 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 							{item.nutrient_counts.map((item, i) => (
 								<StyledText key={i} type="xs" className="py-2 tracking-wide">
 									{item.name}: {item.measurement}
+								</StyledText>
+							))}
+						</View>
+					</View>
+				)}
+
+				{showInstructions === "allergens" && (
+					<View className="mt-2 last:flex-col w-full p-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
+						<StyledText className="font-chunk" type="subheading">
+							Allergens:
+						</StyledText>
+						<View className="flex-col w-full px-1">
+							{item.allergens.split(",").map((item, i) => (
+								<StyledText key={i} type="xs" className="py-2 tracking-wide">
+									{item}
 								</StyledText>
 							))}
 						</View>
