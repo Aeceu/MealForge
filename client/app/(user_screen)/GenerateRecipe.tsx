@@ -86,10 +86,8 @@ const UserPreferences = () => {
 			const res = await axios.post("/generate/recipe", {
 				main_ingredients: data.main_ingredients,
 				seasonings: data.seasonings,
-				user_preference: user?.allergies || "",
+				serve_for: data.serve_for,
 			});
-			// Print the response data to the console formatted as a tree
-			console.dir(res.data, { depth: null });
 
 			setShowRecipe(true);
 			setRecipeResult(res.data);
@@ -115,7 +113,7 @@ const UserPreferences = () => {
 		defaultValues: {
 			main_ingredients: [],
 			seasonings: [],
-			server_for: "1",
+			serve_for: "1",
 		},
 	});
 
@@ -317,7 +315,7 @@ const UserPreferences = () => {
 								<StyledText className="mb-2">Servings</StyledText>
 								<Controller
 									control={control}
-									name="server_for"
+									name="serve_for"
 									render={({ field: { onChange, value } }) => (
 										<TextInput
 											onChangeText={onChange}
@@ -332,11 +330,11 @@ const UserPreferences = () => {
 									)}
 								/>
 							</View>
-							{errors.server_for && (
+							{errors.serve_for && (
 								<StyledText
 									fontStyle="default"
 									className="mt-2 ml-3 text-sm text-red-500">
-									* {errors.server_for.message}
+									* {errors.serve_for.message}
 								</StyledText>
 							)}
 						</View>
