@@ -25,6 +25,7 @@ const UserPreferences = () => {
 		setShowAddPrefModal(true);
 		setdarkbg(true);
 	};
+
 	const onClose = () => {
 		setShowAddPrefModal(false);
 		setdarkbg(false);
@@ -96,15 +97,18 @@ const UserPreferences = () => {
 							)}
 						</View>
 
-						<StyledPressable className="w-full mt-4 bg-main" onPress={handleAddBtn}>
+						<StyledPressable
+							className="w-full mt-4 bg-main"
+							onPress={handleAddBtn}>
 							<StyledText
 								type="subheading"
-								className="text-white dark:text-main-50">Add Preference</StyledText>
+								className="text-white dark:text-main-50">
+								Add Preference
+							</StyledText>
 						</StyledPressable>
 					</View>
 
 					<AddPreference isVisible={showAddPrefModal} onClose={onClose} />
-
 				</View>
 			</ScrollView>
 
