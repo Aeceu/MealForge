@@ -25,7 +25,7 @@ def generateRecipe(input_prompt):
   output_ids = model.generate(
       inputs['input_ids'],
       attention_mask=inputs['attention_mask'],  # Provide attention mask for reliability
-      max_length=500,
+      max_length=300,
       num_return_sequences=1,
       temperature=0.7,
       top_k=50,

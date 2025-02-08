@@ -52,7 +52,7 @@ Before you begin, ensure you have the following installed:
 4. Activate the virtual environment
 
    ```bash
-   source .venv/Scripts/activate
+source .venv/Scripts/activate
    ```
 
 5. Install Dependencies
@@ -75,4 +75,11 @@ To run the Flask development server, use the following command:
 py src/app.py
 python app.py
 ```
+
+cd server
+npx expo start
+cd client
+
+npx expo start
+
 mysql -h 127.0.0.1 -P 3306 -u root -p

@@ -8,8 +8,7 @@ from model.NLP import generateRecipe
 from utils.generateQuery import generateQuery
 
 generate_bp = Blueprint("generate", __name__)
-
-model = genai.GenerativeModel("gemini-1.5-flash")
+ 
 
 @generate_bp.route("/generate/recipe", methods=["POST"])
 def generate():

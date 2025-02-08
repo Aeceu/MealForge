@@ -42,7 +42,7 @@ def generateQuery(ingredients,generated_text,server_for):
         "allergens": "List of allergens present in the recipe. Only return the allergens present in the recipe. (e.g., peanuts, soy, gluten, etc.)  provided as a string with up to 250 characters.",
       }}]
 
-      Ensure the instructions are provided in a clear step-by-step array format, and that the recipe exactly aligns with the user-provided ingredients and make sure the servings are correct. and make sure the recipe is unique and the other preferences are different from each other.
-
+      Ensure the instructions are provided in a clear step-by-step array format, and that the recipe exactly aligns with the user-provided ingredients and make sure the nutrients and servings are correct. and make sure the recipe is unique and the other preferences are different from each other.
   """)
+  print(response)
   return response
