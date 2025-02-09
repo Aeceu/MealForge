@@ -1,14 +1,18 @@
-from flask import Blueprint, jsonify, make_response, request
-from flask_jwt_extended import (
-    create_access_token, create_refresh_token, jwt_required,get_jwt_identity
-)
-from sqlalchemy.exc import IntegrityError
-from flask_bcrypt import Bcrypt
-from sqlalchemy import text
-import uuid
-from utils.database import engine
 import os
+import uuid
+
 import jwt
+from flask import Blueprint, jsonify, make_response, request
+from flask_bcrypt import Bcrypt
+from flask_jwt_extended import (
+    create_access_token,
+    create_refresh_token,
+    get_jwt_identity,
+    jwt_required,
+)
+from sqlalchemy import text
+from sqlalchemy.exc import IntegrityError
+from utils.database import engine
 
 auth_bp = Blueprint("auth", __name__)
 bcrypt = Bcrypt()
@@ -87,6 +91,10 @@ def handleLogin():
                 "email": user_exists.email,
                 "password": user_exists.password,
                 "allergies": user_exists.allergies,
+                "height":user_exists.height,
+                "weight":user_exists.weight,
+                "age":user_exists.age,
+                "gender":user_exists.gender,
                 "profile_picture_url":user_exists.profile_picture_url
             }
 
@@ -117,6 +125,10 @@ def handleLogin():
                     "lastName": user["lastName"],
                     "email": user["email"],
                     "allergies": user["allergies"],
+                    "height":user["height"],
+                    "weight":user["weight"],
+                    "age":user["age"],
+                    "gender":user["gender"],
                     "profile_picture_url":user["profile_picture_url"]
                 },
                 "accessToken": accessToken,
@@ -168,6 +180,10 @@ def refresh():
               "lastName": user_exists.lastName,
               "email": user_exists.email,
               "allergies": user_exists.allergies,
+              "height":user_exists.height,
+              "weight":user_exists.weight,
+              "age":user_exists.age,
+              "gender":user_exists.gender,
               "profile_picture_url":user_exists.profile_picture_url
           }
 
