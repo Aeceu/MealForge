@@ -14,6 +14,7 @@ export type TRecipe = {
 	difficulty: string;
 	tags: string;
 	allergens: string;
+	leftover_recommendations: string;
 };
 
 export const NewRecipeSchema = z.object({

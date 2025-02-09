@@ -1,7 +1,7 @@
 import { icons } from "@/constants";
 import { useState, Fragment } from "react";
 import axios from "@/redux/api/axios";
-import { TextInput } from "react-native";
+import { Alert, TextInput } from "react-native";
 import Loading from "@/components/Loading";
 import { useColorScheme } from "nativewind";
 import StyledText from "@/components/StyledText";
@@ -43,6 +43,7 @@ type recipeProps = {
 	difficulty: string;
 	tags: string;
 	allergens: string;
+	leftover_recommendations: string;
 };
 
 const UserPreferences = () => {
@@ -87,8 +88,11 @@ const UserPreferences = () => {
 				main_ingredients: data.main_ingredients,
 				seasonings: data.seasonings,
 				serve_for: data.serve_for,
+				height: user?.height,
+				weight: user?.weight,
+				age: user?.age,
+				gender: user?.gender,
 			});
-
 			setShowRecipe(true);
 			setRecipeResult(res.data);
 			setdarkbg(true);
@@ -105,7 +109,6 @@ const UserPreferences = () => {
 		control,
 		handleSubmit,
 		setValue,
-		register,
 		formState: { errors },
 		reset,
 	} = useForm<TNewRecipe>({
@@ -116,6 +119,10 @@ const UserPreferences = () => {
 			serve_for: "1",
 		},
 	});
+
+	const test = () => {
+		console.log(watch("seasonings"));
+	};
 
 	if (pageLoading) return <Loading />;
 
@@ -153,6 +160,11 @@ const UserPreferences = () => {
 											save="value"
 											setSelected={(selectedValue: string) => {
 												if (!value.includes(selectedValue)) {
+													if (selectedValue.includes("(expired)")) {
+														Alert.alert(
+															"You selected an expired ingredient..."
+														);
+													}
 													onChange([...value, selectedValue.split("(")[0]]);
 												}
 											}}
@@ -242,7 +254,10 @@ const UserPreferences = () => {
 											save="value"
 											setSelected={(selectedValue: string) => {
 												if (!value.includes(selectedValue)) {
-													onChange([...value, selectedValue]);
+													if (selectedValue.includes("(expired)")) {
+														Alert.alert("You selected an expired seasoning...");
+													}
+													onChange([...value, selectedValue.split("(")[0]]);
 												}
 											}}
 											inputStyles={{

@@ -1,4 +1,10 @@
-import { View, TextInput, TextProps, Image } from "react-native";
+import {
+	View,
+	TextInput,
+	TextProps,
+	Image,
+	KeyboardTypeOptions,
+} from "react-native";
 import React, { useState } from "react";
 import StyledText from "./StyledText";
 import { useThemeColors } from "@/constants/colors";
@@ -18,6 +24,7 @@ type Props = TextProps & {
 	handleTextChange?: ((text: string) => void) | undefined;
 	value: string;
 	error?: string;
+	keyboardType?: KeyboardTypeOptions;
 };
 
 const StyledTextInput = ({
@@ -25,6 +32,7 @@ const StyledTextInput = ({
 	handleTextChange,
 	value,
 	error,
+	keyboardType = "default",
 }: Props) => {
 	const [showPassword, setShowPassword] = useState(false);
 	const { placeholderColor } = useThemeColors();
@@ -51,6 +59,7 @@ const StyledTextInput = ({
 					placeholder={title}
 					placeholderTextColor={placeholderColor}
 					value={value}
+					keyboardType={keyboardType}
 					onChangeText={handleTextChange}
 					autoCapitalize={
 						title === "Username" || title === "Email" || title === "Password"

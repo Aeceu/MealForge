@@ -193,7 +193,7 @@ const RecipePostPage = () => {
 					<View className="w-full px-6 py-4 space-y-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
 						{recipe?.ingredients.split(",").map((item, i) => (
 							<StyledText key={i} type="paragraph" className="">
-								• {item}
+								• {item.split("|")[0]} {item.split("|")[1]}
 							</StyledText>
 						))}
 					</View>
@@ -205,11 +205,11 @@ const RecipePostPage = () => {
 						Instructions:
 					</StyledText>
 					<View className="w-full px-6 py-4 space-y-6 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
-						{recipe?.instruction.split("Step ").map(
+						{recipe?.instruction.split("|").map(
 							(item, i) =>
 								item && ( // Check to ignore any empty strings from the split
 									<StyledText key={i} type="paragraph">
-										Step {item.trim()}
+										• {item.trim()}
 									</StyledText>
 								)
 						)}
@@ -231,12 +231,26 @@ const RecipePostPage = () => {
 				</View>
 
 				{/* Allergens */}
-				<View>
+				<View className="mb-4">
 					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
 						Allergens:
 					</StyledText>
 					<View className="w-full px-6 py-4 space-y-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
 						{recipe?.allergens.split(",").map((item, i) => (
+							<StyledText key={i} type="paragraph" className="">
+								• {item}
+							</StyledText>
+						))}
+					</View>
+				</View>
+
+				{/* Leftover Recommendations */}
+				<View>
+					<StyledText type="subheading" className="px-2 mb-2 font-chunk">
+						Leftover Recommendations:
+					</StyledText>
+					<View className="w-full px-6 py-4 space-y-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
+						{recipe?.leftover_recommendations.split("|").map((item, i) => (
 							<StyledText key={i} type="paragraph" className="">
 								• {item}
 							</StyledText>

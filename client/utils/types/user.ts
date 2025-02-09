@@ -37,10 +37,18 @@ export const ChangePasswordSchema = z
 		path: ["retypeCurrentPassword"],
 	});
 
+export const UserSpecificationSchema = z.object({
+	height: z.string().min(1, "Required"),
+	weight: z.string().min(1, "Required"),
+	age: z.string().min(1, "Required"),
+	gender: z.string().min(1, "Required"),
+});
+
 export type TUserLogin = z.infer<typeof UserLoginSchema>;
 export type TUserSignup = z.infer<typeof UserSignupSchema>;
 export type TEditUser = z.infer<typeof EditInfoSchema>;
 export type TChangePassword = z.infer<typeof ChangePasswordSchema>;
+export type TUserSpecification = z.infer<typeof UserSpecificationSchema>;
 
 export type TUser = {
 	id: string;
@@ -49,6 +57,10 @@ export type TUser = {
 	userName: string;
 	email: string;
 	allergies: string;
+	height: string;
+	weight: string;
+	age: string;
+	gender: string;
 	profile_picture_url: string | null;
 
 	ingredients: {

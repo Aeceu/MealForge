@@ -27,6 +27,7 @@ type RecipeProps = {
 	difficulty: string;
 	tags: string;
 	allergens: string;
+	leftover_recommendations: string;
 };
 
 type RecipeCardProps = {
@@ -41,7 +42,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 	setSelectedRecipe,
 }) => {
 	const [showInstructions, setShowInstructions] = useState<
-		"nutrients" | "instruction" | "allergens" | "none"
+		"ingredients" | "nutrients" | "instruction" | "allergens" | "none"
 	>("none");
 	const { colorScheme } = useColorScheme();
 
@@ -184,47 +185,65 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 				</ScrollView>
 			</View>
 
-			<View className="flex-row items-center justify-start w-full  border-t border-light-border dark:border-dark-border p-2 rounded-b-xl">
-				<TouchableOpacity
-					onPress={() =>
-						setShowInstructions((prev) =>
-							prev === "instruction" ? "none" : "instruction"
-						)
-					}
-					className={`flex-row items-center justify-center bg-light dark:bg-dark border border-light-border dark:border-dark-border rounded-md px-2 py-1.5 mx-1 w-full flex-1 ${
-						showInstructions === "instruction" ? "bg-main" : ""
-					}`}>
-					<StyledText type="xs" className="text-dark dark:text-white">
-						Instructions
-					</StyledText>
-				</TouchableOpacity>
-				<TouchableOpacity
-					onPress={() =>
-						setShowInstructions((prev) =>
-							prev === "nutrients" ? "none" : "nutrients"
-						)
-					}
-					className={`flex-row items-center justify-center bg-light dark:bg-dark border border-light-border dark:border-dark-border rounded-md px-2 py-1.5 mx-1 w-full flex-1 ${
-						showInstructions === "nutrients" ? "bg-main" : ""
-					}`}>
-					<StyledText type="xs" className="text-dark dark:text-white">
-						Nutrients
-					</StyledText>
-				</TouchableOpacity>
-				<TouchableOpacity
-					onPress={() =>
-						setShowInstructions((prev) =>
-							prev === "allergens" ? "none" : "allergens"
-						)
-					}
-					className={`flex-row items-center justify-center bg-light dark:bg-dark border border-light-border dark:border-dark-border rounded-md px-2 py-1.5 mx-1 w-full flex-1 ${
-						showInstructions === "allergens" ? "bg-main" : ""
-					}`}>
-					<StyledText type="xs" className="text-dark dark:text-white">
-						Allergens
-					</StyledText>
-				</TouchableOpacity>
-			</View>
+			<ScrollView
+				horizontal
+				showsHorizontalScrollIndicator={false}
+				className="w-full m-t2">
+				<View className="flex-row items-center justify-start w-full  border-t border-light-border dark:border-dark-border p-2 rounded-b-xl">
+					<TouchableOpacity
+						onPress={() =>
+							setShowInstructions((prev) =>
+								prev === "ingredients" ? "none" : "ingredients"
+							)
+						}
+						className={`flex-row items-center justify-center bg-light dark:bg-dark border border-light-border dark:border-dark-border rounded-md px-2 py-1.5 mx-1 w-full flex-1 ${
+							showInstructions === "ingredients" ? "bg-main" : ""
+						}`}>
+						<StyledText type="xs" className="text-dark dark:text-white">
+							Ingredients
+						</StyledText>
+					</TouchableOpacity>
+					<TouchableOpacity
+						onPress={() =>
+							setShowInstructions((prev) =>
+								prev === "instruction" ? "none" : "instruction"
+							)
+						}
+						className={`flex-row items-center justify-center bg-light dark:bg-dark border border-light-border dark:border-dark-border rounded-md px-2 py-1.5 mx-1 w-full flex-1 ${
+							showInstructions === "instruction" ? "bg-main" : ""
+						}`}>
+						<StyledText type="xs" className="text-dark dark:text-white">
+							Instructions
+						</StyledText>
+					</TouchableOpacity>
+					<TouchableOpacity
+						onPress={() =>
+							setShowInstructions((prev) =>
+								prev === "nutrients" ? "none" : "nutrients"
+							)
+						}
+						className={`flex-row items-center justify-center bg-light dark:bg-dark border border-light-border dark:border-dark-border rounded-md px-2 py-1.5 mx-1 w-full flex-1 ${
+							showInstructions === "nutrients" ? "bg-main" : ""
+						}`}>
+						<StyledText type="xs" className="text-dark dark:text-white">
+							Nutrients
+						</StyledText>
+					</TouchableOpacity>
+					<TouchableOpacity
+						onPress={() =>
+							setShowInstructions((prev) =>
+								prev === "allergens" ? "none" : "allergens"
+							)
+						}
+						className={`flex-row items-center justify-center bg-light dark:bg-dark border border-light-border dark:border-dark-border rounded-md px-2 py-1.5 mx-1 w-full flex-1 ${
+							showInstructions === "allergens" ? "bg-main" : ""
+						}`}>
+						<StyledText type="xs" className="text-dark dark:text-white">
+							Allergens
+						</StyledText>
+					</TouchableOpacity>
+				</View>
+			</ScrollView>
 
 			<View className="px-2 mb-2">
 				{showInstructions === "instruction" && (
@@ -266,6 +285,21 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 							{item.allergens.split(",").map((item, i) => (
 								<StyledText key={i} type="xs" className="py-2 tracking-wide">
 									{item}
+								</StyledText>
+							))}
+						</View>
+					</View>
+				)}
+
+				{showInstructions === "ingredients" && (
+					<View className="mt-2 last:flex-col w-full p-2 bg-white border rounded-xl border-light-border dark:border-dark-border dark:bg-dark-light">
+						<StyledText className="font-chunk" type="subheading">
+							Ingredients:
+						</StyledText>
+						<View className="flex-col w-full px-1">
+							{item.ingredients.map((item, i) => (
+								<StyledText key={i} type="xs" className="py-2 tracking-wide">
+									• {item.measurement} {item.name}
 								</StyledText>
 							))}
 						</View>
