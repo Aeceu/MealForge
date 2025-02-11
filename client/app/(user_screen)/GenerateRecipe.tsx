@@ -152,9 +152,8 @@ const UserPreferences = () => {
 												.filter((item) => item.type === "main ingredient")
 												.map((item, i) => ({
 													key: i,
-													value: `${item.measurements} ${item.name} ${
-														item.is_expired ? "(expired)" : ""
-													}`,
+													value: `${item.measurements} ${item.name} ${item.is_expired ? "(expired)" : ""
+														}`,
 													type: "main ingredient",
 												}))}
 											save="value"
@@ -235,7 +234,7 @@ const UserPreferences = () => {
 
 							{/* Add seasonings */}
 							<View>
-								<StyledText className="mb-2">Select your seasonings</StyledText>
+								<StyledText className="mb-2">Select your secondary ingredients</StyledText>
 								<Controller
 									control={control}
 									name="seasonings"
@@ -243,19 +242,18 @@ const UserPreferences = () => {
 									render={({ field: { onChange, value } }) => (
 										<SelectList
 											data={ingredients
-												.filter((item) => item.type === "seasoning")
+												.filter((item) => item.type === "secondary ingredient")
 												.map((item, i) => ({
 													key: i,
-													value: `${item.measurements} ${item.name} ${
-														item.is_expired ? "(expired)" : ""
-													}`,
-													type: "seasonings",
+													value: `${item.measurements} ${item.name} ${item.is_expired ? "(expired)" : ""
+														}`,
+													type: "secondary ingredient",
 												}))}
 											save="value"
 											setSelected={(selectedValue: string) => {
 												if (!value.includes(selectedValue)) {
 													if (selectedValue.includes("(expired)")) {
-														Alert.alert("You selected an expired seasoning...");
+														Alert.alert("You selected an expired secondary ingredient...");
 													}
 													onChange([...value, selectedValue.split("(")[0]]);
 												}
@@ -399,7 +397,7 @@ const UserPreferences = () => {
 
 							{/* Seasonings Section */}
 							<StyledText className="mt-6" type="heading-4">
-								Selected Seasonings:
+								Selected Secondary Ingredients:
 							</StyledText>
 							<View>
 								{watch("seasonings")?.length <= 0 ? (

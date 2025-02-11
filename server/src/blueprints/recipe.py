@@ -25,6 +25,9 @@ def create_recipe(userId):
     allergens = recipe_data.get("allergens")
     leftover_recommendations = recipe_data.get("leftover_recommendations")
 
+    print(data)
+
+
     try:
         with engine.connect() as conn:
             user = conn.execute(text("SELECT * FROM users WHERE id = :userId"), {"userId": userId}).fetchone()
@@ -75,6 +78,7 @@ def create_recipe(userId):
             return jsonify({"message": "Recipe created successfully!", "recipe_id": recipe_id}), 201
 
     except Exception as e:
+        print(e)
         return jsonify({"error": str(e)}), 500
 
 
