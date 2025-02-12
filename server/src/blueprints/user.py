@@ -1,13 +1,14 @@
 import os
-import jwt
 import uuid
+
 import boto3
-from sqlalchemy import text
-from flask_bcrypt import Bcrypt
-from utils.database import engine
-from sqlalchemy.exc import IntegrityError
+import jwt
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import (  jwt_required, get_jwt_identity,)
+from flask_bcrypt import Bcrypt
+from flask_jwt_extended import get_jwt_identity, jwt_required
+from sqlalchemy import text
+from sqlalchemy.exc import IntegrityError
+from utils.database import engine
 
 user_bp = Blueprint("user", __name__)
 bcrypt = Bcrypt()
@@ -314,3 +315,52 @@ def delete_allergy():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+# TODO: Add user specification
+@user_bp.route("/user/specification/<userId>",methods=["POST"])
+def add_specifications(userId):
+    data = request.get_json()
+
+    height = data.get("height")
+    weight = data.get("weight")
+    age = data.get("age")
+    gender = data.get("gender")
+
+    if not userId:
+        return jsonify({"error":"User id is missing!"}),400
+
+    if not height or not weight or not age or not gender:
+        return jsonify({'error':'Missing field!'}),400
+
+    try:
+        with engine.connect() as conn:
+
+            userExists = conn.execute(text("SELECT id FROM users WHERE id = :userId"),{"userId":userId}).fetchone()
+
+            if userExists is None:
+              return jsonify({"error":"User with that id is not found!"}),400
+
+            conn.execute(text(
+                """
+                UPDATE users SET
+                height = :height,
+                weight = :weight,
+                age = :age,
+                gender = :gender
+                WHERE id = :userId
+                """
+            ),{
+                "height":height,
+                "weight":weight,
+                'age':age,
+                'gender':gender,
+                'userId':userId
+            })
+
+            conn.commit()
+
+            return jsonify({
+                "message":"User specification updated successfully!"
+            }),200
+    except Exception as e:
+        return jsonify({"error":str(e)}),500

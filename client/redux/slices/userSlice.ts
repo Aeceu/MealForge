@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
 	addAllergy,
+	addSpecifications,
 	changePassword,
 	deleteAccount,
 	deleteAllergy,
@@ -107,6 +108,17 @@ const userSlice = createSlice({
 				}
 			})
 			.addCase(deleteAllergy.rejected, (state, action) => {
+				state.status = "failed";
+				state.error = action.error.message;
+			})
+			.addCase(addSpecifications.pending, (state) => {
+				state.status = "pending";
+			})
+			.addCase(addSpecifications.fulfilled, (state) => {
+				state.status = "completed";
+				state.user = null;
+			})
+			.addCase(addSpecifications.rejected, (state, action) => {
 				state.status = "failed";
 				state.error = action.error.message;
 			});

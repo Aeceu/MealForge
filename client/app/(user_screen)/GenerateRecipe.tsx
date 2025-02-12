@@ -1,7 +1,7 @@
 import { icons } from "@/constants";
 import { useState, Fragment } from "react";
 import axios from "@/redux/api/axios";
-import { TextInput } from "react-native";
+import { Alert, TextInput } from "react-native";
 import Loading from "@/components/Loading";
 import { useColorScheme } from "nativewind";
 import StyledText from "@/components/StyledText";
@@ -42,6 +42,8 @@ type recipeProps = {
 	serve_for: string;
 	difficulty: string;
 	tags: string;
+	allergens: string;
+	leftover_recommendations: string;
 };
 
 const UserPreferences = () => {
@@ -85,9 +87,12 @@ const UserPreferences = () => {
 			const res = await axios.post("/generate/recipe", {
 				main_ingredients: data.main_ingredients,
 				seasonings: data.seasonings,
-				user_preference: user?.allergies || "",
+				serve_for: data.serve_for,
+				height: user?.height,
+				weight: user?.weight,
+				age: user?.age,
+				gender: user?.gender,
 			});
-			console.dir(res.data, { depth: null });
 			setShowRecipe(true);
 			setRecipeResult(res.data);
 			setdarkbg(true);
@@ -111,8 +116,13 @@ const UserPreferences = () => {
 		defaultValues: {
 			main_ingredients: [],
 			seasonings: [],
+			serve_for: "1",
 		},
 	});
+
+	const test = () => {
+		console.log(watch("seasonings"));
+	};
 
 	if (pageLoading) return <Loading />;
 
@@ -142,14 +152,18 @@ const UserPreferences = () => {
 												.filter((item) => item.type === "main ingredient")
 												.map((item, i) => ({
 													key: i,
-													value: `${item.name} ${
-														item.is_expired ? "(expired)" : ""
-													}`,
+													value: `${item.measurements} ${item.name} ${item.is_expired ? "(expired)" : ""
+														}`,
 													type: "main ingredient",
 												}))}
 											save="value"
 											setSelected={(selectedValue: string) => {
 												if (!value.includes(selectedValue)) {
+													if (selectedValue.includes("(expired)")) {
+														Alert.alert(
+															"You selected an expired ingredient..."
+														);
+													}
 													onChange([...value, selectedValue.split("(")[0]]);
 												}
 											}}
@@ -220,7 +234,7 @@ const UserPreferences = () => {
 
 							{/* Add seasonings */}
 							<View>
-								<StyledText className="mb-2">Select your seasonings</StyledText>
+								<StyledText className="mb-2">Select your secondary ingredients</StyledText>
 								<Controller
 									control={control}
 									name="seasonings"
@@ -228,18 +242,20 @@ const UserPreferences = () => {
 									render={({ field: { onChange, value } }) => (
 										<SelectList
 											data={ingredients
-												.filter((item) => item.type === "seasoning")
+												.filter((item) => item.type === "secondary ingredient")
 												.map((item, i) => ({
 													key: i,
-													value: `${item.name} ${
-														item.is_expired ? "(expired)" : ""
-													}`,
-													type: "seasonings",
+													value: `${item.measurements} ${item.name} ${item.is_expired ? "(expired)" : ""
+														}`,
+													type: "secondary ingredient",
 												}))}
 											save="value"
 											setSelected={(selectedValue: string) => {
 												if (!value.includes(selectedValue)) {
-													onChange([...value, selectedValue]);
+													if (selectedValue.includes("(expired)")) {
+														Alert.alert("You selected an expired secondary ingredient...");
+													}
+													onChange([...value, selectedValue.split("(")[0]]);
 												}
 											}}
 											inputStyles={{
@@ -306,6 +322,34 @@ const UserPreferences = () => {
 									</StyledText>
 								)}
 							</View>
+
+							{/* Servings */}
+							<View>
+								<StyledText className="mb-2">Servings</StyledText>
+								<Controller
+									control={control}
+									name="serve_for"
+									render={({ field: { onChange, value } }) => (
+										<TextInput
+											onChangeText={onChange}
+											value={value}
+											className={`
+                      border border-light-border font-pregular dark:border-dark-border bg-white dark:bg-dark-light text-dark dark:text-main-50 rounded-lg px-6 py-2 text-sm
+                      `}
+											placeholderTextColor={placeholderColor}
+											placeholder="Enter number of servings"
+											keyboardType="numeric"
+										/>
+									)}
+								/>
+							</View>
+							{errors.serve_for && (
+								<StyledText
+									fontStyle="default"
+									className="mt-2 ml-3 text-sm text-red-500">
+									* {errors.serve_for.message}
+								</StyledText>
+							)}
 						</View>
 
 						{/* Display all selected ingredients and seasonings */}
@@ -353,7 +397,7 @@ const UserPreferences = () => {
 
 							{/* Seasonings Section */}
 							<StyledText className="mt-6" type="heading-4">
-								Selected Seasonings:
+								Selected Secondary Ingredients:
 							</StyledText>
 							<View>
 								{watch("seasonings")?.length <= 0 ? (

@@ -42,14 +42,14 @@ const Seasonings = () => {
 			{ingredients.length > 0 ? (
 				ingredients.map(
 					(item, i) =>
-						item.type === "seasoning" && (
+						item.type === "secondary ingredient" && (
 							<View
 								key={i}
 								className="flex-row items-center justify-between w-full p-4 mb-4 bg-white border border-light-border dark:bg-dark-light dark:border-dark-border rounded-xl">
 								<View className="flex-col items-start justify-center flex-1">
 									<View className="flex-row items-center mb-2">
 										<StyledText type="label" className="text-xs ">
-											{item.type === "seasoning" ? "Seaonings" : item.type}
+											{item.type === "secondary ingredient" ? "Secondary Ingredients" : item.type}
 										</StyledText>
 										{item.is_expired ? (
 											<StyledText

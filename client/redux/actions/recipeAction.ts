@@ -50,6 +50,8 @@ type handleSaveRecipeProps = {
 		benefits: string;
 		serve_for: string;
 		tags: string;
+		allergens: string;
+		leftover_recommendations: string;
 	};
 };
 

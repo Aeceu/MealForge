@@ -32,6 +32,8 @@ type Props = {
 		serve_for: string;
 		difficulty: string;
 		tags: string;
+		allergens: string;
+		leftover_recommendations: string;
 	}[];
 };
 
@@ -57,6 +59,8 @@ type RecipeProps = {
 	serve_for: string;
 	difficulty: string;
 	tags: string;
+	allergens: string;
+	leftover_recommendations: string;
 };
 
 const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
@@ -88,7 +92,6 @@ const DisplayRecipe: React.FC<Props> = ({ isVisible, onClose, recipe }) => {
 			});
 		}
 	};
-
 	return (
 		<Modal
 			visible={isVisible}

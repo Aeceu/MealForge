@@ -13,6 +13,8 @@ export type TRecipe = {
 	serve_for: string | number;
 	difficulty: string;
 	tags: string;
+	allergens: string;
+	leftover_recommendations: string;
 };
 
 export const NewRecipeSchema = z.object({
@@ -22,6 +24,7 @@ export const NewRecipeSchema = z.object({
 	seasonings: z
 		.array(z.string().min(1, "Seasoning name cannot be empty"))
 		.min(2, "At least two seasonings are required"),
+	serve_for: z.string().min(1, { message: "Server for cannot be empty" }),
 });
 
 export type TNewRecipe = z.infer<typeof NewRecipeSchema>;

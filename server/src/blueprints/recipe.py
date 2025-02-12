@@ -22,6 +22,11 @@ def create_recipe(userId):
     serve_for = recipe_data.get("serve_for")
     difficulty = recipe_data.get("difficulty")
     tags = recipe_data.get("tags")
+    allergens = recipe_data.get("allergens")
+    leftover_recommendations = recipe_data.get("leftover_recommendations")
+
+    print(data)
+
 
     try:
         with engine.connect() as conn:
@@ -31,24 +36,24 @@ def create_recipe(userId):
 
             recipe_id = str(uuid.uuid4())
 
-            ingredients_text = ", ".join([f"{ingredient["measurement"]} {ingredient["name"]}"  for ingredient in ingredients])
-            nutrient_counts_text = ", ".join([f"{nutrient_count["measurement"]} {nutrient_count["name"]}"  for nutrient_count in nutrient_counts])
+            ingredients_text = ", ".join([f"{ingredient["measurement"]} | {ingredient["name"]}" for ingredient in ingredients])
+            nutrient_counts_text = ", ".join([f"{nutrient_count["measurement"]} {nutrient_count["name"]}" for nutrient_count in nutrient_counts])
+            leftover_recommendations_text = "|".join(leftover_recommendations) if leftover_recommendations else ""
 
             recipe_query = text(
                 """
                 INSERT INTO recipes (
                     id, name, ingredients, instruction, type_of_cuisine, nutrient_counts,
-                    serve_hot_or_cold, cooking_time, benefits, serve_for, difficulty, tags, user_id
+                    serve_hot_or_cold, cooking_time, benefits, serve_for, difficulty, tags, allergens, leftover_recommendations, user_id
                 )
                 VALUES (
                     :id, :name, :ingredients, :instruction, :type_of_cuisine, :nutrient_counts,
-                    :serve_hot_or_cold, :cooking_time, :benefits, :serve_for, :difficulty,:tags,:user_id
+                    :serve_hot_or_cold, :cooking_time, :benefits, :serve_for, :difficulty, :tags, :allergens, :leftover_recommendations, :user_id
                 )
                 """
             )
 
-            # Insert recipe instructions as a single string joined with newlines
-            instructions_text = "\n".join(instructions)
+            instructions_text = "|".join(instructions)
 
             conn.execute(recipe_query, {
                 "id": recipe_id,
@@ -63,6 +68,8 @@ def create_recipe(userId):
                 "serve_for": serve_for,
                 "difficulty": difficulty,
                 "tags": tags,
+                "allergens": allergens,
+                "leftover_recommendations": leftover_recommendations_text,
                 "user_id": userId
             })
 
@@ -71,7 +78,9 @@ def create_recipe(userId):
             return jsonify({"message": "Recipe created successfully!", "recipe_id": recipe_id}), 201
 
     except Exception as e:
+        print(e)
         return jsonify({"error": str(e)}), 500
+
 
 # Get user all recipe
 @recipes_bp.route("/user/<user_id>/recipes", methods=["GET"])
@@ -100,7 +109,9 @@ def get_user_recipes(user_id):
                     "serve_for":recipe.serve_for,
                     "difficulty":recipe.difficulty,
                     "tags":recipe.tags,
+                    "allergens":recipe.allergens,
                     "ingredients":recipe.ingredients,
+                    "leftover_recommendations":recipe.leftover_recommendations,
                     "user_id":recipe.user_id,
                 })
 
@@ -135,6 +146,8 @@ def get_user_recipe(recipe_id):
           "difficulty":recipe.difficulty,
           "ingredients":recipe.ingredients,
           "tags":recipe.tags,
+          "allergens":recipe.allergens,
+          "leftover_recommendations":recipe.leftover_recommendations,
           "user_id":recipe.user_id,
         }
 

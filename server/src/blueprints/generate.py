@@ -1,6 +1,5 @@
 import json
-import os
-import random
+import traceback
 
 import google.generativeai as genai
 from flask import Blueprint, jsonify, request
@@ -9,7 +8,6 @@ from utils.generateQuery import generateQuery
 
 generate_bp = Blueprint("generate", __name__)
 
-model = genai.GenerativeModel("gemini-1.5-flash")
 
 @generate_bp.route("/generate/recipe", methods=["POST"])
 def generate():
@@ -17,18 +15,51 @@ def generate():
 
     main_ingredients = data.get("main_ingredients", [])
     seasonings = data.get("seasonings", [])
+
     ingredients = main_ingredients + seasonings
+    server_for = data.get("serve_for", 1)
+    height = data.get("height")
+    weight = data.get("weight")
+    age = data.get("age")
+    gender = data.get("gender")
 
-    recommended_recipes = generateRecipe(ingredients,)
-    print(recommended_recipes)
+    print(main_ingredients)
+    print(seasonings)
+    print(ingredients)
 
-    if not recommended_recipes:
-        return jsonify({"error": "No matching recipes found for the provided ingredients."}), 404
+    if not height or not weight or not age or not gender:
+        return jsonify({'error':'Either from height, weight, age or gender is miising!'}),404
+
 
     try:
-        response = generateQuery(ingredients, recommended_recipes)
-        json_response = response.text.replace("```json", "").replace("```", "").strip()
-        json_data = json.loads(json_response)
-        return jsonify(json_data)
-    except json.JSONDecodeError:
-        return jsonify({"error": "Failed to parse JSON from AI response.", "response": response.generated_text}), 500
+        recommended_recipes = generateRecipe(ingredients)
+        print(recommended_recipes)
+
+        if not recommended_recipes:
+          return jsonify({"error": "No matching recipes found for the provided ingredients."}), 404
+
+        response = generateQuery(ingredients, recommended_recipes,server_for,height,weight,age,gender)
+
+        print("Raw AI response:", response)
+        print("Response type:", type(response))
+        print("Available attributes:", dir(response))
+
+        # If response.text doesn't work, try this:
+        json_response = response.candidates[0].content.parts[0].text
+
+        # Handle JSON code block formatting
+        if json_response.startswith("```json"):
+            json_response = json_response[7:]  # Remove starting ```json
+        json_response = json_response.strip("` \n")  # Remove any remaining backticks and whitespace
+        print(f"JSON: {json_response}")
+        # Parse the cleaned JSON
+        parsed_response = json.loads(json_response)
+
+        return jsonify(parsed_response), 200
+    except json.JSONDecodeError as e:
+        print(f"JSON Decode Error: {str(e)}")
+        print(f"Problematic JSON: {json_response}")
+        return jsonify({"error": "Invalid JSON format in AI response"}), 500
+    except Exception as e:
+        print(traceback.format_exc())
+        return jsonify({"error": str(e)}), 500

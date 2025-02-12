@@ -196,7 +196,7 @@ const AddIngredients = () => {
 											<SelectList
 												data={[
 													{ key: 1, value: "main ingredient" },
-													{ key: 2, value: "seasoning" },
+													{ key: 2, value: "secondary ingredient" },
 												]}
 												save="value"
 												setSelected={onChange}

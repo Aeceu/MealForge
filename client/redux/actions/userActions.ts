@@ -149,3 +149,35 @@ export const deleteAllergy = createAsyncThunk(
 		}
 	}
 );
+
+type addSpecificationsProps = {
+	userId: string;
+	height: string;
+	weight: string;
+	age: string;
+	gender: string;
+};
+
+export const addSpecifications = createAsyncThunk(
+	"user/addSpecifications",
+	async (
+		{ age, gender, height, userId, weight }: addSpecificationsProps,
+		{ rejectWithValue }
+	) => {
+		try {
+			const res = await axios.post(`/user/specification/${userId}`, {
+				height,
+				weight,
+				age,
+				gender,
+			});
+			return res.data;
+		} catch (error) {
+			console.log(error);
+			const resError = handleError(error);
+			console.log("resError");
+			console.log(resError);
+			return rejectWithValue(resError);
+		}
+	}
+);
