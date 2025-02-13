@@ -40,19 +40,12 @@ def generate():
 
         response = generateQuery(ingredients, recommended_recipes,server_for,height,weight,age,gender)
 
-        print("Raw AI response:", response)
-        print("Response type:", type(response))
-        print("Available attributes:", dir(response))
-
-        # If response.text doesn't work, try this:
         json_response = response.candidates[0].content.parts[0].text
 
-        # Handle JSON code block formatting
         if json_response.startswith("```json"):
-            json_response = json_response[7:]  # Remove starting ```json
-        json_response = json_response.strip("` \n")  # Remove any remaining backticks and whitespace
-        print(f"JSON: {json_response}")
-        # Parse the cleaned JSON
+            json_response = json_response[7:]
+
+        json_response = json_response.strip("` \n")
         parsed_response = json.loads(json_response)
 
         return jsonify(parsed_response), 200

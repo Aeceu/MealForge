@@ -288,7 +288,7 @@ def get_post(post_id):
                     "difficulty": result.recipe_difficulty,
                     "tags": result.recipe_tags,
                     "allergens": result.recipe_allergens,
-                    "allergens": result.recipe_allergens,
+                    "leftover_recommendations": result.recipe_leftover_recommendations,
                 },
                 "author": result.author_name,
                 "is_bookmarked": is_bookmarked,
@@ -451,7 +451,7 @@ def get_all_user_posts(user_id):
                         "difficulty": row.recipe_difficulty,
                         "tags": row.recipe_tags,
                         "allergens": row.recipe_allergens,
-                        "leftover_recommendations": row.leftover_recommendations
+                        "leftover_recommendations": row.recipe_leftover_recommendations
                     },
                     "author": row.author,
                     "bookmarks": bookmark_list,
@@ -634,7 +634,7 @@ def get_all_posts_filtered():
                         "difficulty": row.recipe_difficulty,
                         "tags": row.recipe_tags,
                         "allergens": row.recipe_allergens,
-                        "leftover_recommendations": row.leftover_recommendations
+                        "leftover_recommendations": row.recipe_leftover_recommendations
                     },
                     "author": row.author_name,
                     "total_likes": row.total_likes,

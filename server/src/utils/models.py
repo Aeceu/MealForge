@@ -19,6 +19,10 @@ class User(Base):
     refreshToken = Column(Text, nullable=True)
     profile_picture_url = Column(String(500), nullable=True)
     allergies = Column(Text, nullable=True)
+    height = Column(String(250), nullable=False,default='')
+    weight = Column(String(250), nullable=False,default='')
+    age = Column(String(250), nullable=False,default='')
+    gender = Column(String(250), nullable=False,default='')
 
     recipes = relationship('Recipe', back_populates='user', cascade="all, delete-orphan")
     recipe_posts = relationship('RecipePost', back_populates='user', cascade="all, delete-orphan")

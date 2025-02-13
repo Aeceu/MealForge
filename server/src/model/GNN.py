@@ -14,7 +14,6 @@ model_path = os.path.join(base_dir,'dataset','GNN','gnn_model.pth')
 ingredients_path = os.path.join(base_dir,'dataset','GNN','ingredients_list.pkl')
 embeddings_path = os.path.join(base_dir,'dataset','GNN','node_embeddings.npy')
 
-# Load the model
 class IngredientGNN(torch.nn.Module):
     def __init__(self, in_channels, out_channels):
         super(IngredientGNN, self).__init__()
@@ -28,32 +27,25 @@ class IngredientGNN(torch.nn.Module):
         x = self.conv2(x, edge_index)
         return x
 
-# Load the model architecture and weights
-model = IngredientGNN(in_channels=384, out_channels=16)  # Adjust channels as per your model
+model = IngredientGNN(in_channels=384, out_channels=16)
 model.load_state_dict(torch.load(model_path))
 model.eval()
 
-# Load ingredients list and embeddings
 with open(ingredients_path, 'rb') as f:
     ingredients_list = pickle.load(f)
 
 embeddings = np.load(embeddings_path)
 
 
-# Function to get similar ingredients
 def get_similar_ingredients(ingredient, k=5):
-    # Check if the ingredient is in the list
     if ingredient not in ingredients_list:
         return jsonify({'error': f"Ingredient '{ingredient}' not found"}), 404
 
-    # Get the index of the query ingredient
     query_index = ingredients_list.index(ingredient)
 
-    # Compute similarities
     query_embedding = embeddings[query_index].reshape(1, -1)
     similarities = cosine_similarity(query_embedding, embeddings)[0]
 
-    # Get top recommendations
     top_k = 5
     recommendation_indices = np.argsort(similarities)[::-1]
     recommendations = [

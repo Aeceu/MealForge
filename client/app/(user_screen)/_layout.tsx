@@ -13,12 +13,6 @@ const AuthLayout = () => {
 		return <Redirect href={"/(auth)/login"} />;
 	}
 
-	// useEffect(() => {
-	// 	if (!user) {
-	// 		dispatch(handleRefresh(accessToken));
-	// 	}
-	// }, [user]);
-
 	return (
 		<>
 			<Stack screenOptions={{ headerShown: false }}>

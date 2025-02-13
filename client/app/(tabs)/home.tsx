@@ -10,19 +10,14 @@ import { useColorScheme } from "nativewind";
 import StyledText from "@/components/StyledText";
 import CreatePost from "@/components/modals/CreatePost";
 import PostFeed from "@/components/HomeUI/PostFeed";
-import { getFilteredPosts, getPosts } from "@/redux/actions/postAction";
 import SearchRecipe from "@/components/modals/SearchRecipe";
 import DarkBgOverlay from "@/components/DarkBgOverlay";
 
 const Home = () => {
-	const [filter, setFilter] = useState("");
-
 	const [darkbg, setDarkBg] = useState(false);
 	const [showModal, setShowModal] = useState(false);
-
 	const dispatch = useDispatch<AppDispatch>();
 	const { user } = useSelector((state: RootState) => state.user);
-	const { post } = useSelector((state: RootState) => state.post);
 	const { accessToken, pageLoading } = useSelector(
 		(state: RootState) => state.auth
 	);
